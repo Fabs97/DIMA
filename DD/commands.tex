@@ -1,0 +1,135 @@
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx} % includegraphics 
+\usepackage{todonotes} % todo notes
+\usepackage{bm} % bold math
+\usepackage{enumitem} % enumerate alignment
+\usepackage{hyperref} % urls
+\usepackage{pgffor} % foreach
+
+% \begin{uml %
+\usepackage{tikz}
+\usepackage{aeguill}
+\usepackage{float}
+\usepackage{caption}
+
+\definecolor{plantucolor0000}{RGB}{255,255,255}
+\definecolor{plantucolor0001}{RGB}{0,0,0}
+\definecolor{plantucolor0002}{RGB}{254,254,206}
+\definecolor{plantucolor0003}{RGB}{168,0,54}
+\definecolor{plantucolor0004}{RGB}{238,238,238}
+% } %
+
+% \begin{tabular style %
+\usepackage[thinlines]{easytable}
+\usepackage{makecell}
+\renewcommand\theadfont{\bfseries}
+\usepackage{spreadtab}
+% } %
+
+% \begin{custom operators %
+\DeclareMathOperator*{\GO}{G}
+\DeclareMathOperator*{\REQ}{R}
+\DeclareMathOperator*{\DA}{D}
+\DeclareMathOperator*{\AR}{AR}
+\DeclareMathOperator*{\PR}{PR}
+\DeclareMathOperator*{\SC}{S}
+
+\newcommand{\goal}[1]{\langle\bm{\GO_{#1}}\rangle}
+\newcommand{\requirement}[1]{\langle\bm{\REQ_{#1}}\rangle}
+\newcommand{\assumption}[1]{\langle\bm{\DA_{#1}}\rangle}
+\newcommand{\arequirement}[1]{\langle\bm{\AR_{#1}}\rangle}
+\newcommand{\prequirement}[1]{\langle\bm{\PR_{#1}}\rangle}
+\newcommand{\scenario}[1]{\langle\bm{\SC_{#1}}\rangle}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+% } %
+
+% \begin{custom targets %
+\usepackage{xifthen}
+\usepackage{xparse}
+\NewDocumentCommand{\defTarget}{o m}{
+    \IfNoValueTF{#1}{
+        \hypertarget{#2}{} #2
+    }{
+        \hypertarget{#1}{} #2
+    }
+}
+\NewDocumentCommand{\defSectionTarget}{o o m}{
+    \IfNoValueTF{#1}{
+        \IfNoValueTF{#2}
+            {\hypertarget{sec#3}{} \section{#3} \label{sec#3}}
+            {\hypertarget{sec#2}{} \section{#3} \label{sec#2}}
+    }{
+        \IfNoValueTF{#2}
+            {\hypertarget{sec#3}{} #1{#3} \label{sec#3}}
+            {\hypertarget{sec#2}{} #1{#3} \label{sec#2}}
+    }
+}
+\NewDocumentCommand{\defChapterTarget}{o m}{
+    \chapter{#2}
+    \IfNoValueTF{#1}
+        {\hypertarget{chap#2}{}}
+        {\hypertarget{chap#1}{}}
+}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\xforeach}{s m +m}{
+    \IfBooleanTF{#1}{
+        \clist_map_inline:on{#2}{#3}
+    }{
+        \clist_map_inline:nn{#2}{#3}
+    }
+}
+\ExplSyntaxOff
+
+\newcommand{\urlink}[1]{\href{#1}{\texttt{#1}}}
+% } %
+
+% \begin{custom section ref %
+\newcommand*{\fullref}[1]{
+    \hyperref[{#1}]{\autoref*{#1} \nameref*{#1}}
+}
+% } %
+
+% \begin{chapter style %
+\usepackage[T1]{fontenc}
+\usepackage{titlesec, color, blindtext}
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}
+    [hang]{\Huge\bfseries}
+    {\thechapter\hsp\textcolor{gray75}{|}\hsp}
+    {0pt}
+    {\Huge\bfseries}
+    
+\setcounter{secnumdepth}{4}
+% } %
+
+% \begin{header %
+\input{metadata.tex}
+% } %
+
+% \begin{custom label ref %
+\newcounter{labelCounter}
+
+\makeatletter
+\newcommand{\labelText}[2]{
+    \refstepcounter{labelCounter}
+    \immediate\write\outputstream{\unexpanded{#1}}
+}
+\makeatother
+
+\newcounter{referencesCounter}
+\stepcounter{referencesCounter}
+\newcommand{\defRef}[1]{
+    \hyperlink{label::text::\arabic{referencesCounter}}{$\left[\arabic{referencesCounter}\right]$}
+    \makebox[0pt]{
+        \labelText{#1}{label::text::\arabic{referencesCounter}}
+        \stepcounter{referencesCounter}
+    }
+}
+% } %

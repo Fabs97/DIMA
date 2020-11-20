@@ -1,0 +1,28 @@
+% !TeX root = ./dd.tex
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{xparse}
+\usepackage{float}
+\usepackage{caption}
+
+\renewcommand{\labelitemii}{$\star$}
+
+\graphicspath{ {chapters/resources/images} }
+\newwrite\outputstream
+\immediate\openout\outputstream=ddreferences.ref
+
+\input{commands.tex}
+% \input{dd/links.tex}
+
+\begin{document}
+\input{document/title.tex}
+
+\tableofcontents
+
+\input{document/chapters/01Introduction.tex}
+
+\immediate\closeout\outputstream
+
+\end{document}
