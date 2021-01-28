@@ -1,4 +1,4 @@
-package com.example.citylife
+package com.casiano.citylife
 
 import io.flutter.embedding.android.FlutterActivity
 

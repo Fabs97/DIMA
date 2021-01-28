@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.citylife">
+package="com.casiano.citylife">
    <application
         android:label="citylife"
         android:icon="@mipmap/ic_launcher">
