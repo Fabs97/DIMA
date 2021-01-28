@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+defaults:
+  run:
+    working-directory: ./citylife
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checking out branch
+        uses: actions/checkout@v2
+      - name: Setting up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - name: Setup Flutter environment
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '1.22.x'
+          channel: 'beta'
+      - name: Fetching dependencies
+        run: flutter pub get
+      - name: Running application tests
+        run: flutter test
+      - name: Build Flutter apk
+        run: flutter build apk
+        
