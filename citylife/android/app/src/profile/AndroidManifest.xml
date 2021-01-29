@@ -1,7 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.casiano.citylife">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.casiano.citylife">
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<application>
+    <!-- This is the required API KEY for the Google Maps API -->
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBO9cIDmqwnaC7GqO1WpQhSGPmnqvW5GFA" />
+</application>
 </manifest>
