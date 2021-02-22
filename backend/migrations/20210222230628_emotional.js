@@ -3,7 +3,7 @@ exports.up = async function(knex) {
     const hasTable = await knex.schema.hasTable(emotionalTable);
     return !hasTable ? knex.schema.createTable(emotionalTable, table => {
         table.increments("id").notNullable();
-        table.integer("userId").unsigned()
+        table.integer("userId").unsigned();
         table.foreign("userId").references("user.id").onDelete("CASCADE");
         
         table.float("cleanness");
