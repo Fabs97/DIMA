@@ -15,13 +15,19 @@ dependencies:
   firebase_auth: ^0.20.0+1
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
+  flutter_facebook_auth: ^2.0.2
+  flutter_twitter_login: ^1.1.0
+  github_sign_in: ^0.0.3
   google_fonts: ^1.1.2
   google_maps_flutter: ^1.1.1
+  google_sign_in: ^4.5.9
   http: ^0.12.2
   intl: ^0.16.1
   location: ^3.2.4
   provider: ^4.3.3
   shared_preferences: ^0.5.12+4
+  uni_links: ^0.4.0
+  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:
