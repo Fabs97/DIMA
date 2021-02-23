@@ -1,5 +1,3 @@
-require('dotenv').config({ path: "./.env" });
-
 const environment = process.env.CITYLIFE_ENV;
 
 let DBConnection;

@@ -4,22 +4,26 @@ const E = require("../utils/customError");
 
 module.exports = {
     getUserById: async (id) => {
-        let result = await db(T.userTable)
+        let res = await db(T.userTable)
             .select()
             .where("id", id)
             .limit(0)
             .catch(e => {
-                console.error(`Message: ${e.message}`);
-                console.error(`Stack: ${e.stack}`);
-                throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
+                if (e) {
+                    console.error(`Message: ${e.message}`);
+                    console.error(`Stack: ${e.stack}`);
+                    throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
+                }
             });
-        return result[0];
+        return res[0];
     },
     getUsers: async (fields = []) => {
         const errFun = e => {
-            console.error(`Message: ${e.message}`);
-            console.error(`Stack: ${e.stack}`);
-            throw new E.CustomError(E.InternalServerError, "Something went wrong while retrieving the users");
+            if (e) {
+                console.error(`Message: ${e.message}`);
+                console.error(`Stack: ${e.stack}`);
+                throw new E.CustomError(E.InternalServerError, "Something went wrong while retrieving the users");
+            }
         };
         
         let res = fields.length === 0 ?
