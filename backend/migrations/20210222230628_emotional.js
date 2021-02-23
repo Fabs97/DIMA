@@ -12,6 +12,7 @@ exports.up = async function(knex) {
         table.float("inclusiveness");
         table.float("comfort");
         table.float("safety");
+        table.float("mean");
         
         table.string("notes");
         table.specificType("images", "text[]");

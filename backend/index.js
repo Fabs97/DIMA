@@ -11,7 +11,9 @@ app.use("/apis", swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json());
 
 const userRoute = require("./routes/userRoute");
+const impressionRoute = require("./routes/impressionRoute");
 app.use("/user", userRoute);
+app.use("/impression", impressionRoute);
 
 app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on http://localhost:${port}!`));
 
