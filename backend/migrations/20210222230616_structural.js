@@ -1,9 +1,9 @@
-const structuralTable = "structural";
+const T = require("../utils/tablesDefinition");
 
 exports.up = async function(knex) {
-    const hasTable = await knex.schema.hasTable(structuralTable);
-    return !hasTable ? knex.schema.createTable(structuralTable, table => {
-        table.increments("id").notNullable();
+    const hasTable = await knex.schema.hasTable(T.structuralTable);
+    return !hasTable ? knex.schema.createTable(T.structuralTable, table => {
+        table.increments("id").primary().notNullable();
         table.integer("userId").unsigned();
         table.foreign("userId").references("user.id").onDelete("CASCADE");
        
@@ -15,10 +15,11 @@ exports.up = async function(knex) {
         table.specificType("images", "text[]");
         table.string("latitude");
         table.string("longitude");
+        table.string("place_tag");
         table.timestamp('created').defaultTo(knex.fn.now());
     }) : null; 
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable(structuralTable);
+    return knex.schema.dropTable(T.structuralTable);
 };

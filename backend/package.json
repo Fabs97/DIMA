@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "serve": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "express": "^4.17.1",
     "js-yaml": "^3.14.1",
     "knex": "^0.21.12",
+    "nodemon": "^2.0.7",
     "pg": "^8.5.1",
     "swagger-ui-express": "^4.1.5"
   }

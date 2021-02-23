@@ -7,9 +7,12 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.use("/", swaggerUI.serve, swaggerUI.setup(APIDocumentation));
+app.use("/apis", swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json);
 
-app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on port ${port}!`));
+const userRoute = require("./routes/userRoute");
+app.use("/user", userRoute);
+
+app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on http://localhost:${port}!`));
 
 module.exports = app;

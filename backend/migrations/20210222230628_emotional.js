@@ -1,8 +1,9 @@
-const emotionalTable = "emotional";
+const T = require("../utils/tablesDefinition");
+
 exports.up = async function(knex) {
-    const hasTable = await knex.schema.hasTable(emotionalTable);
-    return !hasTable ? knex.schema.createTable(emotionalTable, table => {
-        table.increments("id").notNullable();
+    const hasTable = await knex.schema.hasTable(T.emotionalTable);
+    return !hasTable ? knex.schema.createTable(T.emotionalTable, table => {
+        table.increments("id").primary().notNullable();
         table.integer("userId").unsigned();
         table.foreign("userId").references("user.id").onDelete("CASCADE");
         
@@ -16,10 +17,11 @@ exports.up = async function(knex) {
         table.specificType("images", "text[]");
         table.string("latitude");
         table.string("longitude");
+        table.string("place_tag");
         table.timestamp('created').defaultTo(knex.fn.now());
     }) : null; 
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable(emotionalTable);
+    return knex.schema.dropTable(T.emotionalTable);
 };
