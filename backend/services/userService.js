@@ -6,5 +6,8 @@ module.exports = userService = {
     },
     getUsers: async () => {
         return await userDAO.getUsers();
+    },
+    insertUser: async (user) => {
+        return await userDAO.insertUser(user);
     }
 };

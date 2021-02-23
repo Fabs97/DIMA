@@ -7,6 +7,7 @@ exports.up = async function (knex) {
         table.increments("id").primary().notNullable();
         table.string("firebaseId").notNullable();
         table.boolean("tech");
+        table.string("name");
         table.float("exp");
         table.string("email");
         table.string("password");

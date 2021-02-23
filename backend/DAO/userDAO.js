@@ -36,5 +36,23 @@ module.exports = {
                 .limit(100)
                 .catch(errFun);
         return res;
+    },
+    insertUser: async (user) => {
+        let res = await db(T.userTable)
+            .returning()
+            .insert({
+                firebaseId: user.firebaseId,
+                tech: user.tech,
+                exp: user.exp,
+                email: user.email,
+                password: user.password,
+                name: user.name ?? user.email.split("@")[0], 
+            }, ["id", "firebaseId", "tech", "exp", "email", "name"])
+            .catch(e => {
+                if (e) {
+                    throw new E.CustomError(E.InternalServerError, "Something went wrong while trying to save the user");
+                }
+            });
+        return res[0];
     }
 }

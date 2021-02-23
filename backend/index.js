@@ -12,6 +12,7 @@ app.use(express.json());
 
 const userRoute = require("./routes/userRoute");
 app.use("/user", userRoute);
+
 app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on http://localhost:${port}!`));
 
 module.exports = app;
