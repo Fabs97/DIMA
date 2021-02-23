@@ -11,11 +11,12 @@ exports.up = async function(knex) {
         table.float("inclusiveness");
         table.float("comfort");
         table.float("safety");
-
+        
         table.string("notes");
         table.specificType("images", "text[]");
         table.string("latitude");
         table.string("longitude");
+        table.timestamp('created').defaultTo(knex.fn.now());
     }) : null; 
 };
 

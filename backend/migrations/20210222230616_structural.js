@@ -15,6 +15,7 @@ exports.up = async function(knex) {
         table.specificType("images", "text[]");
         table.string("latitude");
         table.string("longitude");
+        table.timestamp('created').defaultTo(knex.fn.now());
     }) : null; 
 };
 
