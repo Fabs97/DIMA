@@ -12,6 +12,21 @@ class AuthService {
     return _singleton;
   }
 
+  final FirebaseAuth _authInstance = FirebaseAuth.instance;
+
+  Future<UserCredential> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      return await _authInstance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e, sTrace) {
+      print("[AuthService]::signInWithEmailAndPassword - $e\n$sTrace");
+      return null;
+    }
+  }
+
   Future<UserCredential> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
@@ -28,7 +43,7 @@ class AuthService {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      return await _authInstance.signInWithCredential(credential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGoogle - $e\n$sTrace");
       return null;
@@ -60,7 +75,7 @@ class AuthService {
           GithubAuthProvider.credential(result.token);
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance
+      return await _authInstance
           .signInWithCredential(githubAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGitHub - $e\n$sTrace");
@@ -77,7 +92,7 @@ class AuthService {
           FacebookAuthProvider.credential(accessToken.token);
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance
+      return await _authInstance
           .signInWithCredential(facebookAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithFacebook - $e\n$sTrace");
@@ -112,7 +127,7 @@ class AuthService {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance
+      return await _authInstance
           .signInWithCredential(twitterAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithTwitter - $e\n$sTrace");

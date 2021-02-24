@@ -16,11 +16,13 @@ dependencies:
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
   flutter_facebook_auth: ^2.0.2
+  flutter_svg: ^0.20.0-nullsafety.3
   flutter_twitter_login: ^1.1.0
   github_sign_in: ^0.0.3
   google_fonts: ^1.1.2
   google_maps_flutter: ^1.1.1
   google_sign_in: ^4.5.9
+  gradient_widgets: ^0.5.2
   http: ^0.12.2
   intl: ^0.16.1
   location: ^3.2.4
@@ -37,9 +39,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/svgs/CityLife_Logo.svg
+    - assets/images/Google_Logo.png
+    - assets/images/Twitter_Logo.png
+    - assets/images/GitHub_Logo.png
+    - assets/images/Facebook_Logo.png
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
