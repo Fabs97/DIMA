@@ -16,8 +16,8 @@ exports.up = async function(knex) {
         
         table.string("notes");
         table.specificType("images", "text[]");
-        table.string("latitude");
-        table.string("longitude");
+        table.float("latitude");
+        table.float("longitude");
         table.string("place_tag");
         table.timestamp('created').defaultTo(knex.fn.now());
     }) : null; 
