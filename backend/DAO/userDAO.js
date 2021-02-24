@@ -7,7 +7,7 @@ module.exports = {
         let res = await db(T.userTable)
             .select()
             .where("id", id)
-            .limit(0)
+            .first()
             .catch(e => {
                 if (e) {
                     console.error(`Message: ${e.message}`);
@@ -15,7 +15,7 @@ module.exports = {
                     throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
                 }
             });
-        return res[0];
+        return res;
     },
     getUsers: async (fields = []) => {
         const errFun = e => {

@@ -8,6 +8,7 @@ module.exports = {
         let res = await db(T.emotionalTable)
             .returning()
             .insert({
+                userId: i.userId,
                 cleanness: i.cleanness,
                 happiness: i.happiness,
                 inclusiveness: i.inclusiveness,
@@ -30,7 +31,7 @@ module.exports = {
         return res[0];
     },
     getEmotionalsByUserId: async (userId) => {
-        let res = db(T.emotionalTable)
+        let res = await db(T.emotionalTable)
             .select()
             .where("userId", userId)
             .catch(e => {

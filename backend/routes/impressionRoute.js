@@ -19,7 +19,7 @@ router.post("/emotional/new", async (req, res, next) => {
     E.sendJson(res, createdImpression);
 });
 
-router.get("/emotional/user/:userId", async (req, res, next) => {
+router.get("/emotional/:userId", async (req, res, next) => {
     const userId = req.params.userId;
     let emotionals = await impressionService
         .getEmotionalsByUserId(userId)
