@@ -19,10 +19,28 @@ router.post("/emotional/new", async (req, res, next) => {
     E.sendJson(res, createdImpression);
 });
 
-router.get("/emotional/:userId", async (req, res, next) => {
+router.get("/emotional/byUser/:userId", async (req, res, next) => {
     const userId = req.params.userId;
     let emotionals = await impressionService
         .getEmotionalsByUserId(userId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, emotionals);
+});
+
+router.get("/emotional/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req, res, next) => {
+    const lat = {
+        min: parseFloat(req.params.latMin),
+        max: parseFloat(req.params.latMax),
+    };
+    const long = {
+        min: parseFloat(req.params.longMin),
+        max: parseFloat(req.params.longMax),
+    };
+
+    let emotionals = await impressionService
+        .getEmotionalsByLatLongRange(lat, long)
         .catch(e => {
             E.sendError(res, e.code, e.message);
         });

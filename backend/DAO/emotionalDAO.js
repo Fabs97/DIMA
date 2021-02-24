@@ -42,5 +42,19 @@ module.exports = {
                 }
             });
         return res;
-    }
+    },
+    getEmotionalsByLatLongRange: async (lat, long) => {
+        let res = await db(T.emotionalTable)
+            .select()
+            .whereBetween("latitude", [lat.min, lat.max])
+            .andWhereBetween("longitude", [long.min, long.max])
+            .catch(e => {
+                if (e) {
+                    console.error(`Message: ${e.message}`);
+                    console.error(`Stack: ${e.stack}`);
+                    throw new E.CustomError(E.InternalServerError, "Something went wrong while trying to retrieve impressions by latitude and longitude");
+                }
+            });
+        return res;
+    },
 }

@@ -4,7 +4,7 @@ const U = require("../utils/utils");
 
 const userService = require("../services/userService");
 
-router.get("/by/:id", async (req, res, next) => {
+router.get("/byUser/:id", async (req, res, next) => {
     const userId = req.params.id;
     if (!userId) {
         E.sendError(res, E.BadRequest, "User id not found in request");
