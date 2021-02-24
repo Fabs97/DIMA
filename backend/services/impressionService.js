@@ -1,4 +1,5 @@
 const emotionalDAO = require("../DAO/emotionalDAO");
+const structuralDAO = require("../DAO/structuralDAO")
 
 module.exports = impressionService = {
     insertEmotional: async (impression) => {
@@ -9,5 +10,13 @@ module.exports = impressionService = {
     },
     getEmotionalsByLatLongRange: async (lat, long) => {
         return await emotionalDAO.getEmotionalsByLatLongRange(lat, long);
-    }
+    },
+
+
+    insertStructural: async(impression) => {
+        return await structuralDAO.insertStructural(impression);
+    },
+    getStructuralsByUserId: async (userId) => {
+        return await structuralDAO.getStructuralsByUserId(userId)
+    },
 }
