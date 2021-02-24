@@ -47,4 +47,30 @@ router.get("/emotional/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req,
     E.sendJson(res, emotionals);
 });
 
+router.post("/structural/new", async (req, res, next) => {
+    const newImpression = req.body;
+    if (!newImpression || U.isEmpty(newImpression)) {
+        E.sendError(res, E.BadRequest, "newImpression not found in request body");
+        return;
+    }
+
+    let createdImpression = await impressionService
+        .insertStructural(newImpression)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, createdImpression);
+});
+
+router.get("/structural/byUser/:userId", async(req, res, next) => {
+    const userId = req.params.userId;
+    let structurals = await impressionService
+    .getStructuralsByUserId(userId)
+    .catch(e => {
+        E.sendError(res, e.code, e.message);
+    });
+    E.sendJson(res,structurals);
+})
+
+
 module.exports = router;
