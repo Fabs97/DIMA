@@ -19,4 +19,7 @@ module.exports = impressionService = {
     getStructuralsByUserId: async (userId) => {
         return await structuralDAO.getStructuralsByUserId(userId)
     },
+    getStructuralsByLatLongRange: async (lat, long) => {
+        return await structuralDAO.getStructuralsByLatLongRange(lat, long);
+    },
 }
