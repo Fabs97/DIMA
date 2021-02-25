@@ -1,3 +1,4 @@
+import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/screens/login/backgroundPainter.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/theme.dart';
@@ -5,6 +6,7 @@ import 'package:citylife/widgets/logo.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -22,6 +24,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService auth = context.read<AuthService>();
+    final AuthStatus authStatus = context.read<AuthStatus>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -106,33 +110,71 @@ class _LoginState extends State<Login> {
                               buildSocialLoginButton(
                                 L.Google,
                                 () async {
-                                  await AuthService().signInWithGoogle();
+                                  try {
+                                    CLUser u = await auth.signInWithGoogle();
+                                    if (u != null) {
+                                      authStatus.updateStatus(Status.Auth);
+                                    }
+                                  } catch (e) {
+                                    //TODO: implement catch statement
+                                  }
                                 },
                               ),
                               buildSocialLoginButton(
                                 L.Twitter,
                                 () async {
-                                  await AuthService().signInWithTwitter();
+                                  try {
+                                    CLUser u = await auth.signInWithTwitter();
+                                    if (u != null) {
+                                      authStatus.updateStatus(Status.Auth);
+                                    }
+                                  } catch (e) {
+                                    //TODO: implement catch statement
+                                  }
                                 },
                               ),
                               buildSocialLoginButton(
                                 L.GitHub,
                                 () async {
-                                  await AuthService().signInWithGitHub(context);
+                                  try {
+                                    CLUser u =
+                                        await auth.signInWithGitHub(context);
+                                    if (u != null) {
+                                      authStatus.updateStatus(Status.Auth);
+                                    }
+                                  } catch (e) {
+                                    //TODO: implement catch statement
+                                  }
                                 },
                               ),
                               buildSocialLoginButton(
                                 L.Facebook,
                                 () async {
-                                  await AuthService().signInWithFacebook();
+                                  try {
+                                    CLUser u = await auth.signInWithFacebook();
+                                    if (u != null) {
+                                      authStatus.updateStatus(Status.Auth);
+                                    }
+                                  } catch (e) {
+                                    //TODO: implement catch statement
+                                  }
                                 },
                               ),
                             ],
                           ),
                           Spacer(),
-                          buildSignInButton(() {
+                          buildSignInButton(() async {
                             if (_formKey.currentState.validate()) {
-                              // AuthService().signInWithEmailAndPassword(_email, _password);
+                              try {
+                                CLUser u =
+                                    await auth.signInWithEmailAndPassword(
+                                        _email, _password);
+                                if (u != null) {
+                                  authStatus.updateStatus(Status.Auth);
+                                }
+                              } catch (e) {
+                                //TODO: implement catch statement
+                              }
                             }
                           }, constraints.maxWidth),
                         ],
@@ -223,6 +265,7 @@ class _LoginState extends State<Login> {
             return "Please input a valid email";
           return null;
         },
+        onChanged: (email) => setState(() => _email = email),
       ),
     );
   }
