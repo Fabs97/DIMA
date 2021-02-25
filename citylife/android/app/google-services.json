@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "79611151858-9a4a36he0lu1apb2qlo20aif329cpu76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.casiano.citylife",
+            "certificate_hash": "68a5270fb29c84c4d171d663b954bf1944e35e19"
+          }
+        },
+        {
           "client_id": "79611151858-q24tergjnbcfk1v2ke714n9i9bsnq6he.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
