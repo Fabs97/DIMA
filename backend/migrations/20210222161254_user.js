@@ -6,9 +6,9 @@ exports.up = async function (knex) {
     return !hasTable ? knex.schema.createTable(T.userTable, table => {
         table.increments("id").primary().notNullable();
         table.string("firebaseId").notNullable();
-        table.boolean("tech");
+        table.boolean("tech").defaultTo(false);
         table.string("name");
-        table.float("exp");
+        table.float("exp").defaultTo(0.0);
         table.string("email");
         table.string("password");
     }) : null;

@@ -18,6 +18,20 @@ router.get("/byUser/:id", async (req, res, next) => {
     E.sendJson(res, foundUser);
 });
 
+router.get("/byFirebase/:id", async (req, res, next) => {
+    const firebaseId = req.params.id;
+    if (!firebaseId) {
+        E.sendError(res, E.BadRequest, "User id not found in request");
+        return;
+    }
+    const foundUser = await userService
+        .getUserByFirebaseId(firebaseId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, foundUser);
+});
+
 router.get("/", async (req, res, next) => {
     const users = await userService
         .getUsers()
@@ -27,6 +41,14 @@ router.get("/", async (req, res, next) => {
     E.sendJson(res, users);
 });
 
+/**
+ * Creates a new user row in the user table
+ * 
+ * @param {object} newUser in req.body
+ * @returns {number} 400 if newUser is not found in the request body
+ * @returns {number} 500 if any error has occured while saving in the db
+ * @returns {number} 200 along with the saved user data if everything is OK
+ */
 router.post("/new", async (req, res, next) => {
     const newUser = req.body;
     if (!newUser || U.isEmpty(newUser)) {
@@ -36,7 +58,7 @@ router.post("/new", async (req, res, next) => {
     let createdUser = await userService
         .insertUser(newUser)
         .catch(e => {
-            E.sendError(res, e.code, e.message);
+            E.sendError(res, e.code ?? E.InternalServerError, e.message);
         });
     
     E.sendJson(res, createdUser);

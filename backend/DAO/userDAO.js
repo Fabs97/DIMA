@@ -17,6 +17,20 @@ module.exports = {
             });
         return res;
     },
+    getUserByFirebaseId: async (id) => {
+        let res = await db(T.userTable)
+            .select()
+            .where("firebaseId", id)
+            .first()
+            .catch(e => {
+                if (e) {
+                    console.error(`Message: ${e.message}`);
+                    console.error(`Stack: ${e.stack}`);
+                    throw new E.CustomError(E.NotFound, `No available user with firebaseId ${id} in the database`);
+                }
+            });
+        return res;
+    },
     getUsers: async (fields = []) => {
         const errFun = e => {
             if (e) {
