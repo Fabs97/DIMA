@@ -1,5 +1,5 @@
 import 'package:citylife/models/cl_user.dart';
-import 'package:citylife/services/api_service.dart';
+import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -55,7 +55,7 @@ class AuthService {
       credential = await _authInstance.createUserWithEmailAndPassword(
           email: email, password: password);
       _authUser = credential.additionalUserInfo.isNewUser
-          ? await APIService.route(ENDPOINTS.User, "/new",
+          ? await UserAPIService.route("/new",
               body: CLUser(
                 email: email,
                 password: password,
@@ -100,8 +100,7 @@ class AuthService {
   }
 
   Future<CLUser> _getUserInfoByFirebaseId(String firebaseId) async {
-    return await APIService.route(
-      ENDPOINTS.User,
+    return await UserAPIService.route(
       "/byFirebase",
       urlArgs: firebaseId,
     );
@@ -217,7 +216,7 @@ class AuthService {
     UserCredential credential =
         await _authInstance.signInWithCredential(authCredential);
     _authUser = credential.additionalUserInfo.isNewUser
-        ? await APIService.route(ENDPOINTS.User, "/new",
+        ? await UserAPIService.route("/new",
             body: CLUser(
               email: credential.user.email,
               name: credential.user.displayName,
