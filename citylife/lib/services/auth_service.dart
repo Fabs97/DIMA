@@ -8,6 +8,7 @@ import 'package:github_sign_in/github_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' show Client;
 
 class AuthException implements Exception {
   final String message;
@@ -31,17 +32,16 @@ class AuthStatus with ChangeNotifier {
 }
 
 class AuthService {
-  static final AuthService _singleton = AuthService._internal();
-  AuthService._internal();
-  factory AuthService() {
-    return _singleton;
-  }
-
-  final FirebaseAuth _authInstance = FirebaseAuth.instance;
+  FirebaseAuth auth;
+  final Client client;
 
   CLUser _authUser;
 
   CLUser get authUser => _authUser;
+
+  AuthService.instance({this.auth, this.client}) {
+    if (this.auth == null) this.auth = FirebaseAuth.instance;
+  }
 
   /// Tries to sign in a new user, but if there's already a user with the provided
   /// email and password, then tries to login in with the given credentials.
@@ -52,7 +52,7 @@ class AuthService {
       String email, String password) async {
     UserCredential credential;
     try {
-      credential = await _authInstance.createUserWithEmailAndPassword(
+      credential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       _authUser = credential.additionalUserInfo.isNewUser
           ? await UserAPIService.route("/new",
@@ -60,39 +60,32 @@ class AuthService {
                 email: email,
                 password: password,
                 firebaseId: credential.user.uid,
-              ))
+              ),
+              client: client)
           : await _getUserInfoByFirebaseId(credential.user.uid);
-      credential = await _authInstance.signInWithEmailAndPassword(
+      credential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       return _authUser;
     } on FirebaseAuthException catch (e, sTrace) {
       if (e.code.compareTo("email-already-in-use") == 0) {
         try {
-          credential = await _authInstance.signInWithEmailAndPassword(
+          credential = await auth.signInWithEmailAndPassword(
               email: email, password: password);
           return _getUserInfoByFirebaseId(credential.user.uid);
         } on FirebaseAuthException catch (e) {
           switch (e.code) {
-            case "email-already-in-use":
-              print(
-                  "[AuthService]::signInWithEmailAndPassword - Email $email already in use");
-              throw new AuthException("Email $email already in use");
             case "wrong-password":
               print(
                   "[AuthService]::signInWithEmailAndPassword - Password $password is wrong");
               throw new AuthException("Wrong password");
             default:
-              throw new AuthException(e.message);
+              throw new AuthException(e.message ?? "Error in AuthService");
           }
         } catch (e) {
           print(
               "[AuthService]::signInWithEmailAndPassword - ${e.message}\n$sTrace");
           throw new AuthException("${e.message}");
         }
-      } else {
-        print(
-            "[AuthService]::signInWithEmailAndPassword - ${e.message}\n$sTrace");
-        throw new AuthException("${e.message}");
       }
     } catch (e, sTrace) {
       throw new AuthException("Exception: ${e.message}\nStack Trace: $sTrace");
@@ -103,6 +96,7 @@ class AuthService {
     return await UserAPIService.route(
       "/byFirebase",
       urlArgs: firebaseId,
+      client: client,
     );
   }
 
@@ -150,12 +144,19 @@ class AuthService {
       // Trigger the sign-in flow
       final result = await gitHubSignIn.signIn(context);
 
-      // Create a credential from the access token
-      final AuthCredential githubAuthCredential =
-          GithubAuthProvider.credential(result.token);
+      if (result.status == GitHubSignInResultStatus.ok) {
+        // Create a credential from the access token
+        final AuthCredential githubAuthCredential =
+            GithubAuthProvider.credential(result.token);
 
-      // Once signed in, return the UserCredential
-      return await _socialSignIn(githubAuthCredential);
+        // Once signed in, return the UserCredential
+        return await _socialSignIn(githubAuthCredential);
+      } else {
+        print(
+            "[AuthService]::signInWithGithub - Status not ok: ${result.status}");
+        return null;
+      }
+      
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGitHub - $e\n$sTrace");
       return null;
@@ -213,15 +214,15 @@ class AuthService {
   }
 
   Future<CLUser> _socialSignIn(AuthCredential authCredential) async {
-    UserCredential credential =
-        await _authInstance.signInWithCredential(authCredential);
+    UserCredential credential = await auth.signInWithCredential(authCredential);
     _authUser = credential.additionalUserInfo.isNewUser
         ? await UserAPIService.route("/new",
             body: CLUser(
               email: credential.user.email,
               name: credential.user.displayName,
               firebaseId: credential.user.uid,
-            ))
+            ),
+            client: client)
         : await _getUserInfoByFirebaseId(credential.user.uid);
     return _authUser;
   }
@@ -229,6 +230,6 @@ class AuthService {
   void signOut(BuildContext context) async {
     final AuthStatus authStatus = context.read<AuthStatus>();
     authStatus.updateStatus(Status.Unauth);
-    await _authInstance.signOut();
+    await auth.signOut();
   }
 }

@@ -19,7 +19,7 @@ class CityLife extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(
-          create: (context) => AuthService(),
+          create: (context) => AuthService.instance(),
         ),
         ChangeNotifierProvider.value(value: AuthStatus())
       ],

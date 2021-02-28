@@ -2,30 +2,20 @@ import 'dart:convert';
 
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 
+import '../../utils/dbMock.dart';
+
 main() {
-  group("POST new User call", () {
+  group("POST new User call -", () {
     final String route = "/new";
-    final userSent = CLUser(
-        firebaseId: "testFirebaseId",
-        tech: false,
-        name: "Fabrizio Casali",
-        exp: 200,
-        email: "test@test.test",
-        password: "testingTheTest");
-    test("returns a CLUser if the response code is 200", () async {
-      final userReceived = userSent;
-      userReceived.id = 1;
 
-      final mockClient = MockClient((request) async {
-        return Response(jsonEncode(userReceived), 200);
-      });
+    test("returns a CLUser if the response code is 200", () async {
       dynamic result =
-          await UserAPIService.route(route, body: userSent, client: mockClient);
+          await UserAPIService.route(route,
+          body: DBMock.userWithoutId, client: DBMock.userMockClient);
       expect(result, isA<CLUser>());
     });
     test("Throws an Exception if 404 as response", () {
@@ -35,7 +25,7 @@ main() {
 
       expect(
           () async => await UserAPIService.route(route,
-              body: userSent, client: mockClient),
+              body: DBMock.userWithoutId, client: mockClient),
           throwsA(predicate((e) => e is UserAPIException)));
     });
 
@@ -46,27 +36,17 @@ main() {
 
       expect(
           () async => await UserAPIService.route(route,
-              body: userSent, client: mockClient),
+              body: DBMock.userWithoutId, client: mockClient),
           throwsA(predicate((e) => e is UserAPIException)));
     });
   });
 
-  group("GET by FirebaseId", () {
+  group("GET by FirebaseId -", () {
     final String route = "/byFirebase";
-    final user = CLUser(
-        id: 2,
-        firebaseId: "testFirebaseId",
-        tech: false,
-        name: "Fabrizio Casali",
-        exp: 200,
-        email: "test@test.test",
-        password: "testingTheTest");
     test("returns a CLUser if the response code is 200", () async {
-      final mockClient = MockClient((request) async {
-        return Response(jsonEncode(user), 200);
-      });
+
       dynamic result = await UserAPIService.route(route,
-          urlArgs: "testFirebaseId", client: mockClient);
+          urlArgs: "testFirebaseId", client: DBMock.userMockClient);
       expect(result, isA<CLUser>());
     });
 
@@ -93,8 +73,8 @@ main() {
     });
   });
 
-  group("Other Tests - ", () {
-    test("defaul switch route option", () {
+  group("Other Tests -", () {
+    test("default switch route option", () {
       expect(
           () async => await UserAPIService.route("testDefaultRoute"),
           throwsA(predicate((e) =>
