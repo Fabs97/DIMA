@@ -20,9 +20,9 @@ class CLUser {
   CLUser.fromJson(Map<String, dynamic> json) {
     this.id = json["id"] as int;
     this.firebaseId = json["firebaseId"] as String;
-    this.tech = json["tech"] as bool;
+    this.tech = json["tech"] as bool ?? false;
     this.name = json["name"] as String;
-    this.exp = json["exp"] as double;
+    this.exp = (json["exp"]).toDouble() ?? 0.0;
     this.email = json["email"] as String;
     this.password = json["password"] as String;
   }
@@ -31,9 +31,9 @@ class CLUser {
     return {
       "id": this.id,
       "firebaseId": this.firebaseId,
-      "tech": this.tech,
+      "tech": this.tech ?? false,
       "name": this.name,
-      "exp": this.exp,
+      "exp": this.exp ?? 0.0,
       "email": this.email,
       "password": this.password,
     };
