@@ -37,10 +37,17 @@ class AuthService {
 
   CLUser _authUser;
 
-  CLUser get authUser => _authUser;
+  CLUser get authUser {
+    return _authUser;
+  }
 
   AuthService.instance({this.auth, this.client}) {
     if (this.auth == null) this.auth = FirebaseAuth.instance;
+    try {
+      getUserInformation();
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// Tries to sign in a new user, but if there's already a user with the provided
@@ -156,7 +163,6 @@ class AuthService {
             "[AuthService]::signInWithGithub - Status not ok: ${result.status}");
         return null;
       }
-      
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGitHub - $e\n$sTrace");
       return null;
@@ -231,5 +237,13 @@ class AuthService {
     final AuthStatus authStatus = context.read<AuthStatus>();
     authStatus.updateStatus(Status.Unauth);
     await auth.signOut();
+  }
+
+  void getUserInformation() {
+    _getUserInfoByFirebaseId(auth.currentUser.uid).then((userInfo) {
+      if (userInfo != null) {
+        _authUser = userInfo;
+      }
+    });
   }
 }

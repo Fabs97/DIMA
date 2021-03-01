@@ -28,6 +28,7 @@ class CityLife extends StatelessWidget {
           title: 'CityLife',
           theme: T.themeData,
           home: Authenticate(),
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );
@@ -40,6 +41,10 @@ class Authenticate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthStatus authStatus = context.watch<AuthStatus>();
+    if (authStatus.status == Status.Auth) {
+      final AuthService authService = context.read<AuthService>();
+      authService.getUserInformation();
+    }
     return authStatus.status == Status.Unauth ? Login() : HomePage();
   }
 }

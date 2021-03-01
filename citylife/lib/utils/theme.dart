@@ -44,4 +44,14 @@ class T {
       floatingLabelBehavior: FloatingLabelBehavior.never,
     ),
   );
+
+  static final IconThemeData unselectedBottomNavBarIconTheme = IconThemeData(
+    color: Colors.black,
+    opacity: .54,
+  );
+
+  static final IconThemeData selectedBottomNavBarIconTheme = IconThemeData(
+    color: Colors.white,
+    opacity: .8,
+  );
 }

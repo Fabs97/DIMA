@@ -1,10 +1,6 @@
-import 'dart:collection';
-
-import 'package:citylife/services/auth_service.dart';
-import 'package:citylife/widgets/bottomAppbar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:provider/provider.dart';
+import 'package:citylife/screens/home/home.dart';
+import 'package:citylife/screens/profile/profile.dart';
+import 'package:citylife/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,76 +11,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  LatLng _initialCameraPosition = LatLng(20.5937, 78.9629);
-  GoogleMapController _controller;
-  Location location = new Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
-  Set<Circle> circles;
+  final List<Widget> pages = [
+    Home(),
+    Placeholder(),
+    Placeholder(),
+    Placeholder(),
+    Profile(),
+  ];
+  int _selectedItem = 0;
 
-  void _onMapCreated(GoogleMapController _cntlr) {
-    _controller = _cntlr;
-    location.onLocationChanged.listen((l) {
-      _controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
-        ),
-      );
-    });
-  }
+  final List<IconData> icons = [
+    Icons.map_outlined,
+    Icons.list_sharp,
+    Icons.add_circle_outline,
+    Icons.star_outline,
+    Icons.person_outline,
+  ];
 
   @override
-  void initState() {
-    super.initState();
-    _checkLocationPermission();
-  }
-
-  void _checkLocationPermission() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-      _locationData = await location.getLocation();
-    }
-    circles = Set.from([
-      Circle(
-          circleId: CircleId("myCircle"),
-          radius: 100000,
-          center: LatLng(_locationData.latitude, _locationData.longitude),
-          fillColor: Color.fromRGBO(171, 39, 133, 0.1),
-          strokeColor: Color.fromRGBO(171, 39, 133, 0.5),
-          onTap: () {
-            print('circle pressed');
-          })
-    ]);
-  }
-
   Widget build(BuildContext context) {
-    final _authInstance = context.read<AuthService>();
     return Scaffold(
-        bottomNavigationBar: CustomBottomAppBar.createBottomBar(),
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(children: [
-              GoogleMap(
-                initialCameraPosition:
-                    CameraPosition(target: _initialCameraPosition),
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                onMapCreated: _onMapCreated,
-                circles: circles,
-              ),
-            ])));
+      bottomNavigationBar: buildBottomNavigationBar(),
+      body: pages[_selectedItem],
+    );
+  }
+
+  Widget buildBottomNavigationBar() {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: T.primaryColor,
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _selectedItem,
+        onTap: (index) {
+          setState(() {
+            _selectedItem = index;
+          });
+        },
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedIconTheme: T.selectedBottomNavBarIconTheme,
+        unselectedIconTheme: T.unselectedBottomNavBarIconTheme,
+        iconSize: 39,
+        items: icons.map((icon) {
+          return BottomNavigationBarItem(
+            icon: Icon(
+              icon,
+              size: 39,
+            ),
+            label: "",
+          );
+        }).toList(),
+      ),
+    );
   }
 }
