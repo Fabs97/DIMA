@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         showUnselectedLabels: false,
         selectedIconTheme: T.selectedBottomNavBarIconTheme,
         unselectedIconTheme: T.unselectedBottomNavBarIconTheme,
+        type: BottomNavigationBarType.fixed,
         iconSize: 39,
         items: icons.map((icon) {
           return BottomNavigationBarItem(
