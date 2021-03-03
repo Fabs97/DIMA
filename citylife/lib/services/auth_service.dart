@@ -1,5 +1,6 @@
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
+import 'package:citylife/services/shared_pref_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' show Client;
+import 'package:citylife/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthException implements Exception {
   final String message;
@@ -58,53 +61,72 @@ class AuthService {
   Future<CLUser> signInWithEmailAndPassword(
       String email, String password) async {
     UserCredential credential;
+    final SharedPrefService _prefService =
+        await SharedPrefService.getInstance();
     try {
-      credential = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      _authUser = credential.additionalUserInfo.isNewUser
-          ? await UserAPIService.route("/new",
-              body: CLUser(
-                email: email,
-                password: password,
-                firebaseId: credential.user.uid,
-              ),
-              client: client)
-          : await _getUserInfoByFirebaseId(credential.user.uid);
-      credential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return _authUser;
+      final CLUser clUser = checkUserInfoPersistence(_prefService);
+      if (clUser != null) {
+        // I already have something in the phone's memory, just sign in
+        credential = await auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        _authUser = clUser;
+        return clUser;
+      } else {
+        credential = await auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+      }
     } on FirebaseAuthException catch (e, sTrace) {
-      if (e.code.compareTo("email-already-in-use") == 0) {
-        try {
+      switch (e.code) {
+        case "wrong-password":
+          print(
+              "[AuthService]::signInWithEmailAndPassword - Password $password is wrong");
+          throw new AuthException("Wrong password");
+        case "email-already-in-use":
           credential = await auth.signInWithEmailAndPassword(
               email: email, password: password);
-          return _getUserInfoByFirebaseId(credential.user.uid);
-        } on FirebaseAuthException catch (e) {
-          switch (e.code) {
-            case "wrong-password":
-              print(
-                  "[AuthService]::signInWithEmailAndPassword - Password $password is wrong");
-              throw new AuthException("Wrong password");
-            default:
-              throw new AuthException(e.message ?? "Error in AuthService");
-          }
-        } catch (e) {
-          print(
-              "[AuthService]::signInWithEmailAndPassword - ${e.message}\n$sTrace");
-          throw new AuthException("${e.message}");
-        }
+          print("!");
+          break;
+        default:
+          print("diocane");
+          throw new AuthException(e.message ?? "Error in AuthService");
       }
     } catch (e, sTrace) {
+      print("diocane");
       throw new AuthException("Exception: ${e.message}\nStack Trace: $sTrace");
+    } finally {
+      if (credential.additionalUserInfo.isNewUser) {
+        _authUser = await UserAPIService.route("/new",
+            body: CLUser(
+              email: email,
+              password: password,
+              firebaseId: credential.user.uid,
+            ),
+            client: client);
+        if (_authUser != null)
+          _prefService.setUserWith(spUserInfoKey, _authUser);
+      } else {
+        _authUser = await _getUserInfoByFirebaseId(credential.user.uid);
+      }
+
+      credential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
     }
+    return _authUser;
+  }
+
+  CLUser checkUserInfoPersistence(SharedPrefService service) {
+    return service.getUserBy(spUserInfoKey);
   }
 
   Future<CLUser> _getUserInfoByFirebaseId(String firebaseId) async {
-    return await UserAPIService.route(
+    final prefService = await SharedPrefService.getInstance();
+    final user = await UserAPIService.route(
       "/byFirebase",
       urlArgs: firebaseId,
       client: client,
     );
+    prefService.setUserWith(spUserInfoKey, user);
+    return user;
   }
 
   Future<CLUser> signInWithGoogle() async {
@@ -234,9 +256,16 @@ class AuthService {
   }
 
   void signOut(BuildContext context) async {
-    final AuthStatus authStatus = context.read<AuthStatus>();
-    authStatus.updateStatus(Status.Unauth);
-    await auth.signOut();
+    final SharedPrefService _prefService =
+        await SharedPrefService.getInstance();
+    if (await _prefService.deleteByKey(spUserInfoKey)) {
+      final AuthStatus authStatus = context.read<AuthStatus>();
+      authStatus.updateStatus(Status.Unauth);
+
+      await auth.signOut();
+    } else {
+      throw new AuthException("Error while signing out, please try again");
+    }
   }
 
   void getUserInformation() {
