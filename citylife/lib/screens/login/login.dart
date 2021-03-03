@@ -25,7 +25,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final AuthService auth = context.read<AuthService>();
-    final AuthStatus authStatus = context.read<AuthStatus>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -112,9 +111,6 @@ class _LoginState extends State<Login> {
                                 () async {
                                   try {
                                     CLUser u = await auth.signInWithGoogle();
-                                    if (u != null) {
-                                      authStatus.updateStatus(Status.Auth);
-                                    }
                                   } catch (e) {
                                     //TODO: implement catch statement
                                   }
@@ -125,9 +121,6 @@ class _LoginState extends State<Login> {
                                 () async {
                                   try {
                                     CLUser u = await auth.signInWithTwitter();
-                                    if (u != null) {
-                                      authStatus.updateStatus(Status.Auth);
-                                    }
                                   } catch (e) {
                                     //TODO: implement catch statement
                                   }
@@ -139,9 +132,6 @@ class _LoginState extends State<Login> {
                                   try {
                                     CLUser u =
                                         await auth.signInWithGitHub(context);
-                                    if (u != null) {
-                                      authStatus.updateStatus(Status.Auth);
-                                    }
                                   } catch (e) {
                                     //TODO: implement catch statement
                                   }
@@ -152,9 +142,6 @@ class _LoginState extends State<Login> {
                                 () async {
                                   try {
                                     CLUser u = await auth.signInWithFacebook();
-                                    if (u != null) {
-                                      authStatus.updateStatus(Status.Auth);
-                                    }
                                   } catch (e) {
                                     //TODO: implement catch statement
                                   }
@@ -169,9 +156,6 @@ class _LoginState extends State<Login> {
                                 CLUser u =
                                     await auth.signInWithEmailAndPassword(
                                         _email, _password);
-                                if (u != null) {
-                                  authStatus.updateStatus(Status.Auth);
-                                }
                               } catch (e) {
                                 //TODO: implement catch statement
                               }

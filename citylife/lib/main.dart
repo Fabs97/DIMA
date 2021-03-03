@@ -1,3 +1,4 @@
+import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/login/login.dart';
 import 'package:citylife/services/auth_service.dart';
@@ -14,18 +15,18 @@ void main() async {
 }
 
 class CityLife extends StatelessWidget {
-  // This widget is the root of your application.
+  CLUser user;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthService>(
+        ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService.instance(),
         ),
         FutureProvider.value(
           value: SharedPrefService.getInstance(),
         ),
-        ChangeNotifierProvider.value(value: AuthStatus())
       ],
       child: NotificationListener(
         child: MaterialApp(
@@ -40,15 +41,15 @@ class CityLife extends StatelessWidget {
 }
 
 class Authenticate extends StatelessWidget {
-  const Authenticate({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final AuthStatus authStatus = context.watch<AuthStatus>();
-    if (authStatus.status == Status.Auth) {
-      final AuthService authService = context.read<AuthService>();
-      authService.getUserInformation();
-    }
-    return authStatus.status == Status.Unauth ? Login() : HomePage();
+    final AuthService authService = context.watch<AuthService>();
+
+    return FutureBuilder(
+        future: authService.checkUserInfoPersistence(),
+        initialData: null,
+        builder: (context, snapshot) {
+          return snapshot.data == null ? Login() : HomePage();
+        });
   }
 }
