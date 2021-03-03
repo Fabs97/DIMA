@@ -23,11 +23,13 @@ class AuthService with ChangeNotifier {
 
   CLUser _authUser;
 
+  bool get isAuthenticated => this._authUser != null;
+
   CLUser get authUser {
     return _authUser;
   }
 
-  void set authUser(CLUser user) {
+  set authUser(CLUser user) {
     _authUser = user;
     notifyListeners();
   }
@@ -248,6 +250,7 @@ class AuthService with ChangeNotifier {
     final SharedPrefService _prefService =
         await SharedPrefService.getInstance();
     if (await _prefService.deleteByKey(spUserInfoKey)) {
+      authUser = null;
       await auth.signOut();
     } else {
       throw new AuthException("Error while signing out, please try again");

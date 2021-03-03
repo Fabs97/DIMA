@@ -18,40 +18,36 @@ class _ProfileState extends State<Profile> {
     final AuthService auth = context.watch<AuthService>();
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: auth.authUser != null
-          ? LayoutBuilder(
-              builder: (context, constraints) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: T.backgroundColor,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        buildImageAvatar(
-                            constraints.maxWidth, constraints.maxHeight / 4),
-                        // buildExpBar(auth.authUser),
-                        buildProfileForm(auth.authUser),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: ElevatedButton(
-                            child: Text("Sign out"),
-                            onPressed: () => auth.signOut(context),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            )
-          : Center(
-              child: CircularProgressIndicator(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: T.backgroundColor,
             ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildImageAvatar(
+                      constraints.maxWidth, constraints.maxHeight / 4),
+                  buildExpBar(auth.authUser),
+                  buildProfileForm(auth.authUser),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: Text("Sign out"),
+                      onPressed: () => auth.signOut(context),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -80,15 +76,16 @@ class _ProfileState extends State<Profile> {
           ),
         ),
         TextFormField(
-          enabled: false,
+          // enabled: false,
           initialValue: "Am I a technical user?",
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.work_outline),
             suffix: Switch(
               value: user?.tech ?? false,
-              onChanged: (value) => setState(() {
-                user.tech = value;
-              }),
+              onChanged: (val) {},
+              // onChanged: (value) => setState(() {
+              //   user.tech = value;
+              // }),
             ),
           ),
         )

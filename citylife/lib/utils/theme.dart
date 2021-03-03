@@ -33,6 +33,10 @@ class T {
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(color: Colors.grey, width: 2.0),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(color: Colors.grey, width: 2.0),

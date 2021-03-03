@@ -12,16 +12,22 @@ import '../../utils/firebaseMock.dart';
 main() {
   setupFirebaseAuthMocks();
   Firebase.initializeApp();
+
+  AuthService _authInstance;
+
   final login = MaterialApp(
     home: MultiProvider(
       providers: [
         // This is not used, but it is required as we need to completely mock the application
         Provider<AuthService>(
-          create: (context) => AuthService.instance(),
+          create: (context) {
+            _authInstance = AuthService.instance();
+            return _authInstance;
+          },
         ),
-        ChangeNotifierProvider.value(
-          value: AuthStatus(),
-        )
+        Provider<bool>.value(
+          value: _authInstance.isAuthenticated,
+        ),
       ],
       child: Login(),
     ),

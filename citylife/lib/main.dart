@@ -7,6 +7,7 @@ import 'package:citylife/utils/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:async/async.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,18 +16,15 @@ void main() async {
 }
 
 class CityLife extends StatelessWidget {
-  CLUser user;
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthService>(
-          create: (context) => AuthService.instance(),
-        ),
         FutureProvider.value(
           value: SharedPrefService.getInstance(),
         ),
+        ChangeNotifierProvider<AuthService>(
+            create: (_) => AuthService.instance()),
       ],
       child: NotificationListener(
         child: MaterialApp(
@@ -40,16 +38,37 @@ class CityLife extends StatelessWidget {
   }
 }
 
-class Authenticate extends StatelessWidget {
+class Authenticate extends StatefulWidget {
+  @override
+  _AuthenticateState createState() => _AuthenticateState();
+}
+
+class _AuthenticateState extends State<Authenticate> {
+  bool _isLoadingInfo = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  void _init() async {
+    final AuthService authService = context.read<AuthService>();
+
+    authService.checkUserInfoPersistence().then(
+          (value) => setState(
+            () => _isLoadingInfo = false,
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = context.watch<AuthService>();
-
-    return FutureBuilder(
-        future: authService.checkUserInfoPersistence(),
-        initialData: null,
-        builder: (context, snapshot) {
-          return snapshot.data == null ? Login() : HomePage();
-        });
+    final auth = context.watch<AuthService>();
+    return _isLoadingInfo
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : (!auth.isAuthenticated ? Login() : HomePage());
   }
 }
