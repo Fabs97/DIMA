@@ -19,7 +19,7 @@ class AuthException implements Exception {
 enum Status { Auth, Unauth }
 
 class AuthStatus with ChangeNotifier {
-  Status _status;
+  Status _status = Status.Unauth;
 
   Status get status {
     return _status;
