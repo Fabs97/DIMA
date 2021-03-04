@@ -11,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  GoogleMap _map;
   LatLng _center = LatLng(20.5937, 78.9629);
   GoogleMapController _controller;
   Location _location = new Location();
@@ -73,7 +72,7 @@ class _HomeState extends State<Home> {
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
-          _map = GoogleMap(
+          GoogleMap(
             initialCameraPosition: CameraPosition(
               target: _center,
               zoom: _zoom,
