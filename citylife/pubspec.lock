@@ -331,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.11"
+  geocoder:
+    dependency: "direct main"
+    description:
+      name: geocoder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   github_sign_in:
     dependency: "direct main"
     description:
@@ -686,6 +693,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  steps_indicator:
+    dependency: "direct main"
+    description:
+      name: steps_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   stream_channel:
     dependency: transitive
     description:
