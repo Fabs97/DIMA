@@ -25,9 +25,4 @@ class Level {
   final double maxExp;
 
   Level(this.number, this.maxExp);
-
-  @override
-  String toString() {
-    return "LVL. ${this.number}";
-  }
 }

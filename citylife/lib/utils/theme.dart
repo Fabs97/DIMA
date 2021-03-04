@@ -21,6 +21,7 @@ class T {
 
   static final Color primaryColor = Color(0xFF4B9F95);
   static final Color textLightColor = Color(0xFFFFFFDD);
+  static final Color textDarkColor = Color(0xFF868686);
   static final Color textFieldIconColor = Color(0xFF5DB075);
 
   static final ThemeData themeData = ThemeData(

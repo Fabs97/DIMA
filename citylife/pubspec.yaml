@@ -54,6 +54,10 @@ flutter:
     - assets/images/Twitter_Logo.png
     - assets/images/GitHub_Logo.png
     - assets/images/Facebook_Logo.png
+    - assets/images/avatar_1.png
+    - assets/images/avatar_2.png
+    - assets/images/avatar_3.png
+    - assets/images/avatar_4.png
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

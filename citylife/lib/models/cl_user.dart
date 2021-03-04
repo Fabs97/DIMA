@@ -6,6 +6,7 @@ class CLUser {
   double exp;
   String email;
   String password;
+  String avatar;
 
   CLUser({
     this.id,
@@ -15,6 +16,7 @@ class CLUser {
     this.exp,
     this.email,
     this.password,
+    this.avatar,
   });
 
   CLUser.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class CLUser {
     this.exp = (json["exp"]).toDouble() ?? 0.0;
     this.email = json["email"] as String;
     this.password = json["password"] as String;
+    this.avatar = json["avatar"] as String;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class CLUser {
       "exp": this.exp ?? 0.0,
       "email": this.email,
       "password": this.password,
+      "avatar": this.avatar,
     };
   }
 }

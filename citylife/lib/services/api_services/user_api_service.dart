@@ -16,6 +16,8 @@ class UserAPIService {
         return _postNewUser(subRoute, body);
       case "/byFirebase":
         return _getByFirebaseId(subRoute, urlArgs);
+      case "/update":
+        return _postUserUpdate(subRoute, body);
       default:
         throw UserAPIException("Error in User API Service");
     }
@@ -35,7 +37,8 @@ class UserAPIService {
       case 500:
       default:
         throw new UserAPIException(
-            response.body?.toString() ?? "Error in User API Service");
+            response.body?.toString() ??
+            "Error in User API Service with code ${response.statusCode}");
     }
   }
 
@@ -52,7 +55,25 @@ class UserAPIService {
       case 500:
       default:
         throw new UserAPIException(
-            response.body?.toString() ?? "Error in User API Service");
+            response.body?.toString() ??
+            "Error in User API Service with code ${response.statusCode}");
+    }
+  }
+
+  static Future<CLUser> _postUserUpdate(String subRoute, CLUser user) async {
+    Response response = await _client.post(
+      APIENDPOINT + userRoute + subRoute,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(user.toJson()),
+    );
+    switch (response.statusCode) {
+      case 200:
+        return CLUser.fromJson(jsonDecode(response.body));
+      case 404:
+      case 500:
+      default:
+        throw new UserAPIException(response.body?.toString() ??
+            "Error in User API Service with code ${response.statusCode}");
     }
   }
 }

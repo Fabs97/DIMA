@@ -197,7 +197,7 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
-        shadowColor: Colors.black.withAlpha((255 * .25).toInt()),
+        shadowColor: Colors.black.withOpacity(.25),
       ),
     );
   }

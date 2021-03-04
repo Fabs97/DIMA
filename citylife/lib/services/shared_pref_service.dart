@@ -34,7 +34,8 @@ class SharedPrefService {
   Future<bool> setUserWith(String key, CLUser user) async {
     try {
       String userString = jsonEncode(user.toJson());
-      return await _setStringWithKey(key, userString);
+      final res = await _setStringWithKey(key, userString);
+      return res;
     } catch (e, sTrace) {
       print("[SharedPrefService]::setUserWith - $e\n$sTrace");
       return false;
