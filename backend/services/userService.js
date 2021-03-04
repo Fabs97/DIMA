@@ -20,5 +20,8 @@ module.exports = userService = {
         } else {
             return await userDAO.insertUser(user);
         }
+    },
+    updateUser: async (user) => {
+        return await userDAO.updateUser(user);
     }
 };

@@ -41,6 +41,20 @@ router.get("/", async (req, res, next) => {
     E.sendJson(res, users);
 });
 
+router.post("/update", async (req, res, next) => {
+    const user = req.body;
+    if (!user) {
+        E.sendError(res, E.BadRequest, "User not found in request body");
+        return;
+    }
+    const userUpdated = await userService
+        .updateUser(user)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, userUpdated);
+});
+
 /**
  * Creates a new user row in the user table
  * 

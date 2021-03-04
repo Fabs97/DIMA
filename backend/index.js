@@ -6,7 +6,7 @@ const cors = require("cors");
 const port = process.env.PORT || 3000;
 const L = require("./utils/logger");
 
-app.use(cors());1
+app.use(cors());
 
 app.use("/apis", swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json());

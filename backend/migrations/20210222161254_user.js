@@ -11,6 +11,7 @@ exports.up = async function (knex) {
         table.float("exp").defaultTo(0.0);
         table.string("email");
         table.string("password");
+        table.string("avatar").defaultTo("avatar_1");
     }) : null;
 };
 

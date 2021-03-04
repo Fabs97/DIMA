@@ -61,10 +61,22 @@ module.exports = {
                 email: user.email,
                 password: user.password,
                 name: user.name ?? user.email.split("@")[0], 
-            }, ["id", "firebaseId", "tech", "exp", "email", "name"])
+            }, ["id", "firebaseId", "tech", "exp", "email", "name", "avatar"])
             .catch(e => {
                 if (e) {
                     throw new E.CustomError(E.InternalServerError, "Something went wrong while trying to save the user");
+                }
+            });
+        return res[0];
+    },
+    updateUser: async (user) => {
+        let res = await db(T.userTable)
+            .where("id", user.id)
+            .update(user)
+            .returning("*")
+            .catch(e => {
+                if (e) {
+                    throw new E.CustomError(E.NotFound, "User not found");
                 }
             });
         return res[0];
