@@ -23,24 +23,32 @@ class T {
   static final Color textLightColor = Color(0xFFFFFFDD);
   static final Color textDarkColor = Color(0xFF868686);
   static final Color textFieldIconColor = Color(0xFF5DB075);
+  static final Color structuralColor = Color(0xFF247772);
+  static final Color emotionalColor = Color(0xFF16A9A0);
 
   static final ThemeData themeData = ThemeData(
     inputDecorationTheme: InputDecorationTheme(
-      labelStyle: TextStyle(
-        color: Colors.grey[400],
+      hintStyle: TextStyle(
+        color: T.textDarkColor,
+        fontSize: 16,
       ),
-      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
+      labelStyle: TextStyle(
+        color: T.textDarkColor,
+        fontSize: 16,
+      ),
+      fillColor: Colors.grey[100],
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.grey, width: 2.0),
+        borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.grey, width: 2.0),
+        borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
