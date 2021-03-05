@@ -18,8 +18,6 @@ class _LittleMapState extends State<LittleMap> {
   PermissionStatus _permissionGranted;
   LocationData _locationData;
   double _zoom = 15;
-  var _address;
-  var _first;
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
@@ -76,7 +74,6 @@ class _LittleMapState extends State<LittleMap> {
   @override
   Widget build(BuildContext context) {
     final structuralImpression = context.watch<CLImpression>();
-    // TODO: make position dynamic
     structuralImpression.latitude = _center.latitude;
     structuralImpression.latitude = _center.longitude;
     return LayoutBuilder(
