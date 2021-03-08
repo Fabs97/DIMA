@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
@@ -83,6 +85,40 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ),
                                     Text("Am I a technical user?"),
+                                    Transform.rotate(
+                                      angle: pi,
+                                      child: GestureDetector(
+                                        onTap: () => showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                              'What do you mean by "technical user"?',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content: Text(
+                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet dignissim eros. Ut hendrerit lacinia velit, nec lacinia risus ornare id. Etiam arcu dolor, finibus quis fringilla id, pretium dignissim nisl. Curabitur nibh justo, finibus sed sem eget, blandit feugiat elit. Suspendisse tincidunt luctus nulla, eu elementum risus luctus vitae. Etiam feugiat ut lacus ac consequat. Vestibulum in leo varius, dictum lacus non, luctus velit."),
+                                            actions: [
+                                              ElevatedButton(
+                                                child: Text("Close"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 15.0,
+                                            right: 5.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.error_outline_rounded,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     Spacer(),
                                     Padding(
                                       padding: EdgeInsets.only(right: 8.0),
