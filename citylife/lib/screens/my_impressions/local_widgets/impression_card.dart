@@ -1,8 +1,9 @@
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/utils/emotional_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:citylife/utils/theme.dart';
-
+import 'package:intl/intl.dart';
 
 class ImpressionCard extends StatelessWidget {
   final dynamic impression;
@@ -52,7 +53,10 @@ class ImpressionCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
-                          isStructural ? "Lamplight" : "10 May 2020",
+                          isStructural
+                              ? impression.component
+                              : DateFormat.yMMMMd("en_US")
+                                  .format(impression.timeStamp),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: T.textLightColor,
@@ -62,7 +66,7 @@ class ImpressionCard extends StatelessWidget {
                         ),
                         isStructural
                             ? Text(
-                                "Broken",
+                                impression.typology,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: T.textLightColor,
@@ -71,10 +75,26 @@ class ImpressionCard extends StatelessWidget {
                                 maxLines: 1,
                               )
                             : Row(
-                                children: [],
+                                children: [
+                                  impression.cleanness,
+                                  impression.happiness,
+                                  impression.inclusiveness,
+                                  impression.comfort,
+                                  impression.safety,
+                                ]
+                                    .map((e) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 10.0,
+                                          ),
+                                          child: Icon(
+                                            EUtils.getFrom(e),
+                                            color: T.textLightColor,
+                                          ),
+                                        ))
+                                    .toList(),
                               ),
                         Text(
-                          "Piazza Leonardo Da Vinci, Milano, MI, 20131",
+                          impression.placeTag,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: T.textLightColor,
