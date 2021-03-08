@@ -2,6 +2,14 @@ const emotionalDAO = require("../DAO/emotionalDAO");
 const structuralDAO = require("../DAO/structuralDAO")
 
 module.exports = impressionService = {
+    getImpressionsBy: async (userId) => {
+        const emotionals = await emotionalDAO.getEmotionalsByUserId(userId);
+        const structurals = await structuralDAO.getStructuralsByUserId(userId);
+
+        return [...emotionals, ...structurals].sort((a, b) => b.created - a.created);
+    },
+
+
     insertEmotional: async (impression) => {
         return await emotionalDAO.insertEmotional(impression);
     },
