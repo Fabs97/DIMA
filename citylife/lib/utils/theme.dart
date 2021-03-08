@@ -4,7 +4,7 @@ class T {
   static final LinearGradient backgroundColor = LinearGradient(
     colors: [
       Color(0xFF87D0AD),
-      Color(0xFF00A0AA),
+      Color(0xFF00A0AA).withOpacity(0.1),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

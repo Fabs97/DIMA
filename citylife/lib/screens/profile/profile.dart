@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/api_services/user_api_service.dart';
 import 'profile_state.dart';
 
 class Profile extends StatefulWidget {

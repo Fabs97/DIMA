@@ -1,9 +1,8 @@
+import 'package:citylife/models/cl_structural.dart';
 import 'package:flutter/material.dart';
 
 import 'package:citylife/utils/theme.dart';
 
-import '../../../models/cl_emotional.dart';
-import '../../../models/cl_structural.dart';
 
 class ImpressionCard extends StatelessWidget {
   final dynamic impression;
