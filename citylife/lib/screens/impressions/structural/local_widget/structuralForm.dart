@@ -19,10 +19,10 @@ class _StructuralFormState extends State<StructuralForm> {
               width: constraints.maxWidth * 0.9,
               height: constraints.maxHeight,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextFormField(
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.location_city_outlined)),
+                    decoration: InputDecoration(prefixIcon: Icon(Icons.domain)),
                     initialValue: "Component",
                     onFieldSubmitted: (value) {
                       setState(() {
@@ -32,7 +32,7 @@ class _StructuralFormState extends State<StructuralForm> {
                   ),
                   TextFormField(
                     decoration:
-                        InputDecoration(prefixIcon: Icon(Icons.paste_sharp)),
+                        InputDecoration(prefixIcon: Icon(Icons.help_outline)),
                     initialValue: "Pathology",
                     onFieldSubmitted: (value) {
                       setState(() {
