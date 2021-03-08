@@ -18,6 +18,7 @@ dependencies:
   flutter_facebook_auth: ^2.0.2
   flutter_svg: ^0.20.0-nullsafety.3
   flutter_twitter_login: ^1.1.0
+  geocoder: ^0.2.1
   github_sign_in: ^0.0.3
   google_fonts: ^1.1.2
   google_maps_flutter: ^1.1.1
@@ -31,6 +32,7 @@ dependencies:
   shared_preferences: ^2.0.3
   uni_links: ^0.4.0
   url_launcher: ^5.7.10
+  steps_indicator: ^1.2.0
 
 dev_dependencies:
   flutter_test:

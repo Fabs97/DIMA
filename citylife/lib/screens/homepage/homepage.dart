@@ -1,4 +1,5 @@
 import 'package:citylife/screens/home/home.dart';
+import 'package:citylife/screens/impressions/newImpression.dart';
 import 'package:citylife/screens/profile/profile.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     Home(),
     Placeholder(),
-    Placeholder(),
+    NewImpression(),
     Placeholder(),
     Profile(),
   ];
