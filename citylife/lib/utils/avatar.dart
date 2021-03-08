@@ -1,50 +1,39 @@
 import 'package:flutter/material.dart';
 
 class Avatars {
-  static final Map<String, Image> avatars = {
-    "avatar_1": Image.asset(
+  static final Map<String, AssetImage> avatars = {
+    "avatar_1": AssetImage(
       "assets/images/avatar_1.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_2": Image.asset(
+    "avatar_2": AssetImage(
       "assets/images/avatar_2.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_3": Image.asset(
+    "avatar_3": AssetImage(
       "assets/images/avatar_3.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_4": Image.asset(
+    "avatar_4": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_5": Image.asset(
+    "avatar_5": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_6": Image.asset(
+    "avatar_6": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_7": Image.asset(
+    "avatar_7": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_8": Image.asset(
+    "avatar_8": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_9": Image.asset(
+    "avatar_9": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_10": Image.asset(
+    "avatar_10": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
-    "avatar_11": Image.asset(
+    "avatar_11": AssetImage(
       "assets/images/avatar_4.png",
-      fit: BoxFit.cover,
     ),
   };
 }

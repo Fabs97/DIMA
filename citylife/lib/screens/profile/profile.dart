@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/api_services/user_api_service.dart';
+import 'profile_state.dart';
+
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
 
@@ -21,53 +24,128 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final AuthService auth = context.watch<AuthService>();
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: T.backgroundColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildImageAvatar(constraints.maxHeight / 4, context),
-                  Spacer(),
-                  buildExpBar(auth.authUser),
-                  Spacer(),
-                  buildProfileForm(auth.authUser),
-                  Spacer(),
-                  Spacer(),
-                  Spacer(),
-                  Spacer(),
-                  Spacer(),
-                  buildSignOutButton(auth, context, constraints.maxWidth),
-                  Spacer(),
-                ],
+    final CLUser user = auth.authUser;
+
+    return ChangeNotifierProvider(
+      create: (_) => ProfileState(user.name),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: T.backgroundColor,
               ),
-            ),
-          );
-        },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Consumer<ProfileState>(
+                  builder: (context, state, _) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Spacer(),
+                        Spacer(),
+                        buildImageAvatar(constraints.maxHeight / 4, context),
+                        buildExpBar(user),
+                        Spacer(),
+                        Column(
+                          children: [
+                            TextFormField(
+                              initialValue: user.name,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.perm_identity),
+                              ),
+                              onChanged: (v) {
+                                state.editedName = v;
+                                state.hasBeenEdited = true;
+                              },
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 6.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Icon(
+                                        Icons.work_outline,
+                                        // color: T.textFieldIconColor,
+                                      ),
+                                    ),
+                                    Text("Am I a technical user?"),
+                                    Spacer(),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Switch(
+                                        value: user?.tech ?? false,
+                                        // * Disable switch if user is already a techie
+                                        onChanged: !(user?.tech ?? false)
+                                            ? (v) {
+                                                setState(() {
+                                                  state.hasBeenEdited = true;
+                                                  user.tech = v;
+                                                });
+                                              }
+                                            : (v) {},
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Spacer(),
+                        Spacer(),
+                        Spacer(),
+                        Spacer(),
+                        Spacer(),
+                        !state.hasBeenEdited
+                            ? buildButton("Sign out", constraints.maxWidth,
+                                () => auth.signOut(context))
+                            : buildButton("Save profile", constraints.maxWidth,
+                                () async {
+                                user.name = state.editedName;
+
+                                auth.authUser = await UserAPIService.route(
+                                    "/update",
+                                    body: user);
+
+                                state.hasBeenEdited = false;
+                              }),
+                        Spacer(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
-  GradientButton buildSignOutButton(
-      AuthService auth, BuildContext context, double width) {
+  GradientButton buildButton(String title, double width, Function() callback) {
     return GradientButton(
-      callback: () => auth.signOut(context),
+      callback: callback,
       gradient: T.buttonGradient,
       increaseWidthBy: width,
       increaseHeightBy: 20.0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "Sign out",
+          title,
           style: TextStyle(
             color: T.textLightColor,
             fontSize: 16.0,
@@ -86,28 +164,40 @@ class _ProfileState extends State<Profile> {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: GestureDetector(
-          onTap: () async {
-            final newAvatar = await buildAvatarDialog(context);
-            if (newAvatar != null && newAvatar != authService.authUser.avatar) {
-              try {
-                CLUser user = authService.authUser;
-                user.avatar = newAvatar;
+            shape: BoxShape.circle, gradient: T.avatarBorderGradient),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              image: DecorationImage(
+                image: Avatars.avatars[authService.authUser.avatar],
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: GestureDetector(
+              onTap: () async {
+                final newAvatar = await buildAvatarDialog(context);
+                if (newAvatar != null &&
+                    newAvatar != authService.authUser.avatar) {
+                  try {
+                    CLUser user = authService.authUser;
+                    user.avatar = newAvatar;
 
-                await UserAPIService.route("/update", body: user);
-                // If everything went smoothly, then change the avatar
-                final sp = await SharedPrefService.getInstance();
-                await sp.setUserWith(spUserInfoKey, user);
+                    await UserAPIService.route("/update", body: user);
+                    // If everything went smoothly, then change the avatar
+                    final sp = await SharedPrefService.getInstance();
+                    await sp.setUserWith(spUserInfoKey, user);
 
-                authService.authUser = user;
-              } catch (e) {
-                print("[Profile]::buildImageAvatar - $e");
-              }
-            }
-          },
-          child: Avatars.avatars[authService.authUser.avatar],
+                    authService.authUser = user;
+                  } catch (e) {
+                    print("[Profile]::buildImageAvatar - $e");
+                  }
+                }
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -138,7 +228,7 @@ class _ProfileState extends State<Profile> {
                       Navigator.pop(context, entry.key);
                     },
                     child: Container(
-                      child: entry.value,
+                      child: Image(image: entry.value),
                     ),
                   ),
                 );
@@ -185,30 +275,6 @@ class _ProfileState extends State<Profile> {
             valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFCA7F27)),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget buildProfileForm(CLUser user) {
-    return Column(
-      children: [
-        TextFormField(
-          initialValue: user.name,
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.perm_identity),
-          ),
-        ),
-        TextFormField(
-          enabled: false,
-          initialValue: "Am I a technical user?",
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.work_outline),
-            suffix: Switch(
-              value: user?.tech ?? false,
-              onChanged: (val) {},
-            ),
-          ),
-        )
       ],
     );
   }

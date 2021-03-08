@@ -18,6 +18,14 @@ class T {
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
+  static final LinearGradient avatarBorderGradient = LinearGradient(
+    colors: [
+      Colors.amber[200],
+      Colors.yellow[700],
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 
   static final Color primaryColor = Color(0xFF4B9F95);
   static final Color textLightColor = Color(0xFFFFFFDD);
