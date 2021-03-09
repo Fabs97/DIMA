@@ -16,8 +16,26 @@ class ImpressionsAPIService {
     switch (subRoute) {
       case "/byUser":
         return _getImpressions(subRoute, urlArgs);
+      case "/emotional":
+      case "/structural":
+        return _deleteImpression(subRoute, urlArgs);
       default:
         throw ImpressionsAPIException("Error in Impressions API Service");
+    }
+  }
+
+  static Future<List<CLImpression>> _deleteImpression(
+      String subRoute, int id) async {
+    Response response = await _client.delete(
+      APIENDPOINT + impressionRoute + subRoute + "/$id",
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        return _parseImpressionsJson(response.body);
+      default:
+        throw new ImpressionsAPIException(response.body?.toString() ??
+            "Error in Impression API Service with code ${response.statusCode}");
     }
   }
 
@@ -29,25 +47,27 @@ class ImpressionsAPIService {
 
     switch (response.statusCode) {
       case 200:
-        {
-          final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-          var res = parsed
-              .map((e) {
-                if (e.keys.contains("component") ||
-                    e.keys.contains("pathology") ||
-                    e.keys.contains("typology")) {
-                  return CLStructural.fromJson(e);
-                } else
-                  return CLEmotional.fromJson(e);
-              })
-              .cast<CLImpression>()
-              .toList();
-          return res;
-        }
+        return _parseImpressionsJson(response.body);
       default:
         throw new ImpressionsAPIException(response.body?.toString() ??
             "Error in Impression API Service with code ${response.statusCode}");
     }
+  }
+
+  static List<CLImpression> _parseImpressionsJson(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    var res = parsed
+        .map((e) {
+          if (e.keys.contains("component") ||
+              e.keys.contains("pathology") ||
+              e.keys.contains("typology")) {
+            return CLStructural.fromJson(e);
+          } else
+            return CLEmotional.fromJson(e);
+        })
+        .cast<CLImpression>()
+        .toList();
+    return res;
   }
 }
 

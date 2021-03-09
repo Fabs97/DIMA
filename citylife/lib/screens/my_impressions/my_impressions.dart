@@ -3,7 +3,6 @@ import 'package:citylife/screens/my_impressions/my_impressions_state.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:citylife/models/cl_emotional.dart';
 import 'package:provider/provider.dart';
 
 class MyImpressions extends StatelessWidget {
@@ -16,7 +15,7 @@ class MyImpressions extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: LayoutBuilder(
-          builder: (context, constraints) {
+          builder: (_, constraints) {
             return Container(
               decoration: BoxDecoration(
                 gradient: T.backgroundColor,
@@ -27,12 +26,13 @@ class MyImpressions extends StatelessWidget {
                   height: constraints.maxHeight,
                   width: constraints.maxWidth,
                   child: Consumer<MyImpressionsState>(
-                    builder: (context, state, _) {
+                    builder: (_, state, __) {
                       return ListView.builder(
                         itemCount: state.impressions.length,
-                        itemBuilder: (context, index) {
+                        itemBuilder: (_, index) {
                           return ImpressionCard(
-                              impression: state.impressions[index]);
+                            impression: state.impressions[index],
+                          );
                         },
                       );
                     },
