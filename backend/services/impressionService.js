@@ -6,7 +6,7 @@ module.exports = impressionService = {
         const emotionals = await emotionalDAO.getEmotionalsByUserId(userId);
         const structurals = await structuralDAO.getStructuralsByUserId(userId);
 
-        return [...emotionals, ...structurals].sort((a, b) => b.created - a.created);
+        return [...emotionals, ...structurals].sort((a, b) => a.created - b.created);
     },
 
 
@@ -19,6 +19,14 @@ module.exports = impressionService = {
     getEmotionalsByLatLongRange: async (lat, long) => {
         return await emotionalDAO.getEmotionalsByLatLongRange(lat, long);
     },
+    deleteEmotionalById: async (id) => {
+        let emotional = await emotionalDAO.deleteEmotionalById(id);
+        if (emotional != null || emotional != undefined) {
+            return await impressionService.getImpressionsBy(emotional.userId);
+        } else {
+            throw new E.CustomError(E.InternalServerError, "Could not find the userId of the deleted impression");
+        }
+    },
 
 
     insertStructural: async(impression) => {
@@ -29,5 +37,13 @@ module.exports = impressionService = {
     },
     getStructuralsByLatLongRange: async (lat, long) => {
         return await structuralDAO.getStructuralsByLatLongRange(lat, long);
+    },
+    deleteStructuralById: async (id) => {
+        let structural = await structuralDAO.deleteStructuralById(id);
+        if (structural != null || structural != undefined) {
+            return await impressionService.getImpressionsBy(structural.userId);
+        } else {
+            throw new E.CustomError(E.InternalServerError, "Could not find the userId of the deleted impression");
+        }
     },
 }

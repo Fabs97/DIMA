@@ -47,6 +47,26 @@ router.get("/emotional/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req,
     E.sendJson(res, emotionals);
 });
 
+router.delete("/emotional/:id", async (req, res, next) => {
+    const impressionId = req.params.id;
+    let impressions = await impressionService
+        .deleteEmotionalById(impressionId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
+router.delete("/structural/:id", async (req, res, next) => {
+    const impressionId = req.params.id;
+    let impressions = await impressionService
+        .deleteStructuralById(impressionId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
 router.post("/structural/new", async (req, res, next) => {
     const newImpression = req.body;
     if (!newImpression || U.isEmpty(newImpression)) {
