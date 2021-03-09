@@ -2,6 +2,7 @@ import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/login/login.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
+import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class CityLife extends StatelessWidget {
         ),
         ChangeNotifierProvider<AuthService>(
             create: (_) => AuthService.instance()),
+        Provider.value(value: StorageService()),
       ],
       child: NotificationListener(
         child: MaterialApp(
