@@ -13,31 +13,30 @@ class SharedForm extends StatefulWidget {
 }
 
 class _SharedFormState extends State<SharedForm> {
+  bool fromGallery;
   File imageFile;
-  List<File> imageList;
+  List<File> _imageList;
+  List<Widget> gridView;
 
-  _getFromGallery() async {
-    PickedFile pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
-      maxWidth: 122,
-      maxHeight: 86,
-    );
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      imageList.add(imageFile);
-    }
+  @override
+  initState() {
+    super.initState();
+    imageList = <File>[];
   }
 
-  _getFromCamera() async {
-    PickedFile pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-      maxWidth: 122,
-      maxHeight: 86,
-    );
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      imageList.add(imageFile);
-    }
+  List<File> get imageList => _imageList;
+
+  set imageList(value) {
+    _imageList = value;
+    gridView = [
+      _addNewImage(),
+      ..._imageList
+          .map((e) => Image(
+                image: FileImage(e),
+              ))
+          .toList()
+    ];
+    // gridView.insert(0, _addNewImage());
   }
 
   @override
@@ -52,32 +51,16 @@ class _SharedFormState extends State<SharedForm> {
                   Container(
                     height: constraints.maxHeight * 0.75,
                     child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
                             childAspectRatio: 122.0 / 86.0,
                             crossAxisSpacing: 3,
                             mainAxisSpacing: 3),
-                        itemCount: imageList.length,
+                        itemCount: gridView.length,
                         itemBuilder: (BuildContext context, index) {
-                          return Container(
-                            alignment: Alignment.center,
-                            child: Image(
-                              image: FileImage(File(imageList[index].path)),
-                            ),
-                          );
+                          return gridView[index];
                         }),
                   ),
-                  ElevatedButton.icon(
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xFFC4C4C4)),
-                      onPressed: () {
-                        // TODO: decide here to pick from gallery or camera
-                      },
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        color: T.textLightColor,
-                      ),
-                      label: Text("")),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: TextFormField(
@@ -92,5 +75,64 @@ class _SharedFormState extends State<SharedForm> {
                 ],
               ),
             ));
+  }
+
+  _getPhoto(value) async {
+    PickedFile pickedFile = await ImagePicker().getImage(
+      source: value ? ImageSource.gallery : ImageSource.camera,
+      maxWidth: 122,
+      maxHeight: 86,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        File imageFile = File(pickedFile.path);
+        imageList = [imageFile, ...imageList];
+      });
+    }
+  }
+
+  _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext buildContext) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        fromGallery = true;
+                        _getPhoto(fromGallery);
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      fromGallery = false;
+                      _getPhoto(fromGallery);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _addNewImage() {
+    return ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(primary: Color(0xFFC4C4C4)),
+        onPressed: () {
+          _showPicker(context);
+        },
+        icon: Icon(
+          Icons.add_a_photo_outlined,
+          color: T.textLightColor,
+        ),
+        label: Text(""));
   }
 }
