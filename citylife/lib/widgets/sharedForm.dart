@@ -33,15 +33,15 @@ class _SharedFormState extends State<SharedForm> {
       ..._imageList
           .map((e) => Image(
                 image: FileImage(e),
+                fit: BoxFit.fill,
               ))
           .toList()
     ];
-    // gridView.insert(0, _addNewImage());
   }
 
   @override
   Widget build(BuildContext context) {
-    final structuralImpression = context.watch<CLImpression>();
+    final sharedImpression = context.watch<CLImpression>();
     return LayoutBuilder(
         builder: (context, constraints) => Container(
               width: constraints.maxWidth * 0.8,
@@ -58,6 +58,7 @@ class _SharedFormState extends State<SharedForm> {
                             mainAxisSpacing: 3),
                         itemCount: gridView.length,
                         itemBuilder: (BuildContext context, index) {
+                          // TODO: save images
                           return gridView[index];
                         }),
                   ),
@@ -80,6 +81,7 @@ class _SharedFormState extends State<SharedForm> {
   _getPhoto(value) async {
     PickedFile pickedFile = await ImagePicker().getImage(
       source: value ? ImageSource.gallery : ImageSource.camera,
+      // TODO: fix dimensions
       maxWidth: 122,
       maxHeight: 86,
     );
