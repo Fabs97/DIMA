@@ -54,4 +54,15 @@ module.exports = {
             });
         return res;
     },
+    deleteStructuralById: async (id) => {
+        let res = await db(T.structuralTable)
+            .where("id", id)
+            .delete("*")
+            .catch(e => {
+                if (e) {
+                    throw new E.CustomError(E.InternalServerError, "Something went wrong while trying to delete the impression");
+                }
+            });
+        return res[0];
+    }
 }

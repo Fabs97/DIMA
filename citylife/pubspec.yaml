@@ -29,11 +29,12 @@ dependencies:
   image_picker:
   latlong: ^0.6.1
   location: ^3.2.4
+  path: ^1.8.0
   provider: ^4.3.3
   shared_preferences: ^2.0.3
+  steps_indicator: ^1.2.0
   uni_links: ^0.4.0
   url_launcher: ^5.7.10
-  steps_indicator: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -57,10 +58,17 @@ flutter:
     - assets/images/Twitter_Logo.png
     - assets/images/GitHub_Logo.png
     - assets/images/Facebook_Logo.png
-    - assets/images/avatar_1.png
-    - assets/images/avatar_2.png
-    - assets/images/avatar_3.png
-    - assets/images/avatar_4.png
+    - assets/images/avatar_1.jpg
+    - assets/images/avatar_2.jpg
+    - assets/images/avatar_3.jpg
+    - assets/images/avatar_4.jpg
+    - assets/images/avatar_5.jpg
+    - assets/images/avatar_6.jpg
+    - assets/images/avatar_7.jpg
+    - assets/images/avatar_8.jpg
+    - assets/images/avatar_9.jpg
+    - assets/images/avatar_10.jpg
+    - assets/images/avatar_11.jpg
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

@@ -47,6 +47,26 @@ router.get("/emotional/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req,
     E.sendJson(res, emotionals);
 });
 
+router.delete("/emotional/:id", async (req, res, next) => {
+    const impressionId = req.params.id;
+    let impressions = await impressionService
+        .deleteEmotionalById(impressionId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
+router.delete("/structural/:id", async (req, res, next) => {
+    const impressionId = req.params.id;
+    let impressions = await impressionService
+        .deleteStructuralById(impressionId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
 router.post("/structural/new", async (req, res, next) => {
     const newImpression = req.body;
     if (!newImpression || U.isEmpty(newImpression)) {
@@ -62,15 +82,26 @@ router.post("/structural/new", async (req, res, next) => {
     E.sendJson(res, createdImpression);
 });
 
-router.get("/structural/byUser/:userId", async(req, res, next) => {
+router.get("/byUser/:userId", async (req, res, next) => {
+    const userId = req.params.userId;
+
+    let impressions = await impressionService
+        .getImpressionsBy(userId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
+router.get("/structural/byUser/:userId", async (req, res, next) => {
     const userId = req.params.userId;
     let structurals = await impressionService
-    .getStructuralsByUserId(userId)
-    .catch(e => {
-        E.sendError(res, e.code, e.message);
-    });
-    E.sendJson(res,structurals);
-})
+        .getStructuralsByUserId(userId)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, structurals);
+});
 
 router.get("/structural/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req, res, next) => {
     const lat = {

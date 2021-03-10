@@ -4,7 +4,7 @@ class T {
   static final LinearGradient backgroundColor = LinearGradient(
     colors: [
       Color(0xFF87D0AD),
-      Color(0xFF00A0AA),
+      Color(0xFF00A0AA).withOpacity(0.1),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -17,6 +17,14 @@ class T {
     ],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
+  );
+  static final LinearGradient avatarBorderGradient = LinearGradient(
+    colors: [
+      Colors.amber[200],
+      Colors.yellow[700],
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 
   static final Color primaryColor = Color(0xFF4B9F95);

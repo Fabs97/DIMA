@@ -1,45 +1,48 @@
 import 'dart:convert';
+import 'package:citylife/models/cl_impression.dart';
 
-import 'package:flutter/cupertino.dart';
-
-class CLEmotional extends ChangeNotifier {
-  int id;
-  int userId;
+class CLEmotional extends CLImpression {
   int cleanness;
   int happiness;
   int inclusiveness;
-  int confort;
+  int comfort;
   int safety;
 
   CLEmotional({
-    this.id,
-    this.userId,
     this.cleanness,
     this.happiness,
     this.inclusiveness,
-    this.confort,
+    this.comfort,
     this.safety,
   });
 
   String toJson() {
-    return jsonEncode({
-      "id": this.id,
-      "userId": this.userId,
-      "cleanness": this.cleanness ?? null,
-      "happiness": this.happiness ?? null,
-      "inclusiveness": this.inclusiveness ?? null,
-      "confort": this.confort ?? null,
-      "safety": this.safety ?? null,
-    });
+    var data = super.toJsonMap();
+    data["cleanness"] = this.cleanness;
+    data["happiness"] = this.happiness;
+    data["inclusiveness"] = this.inclusiveness;
+    data["comfort"] = this.comfort;
+    data["safety"] = this.safety;
+
+    return jsonEncode(data);
   }
 
   CLEmotional.fromJson(Map<String, dynamic> json) {
     this.id = json["id"] as int;
     this.userId = json["userId"] as int;
+    this.notes = json["notes"] as String;
+    this.images = json["images"].cast<String>().toList();
+    this.latitude = json["latitude"] as double;
+    this.longitude = json["longitude"] as double;
+    if (json["created"] != null) {
+      this.timeStamp = DateTime.parse(json["created"] as String);
+    }
+    this.placeTag = json["place_tag"] as String;
+
     this.cleanness = json["cleanness"] as int;
     this.happiness = json["happiness"] as int;
     this.inclusiveness = json["inclusiveness"] as int;
-    this.confort = json["confort"] as int;
+    this.comfort = json["comfort"] as int;
     this.safety = json["safety"] as int;
   }
 }
