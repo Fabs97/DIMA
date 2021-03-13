@@ -1,9 +1,7 @@
-import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/my_impressions/local_widgets/impression_detail_state.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/emotional_utils.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
