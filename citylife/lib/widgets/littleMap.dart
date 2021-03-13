@@ -101,7 +101,7 @@ class _LittleMapState extends State<LittleMap> {
               width: constraints.maxWidth * 0.9,
               child: TextFormField(
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.location_on_outlined)),
+                      prefixIcon: Icon(Icons.pin_drop_outlined)),
                   initialValue:
                       "Lat: ${_center.latitude}, Long: ${_center.longitude}",
                   readOnly: true),

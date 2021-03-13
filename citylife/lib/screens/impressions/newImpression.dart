@@ -1,3 +1,4 @@
+import 'package:citylife/screens/impressions/emotional/emotionalImpression.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class _NewImpressionState extends State<NewImpression> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -81,7 +83,7 @@ class _NewImpressionState extends State<NewImpression> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StructuralImpression()),
+                            builder: (context) => EmotionalImpression()),
                       );
                     });
                   },

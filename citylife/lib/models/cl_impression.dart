@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
@@ -6,7 +7,7 @@ class CLImpression extends ChangeNotifier {
   int id;
   int userId;
   String notes;
-  List<String> images;
+  List<File> images;
   double latitude;
   double longitude;
   DateTime timeStamp;
@@ -36,5 +37,14 @@ class CLImpression extends ChangeNotifier {
       "timeStamp": this.timeStamp.toString(),
       "placeTag": this.placeTag,
     };
+  }
+
+  CLImpression.fromJson(Map<String, dynamic> json) {
+    this.notes = json["notes"] as String;
+    this.images = (json["images"]) as List<File>;
+    this.latitude = json["latitude"] as double;
+    this.longitude = json["longitude"] as double;
+    this.timeStamp = json["timeStamp"] as String;
+    this.placeTag = json["placeTag"] as String;
   }
 }
