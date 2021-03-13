@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
@@ -16,16 +18,22 @@ class EmotionalImpression extends StatefulWidget {
 }
 
 class _EmotionalImpressionState extends State<EmotionalImpression> {
-  final List<Widget> steps = [EmotionalForm(), SharedForm()];
+  List<File> imageList = [];
+  SharedForm _sharedForm = SharedForm();
   int selectedStep = 0;
   int nbSteps = 4;
+
+  // @override
+  // void initState(){
+    super.initState();
+  //   selectedStep = 0;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: CLEmotional()),
-        ChangeNotifierProvider.value(value: CLImpression()),
       ],
       builder: (context, _) {
         return Scaffold(
@@ -60,7 +68,10 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                     ),
                     Container(
                         height: constraints.maxHeight * 0.4,
-                        child: steps[selectedStep]),
+                        child: [
+                          EmotionalForm(),
+                          _sharedForm,
+                        ].elementAt(selectedStep)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -82,23 +93,30 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                           enableLineAnimation: true,
                           enableStepAnimation: true,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 45),
-                          child: MaterialButton(
-                            color: T.primaryColor,
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0),
-                            ),
-                            onPressed: () {
-                              if (selectedStep < nbSteps) {
-                                setState(() {
-                                  selectedStep++;
-                                });
-                              }
-                            },
-                            child: Text(
-                              'Next',
-                              style: TextStyle(color: T.textLightColor),
+                        Consumer<CLImpression>(
+                          builder: (_, impression, __) => Padding(
+                            padding: const EdgeInsets.only(left: 45),
+                            child: MaterialButton(
+                              color: T.primaryColor,
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0),
+                              ),
+                              onPressed: () {
+                                if (selectedStep < nbSteps) {
+                                  setState(() {
+                                    selectedStep++;
+                                  });
+                                }
+
+                                // TODO: is it 2?
+                                if (selectedStep == 2) {
+                                  impression.images = _sharedForm.imageList;
+                                }
+                              },
+                              child: Text(
+                                'Next',
+                                style: TextStyle(color: T.textLightColor),
+                              ),
                             ),
                           ),
                         ),

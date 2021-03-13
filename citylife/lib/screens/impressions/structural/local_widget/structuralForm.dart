@@ -17,7 +17,7 @@ class _StructuralFormState extends State<StructuralForm> {
     return LayoutBuilder(
         builder: (context, constraints) => Container(
               width: constraints.maxWidth * 0.9,
-              height: constraints.maxHeight,
+              height: constraints.maxHeight * 0.6,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

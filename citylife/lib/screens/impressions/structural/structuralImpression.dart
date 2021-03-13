@@ -25,7 +25,6 @@ class _StructuralImpressionState extends State<StructuralImpression> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: CLStructural()),
-        ChangeNotifierProvider.value(value: CLImpression()),
       ],
       builder: (context, _) {
         return Scaffold(

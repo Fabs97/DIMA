@@ -27,6 +27,8 @@ class ImpressionDetailState with ChangeNotifier {
   void initState(CLImpression impression, StorageService storage) async {
     // retrieve images from firebase storage
     // TODO: from this a list of paths must come out and be stored in this.images
-    List<DownloadTask> tasks = storage.downloadImageList(impression.images);
+    //la riga sotto l'ho commentata perché mi dava errore
+    // TODO: scommentare la riga sotto
+    //List<DownloadTask> tasks = storage.downloadImageList(impression.images);
   }
 }
