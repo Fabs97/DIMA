@@ -19,21 +19,17 @@ class EmotionalImpression extends StatefulWidget {
 
 class _EmotionalImpressionState extends State<EmotionalImpression> {
   List<File> imageList = [];
-  SharedForm _sharedForm = SharedForm();
+  SharedForm _sharedForm = SharedForm(
+    watchStructural: false,
+  );
   int selectedStep = 0;
   int nbSteps = 4;
-
-  // @override
-  // void initState(){
-    super.initState();
-  //   selectedStep = 0;
-  // }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: CLEmotional()),
+        ChangeNotifierProvider<CLEmotional>.value(value: CLEmotional()),
       ],
       builder: (context, _) {
         return Scaffold(
@@ -57,7 +53,9 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                   children: [
                     Container(
                         height: constraints.maxHeight * 0.4,
-                        child: LittleMap()),
+                        child: LittleMap(
+                          watchStructural: false,
+                        )),
                     Container(
                       width: constraints.maxWidth * 0.7,
                       child: Divider(
@@ -71,6 +69,7 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                         child: [
                           EmotionalForm(),
                           _sharedForm,
+                          Placeholder(),
                         ].elementAt(selectedStep)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +92,7 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                           enableLineAnimation: true,
                           enableStepAnimation: true,
                         ),
-                        Consumer<CLImpression>(
+                        Consumer<CLEmotional>(
                           builder: (_, impression, __) => Padding(
                             padding: const EdgeInsets.only(left: 45),
                             child: MaterialButton(
@@ -105,12 +104,10 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                                 if (selectedStep < nbSteps) {
                                   setState(() {
                                     selectedStep++;
+                                    if (selectedStep == 2) {
+                                      impression.images = _sharedForm.imageList;
+                                    }
                                   });
-                                }
-
-                                // TODO: is it 2?
-                                if (selectedStep == 2) {
-                                  impression.images = _sharedForm.imageList;
                                 }
                               },
                               child: Text(

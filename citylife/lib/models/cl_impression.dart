@@ -37,17 +37,15 @@ class CLImpression extends ChangeNotifier {
       "timeStamp": this.timeStamp.toString(),
       "placeTag": this.placeTag,
     };
-<<<<<<< HEAD
-=======
   }
 
-  CLImpression.fromJson(Map<String, dynamic> json) {
-    this.notes = json["notes"] as String;
-    this.images = (json["images"]) as List<File>;
-    this.latitude = json["latitude"] as double;
-    this.longitude = json["longitude"] as double;
-    this.timeStamp = json["timeStamp"] as String;
-    this.placeTag = json["placeTag"] as String;
->>>>>>> dev
-  }
+  // CLImpression.fromJson(Map<String, dynamic> json) {
+  //   this.notes = json["notes"] as String;
+  //   this.images = (json["images"]) as List<File>;
+  //   this.latitude = json["latitude"] as double;
+  //   this.longitude = json["longitude"] as double;
+  //   if(json["timeStamp"])
+  //   this.timeStamp = json["timeStamp"] as String;
+  //   this.placeTag = json["placeTag"] as String;
+  // }
 }
