@@ -2,6 +2,7 @@ import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
+import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
@@ -28,6 +29,9 @@ class _StructuralImpressionState extends State<StructuralImpression> {
 
   @override
   Widget build(BuildContext context) {
+    if (_impression.userId == null) {
+      _impression.userId = context.read<AuthService>().authUser.id;
+    }
     return ChangeNotifierProvider<CLStructural>.value(
       value: _impression,
       builder: (context, _) {
