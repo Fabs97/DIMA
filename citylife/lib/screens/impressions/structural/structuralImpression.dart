@@ -2,6 +2,7 @@ import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
+import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
 import 'package:citylife/widgets/saveImpression.dart';
@@ -50,7 +51,7 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                   width: constraints.maxWidth,
                   height: constraints.maxHeight,
                   child: selectedStep == 2
-                      ? Consumer(
+                      ? Consumer<StorageService>(
                           builder: (_, storageService, __) => Container(
                               height: constraints.maxHeight * 0.45,
                               child: [
