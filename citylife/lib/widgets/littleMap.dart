@@ -75,7 +75,7 @@ class _LittleMapState extends State<LittleMap> {
         ? context.watch<CLStructural>()
         : context.watch<CLEmotional>();
     impression.latitude = _center.latitude;
-    impression.latitude = _center.longitude;
+    impression.longitude = _center.longitude;
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         width: constraints.maxWidth,

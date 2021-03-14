@@ -4,6 +4,7 @@ import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
+import 'package:citylife/widgets/saveImpression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +23,12 @@ class _StructuralImpressionState extends State<StructuralImpression> {
   );
   int selectedStep = 0;
   int nbSteps = 4;
+  CLStructural _impression = CLStructural();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: CLStructural()),
-      ],
+    return ChangeNotifierProvider<CLStructural>.value(
+      value: _impression,
       builder: (context, _) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -69,7 +69,9 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                         child: [
                           StructuralForm(),
                           _sharedForm,
-                          Placeholder(),
+                          SaveImpression(
+                            isStructural: true,
+                          ),
                         ].elementAt(selectedStep)),
                     Expanded(
                       child: Align(
@@ -101,7 +103,8 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                                 child: MaterialButton(
                                   color: T.primaryColor,
                                   shape: new RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(20.0),
+                                    borderRadius:
+                                        new BorderRadius.circular(20.0),
                                   ),
                                   onPressed: () {
                                     if (selectedStep < nbSteps) {

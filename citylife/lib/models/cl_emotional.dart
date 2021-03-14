@@ -2,27 +2,56 @@ import 'dart:convert';
 import 'package:citylife/models/cl_impression.dart';
 
 class CLEmotional extends CLImpression {
-  int cleanness;
-  int happiness;
-  int inclusiveness;
-  int comfort;
-  int safety;
+  int _cleanness;
+  int get cleanness => this._cleanness;
+  set cleanness(v) {
+    this._cleanness = v;
+    notifyListeners();
+  }
+
+  int _happiness;
+  int get happiness => this._happiness;
+  set happiness(v) {
+    this._happiness = v;
+    notifyListeners();
+  }
+
+  int _inclusiveness;
+  int get inclusiveness => this._inclusiveness;
+  set inclusiveness(v) {
+    this._inclusiveness = v;
+    notifyListeners();
+  }
+
+  int _comfort;
+  int get comfort => this._comfort;
+  set comfort(v) {
+    this._comfort = v;
+    notifyListeners();
+  }
+
+  int _safety;
+  int get safety => this._safety;
+  set safety(v) {
+    this._safety = v;
+    notifyListeners();
+  }
 
   CLEmotional({
-    this.cleanness,
-    this.happiness,
-    this.inclusiveness,
-    this.comfort,
-    this.safety,
+    cleanness,
+    happiness,
+    inclusiveness,
+    comfort,
+    safety,
   });
 
   String toJson() {
     var data = super.toJsonMap();
-    data["cleanness"] = this.cleanness;
-    data["happiness"] = this.happiness;
-    data["inclusiveness"] = this.inclusiveness;
-    data["comfort"] = this.comfort;
-    data["safety"] = this.safety;
+    data["cleanness"] = this._cleanness;
+    data["happiness"] = this._happiness;
+    data["inclusiveness"] = this._inclusiveness;
+    data["comfort"] = this._comfort;
+    data["safety"] = this._safety;
 
     return jsonEncode(data);
   }

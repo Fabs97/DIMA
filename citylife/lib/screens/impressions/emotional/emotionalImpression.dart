@@ -6,6 +6,7 @@ import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
+import 'package:citylife/widgets/saveImpression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,12 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
   );
   int selectedStep = 0;
   int nbSteps = 4;
+  CLEmotional _impression = CLEmotional();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<CLEmotional>.value(value: CLEmotional()),
-      ],
+    return ChangeNotifierProvider<CLEmotional>.value(
+      value: _impression,
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
@@ -45,7 +45,7 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
             ],
           ),
           body: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
+            builder: (_, constraints) => SingleChildScrollView(
               child: Container(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
@@ -69,7 +69,9 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                         child: [
                           EmotionalForm(),
                           _sharedForm,
-                          Placeholder(),
+                          SaveImpression(
+                            isStructural: false,
+                          ),
                         ].elementAt(selectedStep)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
