@@ -72,8 +72,8 @@ class _StructuralFormState extends State<StructuralForm> {
                         isExpanded: true,
                         items: [
                           DropdownMenuItem<String>(
-                            child: Text('Fixing'),
-                            value: 'Fixing',
+                            child: Text('Repair'),
+                            value: 'Repair',
                           ),
                           DropdownMenuItem<String>(
                             child: Text('Add new'),
