@@ -1,4 +1,6 @@
 import 'package:citylife/models/cl_emotional.dart';
+import 'package:citylife/utils/emotional_utils.dart';
+import 'package:citylife/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,27 +11,98 @@ class EmotionalForm extends StatefulWidget {
 }
 
 class _EmotionalFormState extends State<EmotionalForm> {
-  double _value;
+  List<String> _titles = [
+    "Cleanness",
+    "Happiness",
+    "Inclusiveness",
+    "Comfort",
+    "Safety"
+  ];
+
+  List<int> _sliderValue = [1, 1, 1, 1, 1];
+
   @override
   Widget build(BuildContext context) {
-    final emotionalImpression = context.watch<CLEmotional>();
     return LayoutBuilder(
         builder: (context, constraints) => Container(
-              width: constraints.maxWidth * 0.9,
+              width: constraints.maxWidth * 0.7,
               height: constraints.maxHeight,
-              child: Column(
-                children: [
-                  Slider(
-                    min: 0,
-                    max: 100,
-                    value: _value,
-                    onChanged: (value) {
-                      setState(() {
-                        _value = value;
-                      });
-                    },
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: _titles.length,
+                itemBuilder: (context, index) {
+                  return Consumer<CLEmotional>(
+                    builder: (_, emotionalImpression, __) => Container(
+                      height: constraints.maxHeight * 0.3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _titles[index],
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                EUtils.getFrom(_sliderValue[index]),
+                                color: T.textDarkColor,
+                              ),
+                              Container(
+                                width: constraints.maxWidth * 0.64,
+                                child: Slider(
+                                  activeColor: T.primaryColor,
+                                  min: 1,
+                                  max: 5,
+                                  divisions: 5,
+                                  value: _sliderValue[index].toDouble(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _sliderValue[index] = value.toInt();
+                                      switch (_titles[index]) {
+                                        case "Cleanness":
+                                          {
+                                            emotionalImpression.cleanness =
+                                                value.toInt();
+                                            break;
+                                          }
+                                        case "Happiness":
+                                          {
+                                            emotionalImpression.happiness =
+                                                value.toInt();
+                                            break;
+                                          }
+                                        case "Inclusiveness":
+                                          {
+                                            emotionalImpression.inclusiveness =
+                                                value.toInt();
+                                            break;
+                                          }
+                                        case "Comfort":
+                                          {
+                                            emotionalImpression.comfort =
+                                                value.toInt();
+                                            break;
+                                          }
+                                        case "Safety":
+                                          {
+                                            emotionalImpression.safety =
+                                                value.toInt();
+                                            break;
+                                          }
+                                        default:
+                                          throw Exception(
+                                              "Value not defined in emotional range");
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ));
   }

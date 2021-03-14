@@ -1,4 +1,6 @@
+import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
+import 'package:citylife/models/cl_structural.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,6 +8,9 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class LittleMap extends StatefulWidget {
+  final bool watchStructural;
+
+  const LittleMap({Key key, @required this.watchStructural}) : super(key: key);
   @override
   _LittleMapState createState() => _LittleMapState();
 }
@@ -64,18 +69,13 @@ class _LittleMapState extends State<LittleMap> {
     );
   }
 
-  // void _getAddress() async {
-  //   final coordinates = new Coordinates(_center.latitude, _center.longitude);
-  //   _address = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-
-  //   _first = _address.first.addressLine;
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final structuralImpression = context.watch<CLImpression>();
-    structuralImpression.latitude = _center.latitude;
-    structuralImpression.latitude = _center.longitude;
+    final impression = widget.watchStructural
+        ? context.watch<CLStructural>()
+        : context.watch<CLEmotional>();
+    impression.latitude = _center.latitude;
+    impression.longitude = _center.longitude;
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         width: constraints.maxWidth,

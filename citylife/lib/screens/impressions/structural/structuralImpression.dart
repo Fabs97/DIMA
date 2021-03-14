@@ -4,6 +4,7 @@ import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
+import 'package:citylife/widgets/saveImpression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +17,18 @@ class StructuralImpression extends StatefulWidget {
 }
 
 class _StructuralImpressionState extends State<StructuralImpression> {
-  final List<Widget> steps = [StructuralForm(), SharedForm()];
+  final List<Widget> steps = [];
+  final SharedForm _sharedForm = SharedForm(
+    watchStructural: true,
+  );
   int selectedStep = 0;
   int nbSteps = 4;
+  CLStructural _impression = CLStructural();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: CLStructural()),
-        ChangeNotifierProvider.value(value: CLImpression()),
-      ],
+    return ChangeNotifierProvider<CLStructural>.value(
+      value: _impression,
       builder: (context, _) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -50,7 +52,9 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                   children: [
                     Container(
                         height: constraints.maxHeight * 0.4,
-                        child: LittleMap()),
+                        child: LittleMap(
+                          watchStructural: true,
+                        )),
                     Container(
                       height: constraints.maxHeight * 0.03,
                       width: constraints.maxWidth * 0.7,
@@ -62,7 +66,13 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                     ),
                     Container(
                         height: constraints.maxHeight * 0.45,
-                        child: steps[selectedStep]),
+                        child: [
+                          StructuralForm(),
+                          _sharedForm,
+                          SaveImpression(
+                            isStructural: true,
+                          ),
+                        ].elementAt(selectedStep)),
                     Expanded(
                       child: Align(
                         alignment: FractionalOffset.bottomCenter,
@@ -87,23 +97,30 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                               enableLineAnimation: true,
                               enableStepAnimation: true,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 45),
-                              child: MaterialButton(
-                                color: T.primaryColor,
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(20.0),
-                                ),
-                                onPressed: () {
-                                  if (selectedStep < nbSteps) {
-                                    setState(() {
-                                      selectedStep++;
-                                    });
-                                  }
-                                },
-                                child: Text(
-                                  'Next',
-                                  style: TextStyle(color: T.textLightColor),
+                            Consumer<CLStructural>(
+                              builder: (_, impression, __) => Padding(
+                                padding: const EdgeInsets.only(left: 45),
+                                child: MaterialButton(
+                                  color: T.primaryColor,
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(20.0),
+                                  ),
+                                  onPressed: () {
+                                    if (selectedStep < nbSteps) {
+                                      setState(() {
+                                        selectedStep++;
+                                        if (selectedStep == 2) {
+                                          impression.images =
+                                              _sharedForm.imageList;
+                                        }
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    'Next',
+                                    style: TextStyle(color: T.textLightColor),
+                                  ),
                                 ),
                               ),
                             ),

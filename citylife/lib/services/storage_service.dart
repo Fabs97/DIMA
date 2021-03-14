@@ -16,8 +16,10 @@ class StorageService {
     appDocDir = await getApplicationDocumentsDirectory();
   }
 
-  UploadTask uploadImage(bool isStructural, String impressionId, File image,
+  Future<String> uploadImage(bool isStructural, int impressionId, File image,
       {Reference reference}) {
+    // * /impressions/structural/3/<path>
+    // * path is surely unique
     Reference ref = reference ??
         _instance
             .ref()
@@ -25,17 +27,17 @@ class StorageService {
             .child("/${isStructural ? "structural" : "emotional"}")
             .child("/$impressionId")
             .child("/${basename(image.path)}");
-    return ref.putFile(image);
+    return ref.putFile(image).then((snapshot) => ref.getDownloadURL());
   }
 
   DownloadTask downloadFile(String url) {
     return _instance.ref(url).writeToFile(File('${appDocDir.path}/$url'));
   }
 
-  List<UploadTask> uploadImageList(
-      bool isStructural, String impressionId, List<File> images,
+  List<Future<String>> uploadImageList(
+      bool isStructural, int impressionId, List<File> images,
       {Reference reference}) {
-    final Reference reference = _instance
+    final Reference ref = _instance
         .ref()
         .child("/impressions")
         .child("/${isStructural ? "structural" : "emotional"}")
@@ -43,8 +45,7 @@ class StorageService {
 
     return images
         .map((image) => uploadImage(isStructural, impressionId, image,
-            reference:
-                reference ?? reference.child("/${basename(image.path)}")))
+            reference: reference ?? ref.child("/${basename(image.path)}")))
         .toList();
   }
 

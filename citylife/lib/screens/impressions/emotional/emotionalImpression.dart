@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
+import 'package:citylife/widgets/saveImpression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +19,18 @@ class EmotionalImpression extends StatefulWidget {
 }
 
 class _EmotionalImpressionState extends State<EmotionalImpression> {
-  final List<Widget> steps = [EmotionalForm(), SharedForm()];
+  List<File> imageList = [];
+  SharedForm _sharedForm = SharedForm(
+    watchStructural: false,
+  );
   int selectedStep = 0;
   int nbSteps = 4;
+  CLEmotional _impression = CLEmotional();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: CLEmotional()),
-        ChangeNotifierProvider.value(value: CLImpression()),
-      ],
+    return ChangeNotifierProvider<CLEmotional>.value(
+      value: _impression,
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
@@ -41,7 +45,7 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
             ],
           ),
           body: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
+            builder: (_, constraints) => SingleChildScrollView(
               child: Container(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
@@ -49,7 +53,9 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                   children: [
                     Container(
                         height: constraints.maxHeight * 0.4,
-                        child: LittleMap()),
+                        child: LittleMap(
+                          watchStructural: false,
+                        )),
                     Container(
                       width: constraints.maxWidth * 0.7,
                       child: Divider(
@@ -60,7 +66,13 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                     ),
                     Container(
                         height: constraints.maxHeight * 0.4,
-                        child: steps[selectedStep]),
+                        child: [
+                          EmotionalForm(),
+                          _sharedForm,
+                          SaveImpression(
+                            isStructural: false,
+                          ),
+                        ].elementAt(selectedStep)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -82,23 +94,28 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                           enableLineAnimation: true,
                           enableStepAnimation: true,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 45),
-                          child: MaterialButton(
-                            color: T.primaryColor,
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0),
-                            ),
-                            onPressed: () {
-                              if (selectedStep < nbSteps) {
-                                setState(() {
-                                  selectedStep++;
-                                });
-                              }
-                            },
-                            child: Text(
-                              'Next',
-                              style: TextStyle(color: T.textLightColor),
+                        Consumer<CLEmotional>(
+                          builder: (_, impression, __) => Padding(
+                            padding: const EdgeInsets.only(left: 45),
+                            child: MaterialButton(
+                              color: T.primaryColor,
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0),
+                              ),
+                              onPressed: () {
+                                if (selectedStep < nbSteps) {
+                                  setState(() {
+                                    selectedStep++;
+                                    if (selectedStep == 2) {
+                                      impression.images = _sharedForm.imageList;
+                                    }
+                                  });
+                                }
+                              },
+                              child: Text(
+                                'Next',
+                                style: TextStyle(color: T.textLightColor),
+                              ),
                             ),
                           ),
                         ),

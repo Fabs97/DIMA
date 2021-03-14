@@ -94,7 +94,8 @@ class _NewImpressionState extends State<NewImpression> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(
+                        left: 8.0, right: 8.0, top: 14.0, bottom: 14.0),
                     child: Column(
                       children: [
                         Padding(
