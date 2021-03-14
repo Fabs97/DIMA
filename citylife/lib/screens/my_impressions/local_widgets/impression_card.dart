@@ -147,7 +147,7 @@ class ImpressionCard extends StatelessWidget {
                                           .toList(),
                                     ),
                               Text(
-                                impression.placeTag,
+                                impression.placeTag ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: T.textLightColor,
