@@ -15,8 +15,8 @@ class CLStructural extends CLImpression {
 
   String toJson() {
     var data = super.toJsonMap();
-    data["cleanness"] = this.component;
-    data["happiness"] = this.pathology;
+    data["component"] = this.component;
+    data["pathology"] = this.pathology;
     data["typology"] = this.typology;
 
     return jsonEncode(data);
