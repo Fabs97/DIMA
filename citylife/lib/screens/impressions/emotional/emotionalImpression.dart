@@ -26,17 +26,13 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
   );
   int selectedStep = 0;
   int nbSteps = 4;
-  CLEmotional _impression = CLEmotional();
-
-  @override
-  initState() {
-    super.initState();
-    _impression.cleanness = 1;
-    _impression.comfort = 1;
-    _impression.happiness = 1;
-    _impression.inclusiveness = 1;
-    _impression.safety = 1;
-  }
+  CLEmotional _impression = CLEmotional(
+    cleanness: 1,
+    comfort: 1,
+    happiness: 1,
+    inclusiveness: 1,
+    safety: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
