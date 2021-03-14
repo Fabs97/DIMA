@@ -16,11 +16,10 @@ module.exports = {
                 safety: i.safety,
                 mean: U.mean([i.cleanness, i.happiness, i.inclusiveness, i.comfort, i.safety]),
                 notes: i.notes,
-                images: i.images,
                 latitude: i.latitude,
                 longitude: i.longitude,
                 place_tag: i.place_tag
-            }, ["id", "userId", "cleanness", "happiness", "inclusiveness", "comfort", "safety", "mean", "notes", "images", "latitude", "longitude", "created", "place_tag"])
+            }, ["id", "userId", "cleanness", "happiness", "inclusiveness", "comfort", "safety", "mean", "notes", "latitude", "longitude", "created", "place_tag"])
             .catch(e => {
                 if (e) {
                     console.error(`Message: ${e.message}`);
