@@ -15,7 +15,6 @@ exports.up = async function(knex) {
         table.float("mean");
         
         table.string("notes");
-        table.specificType("images", "text[]");
         table.float("latitude");
         table.float("longitude");
         table.string("place_tag");
