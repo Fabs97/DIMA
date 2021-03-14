@@ -54,7 +54,7 @@ class _SaveImpressionState extends State<SaveImpression> {
       setState(() {
         _uploadStatus = UploadStatus.Error;
       });
-      print("$e\n$sTrace");
+      print("${e.message}\n$sTrace");
     }
   }
 
@@ -66,10 +66,6 @@ class _SaveImpressionState extends State<SaveImpression> {
 
   @override
   Widget build(BuildContext context) {
-    // final StorageService _storage = context.read<StorageService>();
-    // final CLImpression _impression = widget.isStructural
-    //     ? context.watch<CLStructural>()
-    //     : context.watch<CLEmotional>();
     return Center(
       child: <UploadStatus, Widget>{
         UploadStatus.Saving: SpinKitRipple(
@@ -79,10 +75,5 @@ class _SaveImpressionState extends State<SaveImpression> {
         UploadStatus.Error: Icon(Icons.warning_amber_outlined),
       }[_uploadStatus],
     );
-    // return FutureBuilder(
-    //   builder: (context, snapshot) {
-    //     _saveImpression(_impression, _storage);
-    //   },
-    // );
   }
 }
