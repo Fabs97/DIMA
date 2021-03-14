@@ -1,13 +1,21 @@
-import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/storage_service.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
+
+enum UploadStatus { Saving, Saved, Error }
 
 class SaveImpression extends StatefulWidget {
   final bool isStructural;
-  const SaveImpression({Key key, @required this.isStructural})
+  final CLImpression impression;
+  final StorageService storageService;
+  const SaveImpression(
+      {Key key,
+      @required this.isStructural,
+      @required this.impression,
+      @required this.storageService})
       : super(key: key);
 
   @override
@@ -16,25 +24,65 @@ class SaveImpression extends StatefulWidget {
 
 class _SaveImpressionState extends State<SaveImpression> {
   bool saved = false;
+  UploadStatus _uploadStatus = UploadStatus.Saving;
+
+  void _saveImpression(CLImpression impression, StorageService storage) async {
+    try {
+      // Save to DB
+      var savedImpression =
+          await ImpressionsAPIService.route("/new", body: impression);
+      if (savedImpression != null) {
+        // Save images to storage
+        Future.wait(storage.uploadImageList(
+                impression is CLStructural,
+                savedImpression.id, impression.images))
+            .then((_) {
+          setState(() => _uploadStatus = UploadStatus.Saved);
+        }).catchError((e) {
+          // Error while saving in storage
+          setState(() {
+            if (e.message == "Images list was found null") {
+              _uploadStatus = UploadStatus.Saved;
+            } else {
+              _uploadStatus = UploadStatus.Error;
+            }
+          });
+        });
+      }
+    } catch (e, sTrace) {
+      // Error while saving impression
+      setState(() {
+        _uploadStatus = UploadStatus.Error;
+      });
+      print("$e\n$sTrace");
+    }
+  }
+
   @override
   void initState() {
+    _saveImpression(widget.impression, widget.storageService);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!saved) {
-      final StorageService _storage = context.read<StorageService>();
-      final CLImpression _impression = widget.isStructural
-          ? context.watch<CLStructural>()
-          : context.watch<CLEmotional>();
-      Future.wait(_storage.uploadImageList(
-              _impression is CLStructural, 1, _impression.images))
-          .then((value) => setState(() {
-                saved = true;
-                print(value);
-              }));
-    }
-    return Container();
+    // final StorageService _storage = context.read<StorageService>();
+    // final CLImpression _impression = widget.isStructural
+    //     ? context.watch<CLStructural>()
+    //     : context.watch<CLEmotional>();
+    return Center(
+      child: <UploadStatus, Widget>{
+        UploadStatus.Saving: SpinKitRipple(
+          color: Colors.amber,
+        ),
+        UploadStatus.Saved: Icon(Icons.done_all_outlined),
+        UploadStatus.Error: Icon(Icons.warning_amber_outlined),
+      }[_uploadStatus],
+    );
+    // return FutureBuilder(
+    //   builder: (context, snapshot) {
+    //     _saveImpression(_impression, _storage);
+    //   },
+    // );
   }
 }

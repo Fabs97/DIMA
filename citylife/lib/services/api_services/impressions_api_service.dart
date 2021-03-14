@@ -19,6 +19,8 @@ class ImpressionsAPIService {
       case "/emotional":
       case "/structural":
         return _deleteImpression(subRoute, urlArgs);
+      case "/new":
+        return _postImpression(subRoute, body);
       default:
         throw ImpressionsAPIException("Error in Impressions API Service");
     }
@@ -54,20 +56,39 @@ class ImpressionsAPIService {
     }
   }
 
+  static Future<CLImpression> _postImpression(
+      String subRoute, CLImpression impression) async {
+    Response response = await _client.post(
+      APIENDPOINT +
+          impressionRoute +
+          "${impression is CLStructural ? "/structural" : "/emotional"}" +
+          subRoute,
+      headers: {"Content-Type": "application/json"},
+      body: impression.toJson(),
+    );
+    switch (response.statusCode) {
+      case 200:
+        return _parseImpression(jsonDecode(response.body));
+      default:
+        throw new ImpressionsAPIException(response.body?.toString() ??
+            "Error in Impression API Service with code ${response.statusCode}");
+    }
+  }
+
   static List<CLImpression> _parseImpressionsJson(String json) {
     final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    var res = parsed
-        .map((e) {
-          if (e.keys.contains("component") ||
-              e.keys.contains("pathology") ||
-              e.keys.contains("typology")) {
-            return CLStructural.fromJson(e);
-          } else
-            return CLEmotional.fromJson(e);
-        })
-        .cast<CLImpression>()
-        .toList();
+    var res =
+        parsed.map((e) => _parseImpression(e)).cast<CLImpression>().toList();
     return res;
+  }
+
+  static CLImpression _parseImpression(Map<String, dynamic> i) {
+    if (i.keys.contains("component") ||
+        i.keys.contains("pathology") ||
+        i.keys.contains("typology")) {
+      return CLStructural.fromJson(i);
+    } else
+      return CLEmotional.fromJson(i);
   }
 }
 

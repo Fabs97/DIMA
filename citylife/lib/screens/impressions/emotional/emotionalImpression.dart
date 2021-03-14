@@ -4,6 +4,7 @@ import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
+import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
 import 'package:citylife/widgets/saveImpression.dart';
@@ -49,53 +50,57 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
               child: Container(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: Column(
-                  children: [
-                    Container(
-                        height: constraints.maxHeight * 0.4,
-                        child: LittleMap(
-                          watchStructural: false,
-                        )),
-                    Container(
-                      width: constraints.maxWidth * 0.7,
-                      child: Divider(
-                        height: 50,
-                        thickness: 3,
-                        color: T.textDarkColor,
-                      ),
-                    ),
-                    Container(
-                        height: constraints.maxHeight * 0.4,
-                        child: [
-                          EmotionalForm(),
-                          _sharedForm,
-                          SaveImpression(
-                            isStructural: false,
-                          ),
-                        ].elementAt(selectedStep)),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        StepsIndicator(
-                          selectedStep: selectedStep,
-                          nbSteps: nbSteps,
-                          unselectedStepColorIn: T.emotionalColor,
-                          unselectedStepColorOut: T.emotionalColor,
-                          selectedStepColorIn: T.structuralColor,
-                          selectedStepColorOut: T.structuralColor,
-                          doneLineColor: T.emotionalColor,
-                          doneStepColor: T.emotionalColor,
-                          undoneLineColor: T.emotionalColor,
-                          doneStepSize: 13,
-                          unselectedStepSize: 13,
-                          selectedStepSize: 13,
-                          lineLength: 40,
-                          enableLineAnimation: true,
-                          enableStepAnimation: true,
+                child: Consumer<CLEmotional>(
+                  builder: (_, impression, __) => Column(
+                    children: [
+                      Container(
+                          height: constraints.maxHeight * 0.4,
+                          child: LittleMap(
+                            watchStructural: false,
+                          )),
+                      Container(
+                        width: constraints.maxWidth * 0.7,
+                        child: Divider(
+                          height: 50,
+                          thickness: 3,
+                          color: T.textDarkColor,
                         ),
-                        Consumer<CLEmotional>(
-                          builder: (_, impression, __) => Padding(
+                      ),
+                      Consumer<StorageService>(
+                        builder: (_, storageService, __) => Container(
+                            height: constraints.maxHeight * 0.4,
+                            child: [
+                              EmotionalForm(),
+                              _sharedForm,
+                              SaveImpression(
+                                isStructural: false,
+                                impression: impression,
+                                storageService: storageService,
+                              ),
+                            ].elementAt(selectedStep)),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StepsIndicator(
+                            selectedStep: selectedStep,
+                            nbSteps: nbSteps,
+                            unselectedStepColorIn: T.emotionalColor,
+                            unselectedStepColorOut: T.emotionalColor,
+                            selectedStepColorIn: T.structuralColor,
+                            selectedStepColorOut: T.structuralColor,
+                            doneLineColor: T.emotionalColor,
+                            doneStepColor: T.emotionalColor,
+                            undoneLineColor: T.emotionalColor,
+                            doneStepSize: 13,
+                            unselectedStepSize: 13,
+                            selectedStepSize: 13,
+                            lineLength: 40,
+                            enableLineAnimation: true,
+                            enableStepAnimation: true,
+                          ),
+                          Padding(
                             padding: const EdgeInsets.only(left: 45),
                             child: MaterialButton(
                               color: T.primaryColor,
@@ -118,10 +123,10 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

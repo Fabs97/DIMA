@@ -48,57 +48,61 @@ class _StructuralImpressionState extends State<StructuralImpression> {
               child: Container(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: Column(
-                  children: [
-                    Container(
-                        height: constraints.maxHeight * 0.4,
-                        child: LittleMap(
-                          watchStructural: true,
-                        )),
-                    Container(
-                      height: constraints.maxHeight * 0.03,
-                      width: constraints.maxWidth * 0.7,
-                      child: Divider(
-                        height: 50,
-                        thickness: 3,
-                        color: T.textDarkColor,
+                child: Consumer<CLStructural>(
+                  builder: (_, impression, __) => Column(
+                    children: [
+                      Container(
+                          height: constraints.maxHeight * 0.4,
+                          child: LittleMap(
+                            watchStructural: true,
+                          )),
+                      Container(
+                        height: constraints.maxHeight * 0.03,
+                        width: constraints.maxWidth * 0.7,
+                        child: Divider(
+                          height: 50,
+                          thickness: 3,
+                          color: T.textDarkColor,
+                        ),
                       ),
-                    ),
-                    Container(
-                        height: constraints.maxHeight * 0.45,
-                        child: [
-                          StructuralForm(),
-                          _sharedForm,
-                          SaveImpression(
-                            isStructural: true,
-                          ),
-                        ].elementAt(selectedStep)),
-                    Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomCenter,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StepsIndicator(
-                              selectedStep: selectedStep,
-                              nbSteps: nbSteps,
-                              unselectedStepColorIn: T.emotionalColor,
-                              unselectedStepColorOut: T.emotionalColor,
-                              selectedStepColorIn: T.structuralColor,
-                              selectedStepColorOut: T.structuralColor,
-                              doneLineColor: T.emotionalColor,
-                              doneStepColor: T.emotionalColor,
-                              undoneLineColor: T.emotionalColor,
-                              doneStepSize: 13,
-                              unselectedStepSize: 13,
-                              selectedStepSize: 13,
-                              lineLength: 40,
-                              enableLineAnimation: true,
-                              enableStepAnimation: true,
-                            ),
-                            Consumer<CLStructural>(
-                              builder: (_, impression, __) => Padding(
+                      Consumer(
+                        builder: (_, storageService, __) => Container(
+                            height: constraints.maxHeight * 0.45,
+                            child: [
+                              StructuralForm(),
+                              _sharedForm,
+                              SaveImpression(
+                                isStructural: true,
+                                impression: impression,
+                                storageService: storageService,
+                              ),
+                            ].elementAt(selectedStep)),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StepsIndicator(
+                                selectedStep: selectedStep,
+                                nbSteps: nbSteps,
+                                unselectedStepColorIn: T.emotionalColor,
+                                unselectedStepColorOut: T.emotionalColor,
+                                selectedStepColorIn: T.structuralColor,
+                                selectedStepColorOut: T.structuralColor,
+                                doneLineColor: T.emotionalColor,
+                                doneStepColor: T.emotionalColor,
+                                undoneLineColor: T.emotionalColor,
+                                doneStepSize: 13,
+                                unselectedStepSize: 13,
+                                selectedStepSize: 13,
+                                lineLength: 40,
+                                enableLineAnimation: true,
+                                enableStepAnimation: true,
+                              ),
+                              Padding(
                                 padding: const EdgeInsets.only(left: 45),
                                 child: MaterialButton(
                                   color: T.primaryColor,
@@ -123,12 +127,12 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

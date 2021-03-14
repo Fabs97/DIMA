@@ -31,7 +31,7 @@ class CLImpression extends ChangeNotifier {
       "id": this.id,
       "userId": this.userId,
       "notes": this.notes,
-      "images": this.images,
+      // "images": this.images.map((i) => null).toList(),
       "latitude": this.latitude,
       "longitude": this.longitude,
       "timeStamp": this.timeStamp.toString(),
@@ -43,7 +43,7 @@ class CLImpression extends ChangeNotifier {
     this.id = json["id"] as int;
     this.userId = json["userId"] as int;
     this.notes = json["notes"] as String;
-    this.images = json["images"].cast<String>().toList();
+    // this.images = json["images"].cast<String>().toList();
     this.latitude = json["latitude"] as double;
     this.longitude = json["longitude"] as double;
     if (json["created"] != null) {

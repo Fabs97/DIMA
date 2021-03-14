@@ -37,6 +37,8 @@ class StorageService {
   List<Future<String>> uploadImageList(
       bool isStructural, int impressionId, List<File> images,
       {Reference reference}) {
+        // TODO: if the error has to be changed, check the catch in the SaveImpression widget.
+    if (images == null) throw new Exception("Images list was found null");
     final Reference ref = _instance
         .ref()
         .child("/impressions")

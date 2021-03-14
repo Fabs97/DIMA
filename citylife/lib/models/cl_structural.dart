@@ -26,7 +26,7 @@ class CLStructural extends CLImpression {
     this.id = json["id"] as int;
     this.userId = json["userId"] as int;
     this.notes = json["notes"] as String;
-    this.images = json["images"].cast<String>().toList();
+    // this.images = json["images"].cast<String>().toList();
     this.latitude = json["latitude"] as double;
     this.longitude = json["longitude"] as double;
     if (json["created"] != null) {
