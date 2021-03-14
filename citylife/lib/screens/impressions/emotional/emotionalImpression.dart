@@ -29,6 +29,16 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
   CLEmotional _impression = CLEmotional();
 
   @override
+  initState() {
+    super.initState();
+    _impression.cleanness = 1;
+    _impression.comfort = 1;
+    _impression.happiness = 1;
+    _impression.inclusiveness = 1;
+    _impression.safety = 1;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CLEmotional>.value(
       value: _impression,
