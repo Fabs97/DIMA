@@ -48,88 +48,90 @@ class _StructuralImpressionState extends State<StructuralImpression> {
               child: Container(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: Column(
-                  children: [
-                    Container(
-                        height: constraints.maxHeight * 0.4,
-                        child: LittleMap(
-                          watchStructural: true,
-                        )),
-                    Container(
-                      height: constraints.maxHeight * 0.03,
-                      width: constraints.maxWidth * 0.7,
-                      child: Divider(
-                        height: 50,
-                        thickness: 3,
-                        color: T.textDarkColor,
-                      ),
-                    ),
-                    Container(
-                        height: constraints.maxHeight * 0.45,
-                        child: [
-                          StructuralForm(),
-                          _sharedForm,
-                          SaveImpression(
-                            isStructural: true,
-                          ),
-                        ].elementAt(selectedStep)),
-                    Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomCenter,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StepsIndicator(
-                              selectedStep: selectedStep,
-                              nbSteps: nbSteps,
-                              unselectedStepColorIn: T.emotionalColor,
-                              unselectedStepColorOut: T.emotionalColor,
-                              selectedStepColorIn: T.structuralColor,
-                              selectedStepColorOut: T.structuralColor,
-                              doneLineColor: T.emotionalColor,
-                              doneStepColor: T.emotionalColor,
-                              undoneLineColor: T.emotionalColor,
-                              doneStepSize: 13,
-                              unselectedStepSize: 13,
-                              selectedStepSize: 13,
-                              lineLength: 40,
-                              enableLineAnimation: true,
-                              enableStepAnimation: true,
+                child: selectedStep == 2
+                    ? SaveImpression(
+                        isStructural: true,
+                      )
+                    : Column(
+                        children: [
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              child: LittleMap(
+                                watchStructural: true,
+                              )),
+                          Container(
+                            height: constraints.maxHeight * 0.03,
+                            width: constraints.maxWidth * 0.7,
+                            child: Divider(
+                              height: 50,
+                              thickness: 3,
+                              color: T.textDarkColor,
                             ),
-                            Consumer<CLStructural>(
-                              builder: (_, impression, __) => Padding(
-                                padding: const EdgeInsets.only(left: 45),
-                                child: MaterialButton(
-                                  color: T.primaryColor,
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(20.0),
+                          ),
+                          Container(
+                              height: constraints.maxHeight * 0.45,
+                              child: [
+                                StructuralForm(),
+                                _sharedForm,
+                              ].elementAt(selectedStep)),
+                          Expanded(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  StepsIndicator(
+                                    selectedStep: selectedStep,
+                                    nbSteps: nbSteps,
+                                    unselectedStepColorIn: T.emotionalColor,
+                                    unselectedStepColorOut: T.emotionalColor,
+                                    selectedStepColorIn: T.structuralColor,
+                                    selectedStepColorOut: T.structuralColor,
+                                    doneLineColor: T.emotionalColor,
+                                    doneStepColor: T.emotionalColor,
+                                    undoneLineColor: T.emotionalColor,
+                                    doneStepSize: 13,
+                                    unselectedStepSize: 13,
+                                    selectedStepSize: 13,
+                                    lineLength: 40,
+                                    enableLineAnimation: true,
+                                    enableStepAnimation: true,
                                   ),
-                                  onPressed: () {
-                                    if (selectedStep < nbSteps) {
-                                      setState(() {
-                                        selectedStep++;
-                                        if (selectedStep == 2) {
-                                          impression.images =
-                                              _sharedForm.imageList;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    'Next',
-                                    style: TextStyle(color: T.textLightColor),
+                                  Consumer<CLStructural>(
+                                    builder: (_, impression, __) => Padding(
+                                      padding: const EdgeInsets.only(left: 45),
+                                      child: MaterialButton(
+                                        color: T.primaryColor,
+                                        shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(20.0),
+                                        ),
+                                        onPressed: () {
+                                          if (selectedStep < nbSteps) {
+                                            setState(() {
+                                              selectedStep++;
+                                              if (selectedStep == 2) {
+                                                impression.images =
+                                                    _sharedForm.imageList;
+                                              }
+                                            });
+                                          }
+                                        },
+                                        child: Text(
+                                          'Next',
+                                          style: TextStyle(
+                                              color: T.textLightColor),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
