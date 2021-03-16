@@ -1,6 +1,7 @@
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/services/geocoding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +24,7 @@ class _LittleMapState extends State<LittleMap> {
   PermissionStatus _permissionGranted;
   LocationData _locationData;
   double _zoom = 15;
+  String _placeTag = "";
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
@@ -94,21 +96,33 @@ class _LittleMapState extends State<LittleMap> {
                 tiltGesturesEnabled: false,
                 myLocationButtonEnabled: true,
                 onMapCreated: _onMapCreated,
+                onCameraIdle: _onCameraIdle,
               ),
             ),
             Spacer(),
             Container(
               width: constraints.maxWidth * 0.9,
               child: TextFormField(
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.pin_drop_outlined)),
-                  initialValue:
-                      "Lat: ${_center.latitude}, Long: ${_center.longitude}",
-                  readOnly: true),
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.pin_drop_outlined),
+                    hintText: _placeTag),
+                readOnly: true,
+                enabled: false,
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _onCameraIdle() async {
+    var placeTag = await GeocodingService.getAddressFrom(
+        _center.latitude, _center.longitude);
+    if (placeTag != null) {
+      setState(() => _placeTag = placeTag ?? "");
+    } else {
+      print("placeTag is null");
+    }
   }
 }
