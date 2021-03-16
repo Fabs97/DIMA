@@ -52,7 +52,7 @@ class _EmotionalFormState extends State<EmotionalForm> {
                                   activeColor: T.primaryColor,
                                   min: 1,
                                   max: 5,
-                                  divisions: 5,
+                                  divisions: 4,
                                   value: _sliderValue[index].toDouble(),
                                   onChanged: (value) {
                                     setState(() {
