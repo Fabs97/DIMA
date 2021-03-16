@@ -338,6 +338,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.11"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.1.8"
   geocoder:
     dependency: "direct main"
     description:

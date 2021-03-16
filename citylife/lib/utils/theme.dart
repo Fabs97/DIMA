@@ -1,3 +1,4 @@
+import 'package:citylife/widgets/custom_slider_track.dart';
 import 'package:flutter/material.dart';
 
 class T {
@@ -13,6 +14,10 @@ class T {
   static final LinearGradient buttonGradient = LinearGradient(
     colors: [
       Color(0xFF005B50),
+      Color(0xFF005B50),
+      Color(0xFF005B50),
+      Color(0xFF47BCAE),
+      Color(0xFF47BCAE),
       Color(0xFF47BCAE),
     ],
     begin: Alignment.centerLeft,
@@ -22,6 +27,14 @@ class T {
     colors: [
       Colors.amber[200],
       Colors.yellow[700],
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  static final LinearGradient sliderTrackGradient = LinearGradient(
+    colors: [
+      Color(0xFF3AAB75),
+      Color(0xFF28A5AD),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -63,6 +76,15 @@ class T {
         borderSide: BorderSide(color: textFieldIconColor, width: 2.0),
       ),
       floatingLabelBehavior: FloatingLabelBehavior.never,
+    ),
+    sliderTheme: SliderThemeData(
+      tickMarkShape: RoundSliderTickMarkShape(),
+      trackShape: GradientRectSliderTrackShape(
+        gradient: sliderTrackGradient,
+        darkenInactive: false,
+      ),
+      activeTickMarkColor: T.structuralColor,
+      inactiveTickMarkColor: T.structuralColor,
     ),
   );
 

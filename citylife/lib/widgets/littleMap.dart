@@ -96,7 +96,15 @@ class _LittleMapState extends State<LittleMap> {
                 tiltGesturesEnabled: false,
                 myLocationButtonEnabled: true,
                 onMapCreated: _onMapCreated,
-                onCameraIdle: _onCameraIdle,
+                onCameraIdle: () async {
+                  var placeTag = await GeocodingService.getAddressFrom(
+                      _center.latitude, _center.longitude);
+                  if (placeTag != null) {
+                    setState(() => impression.placeTag = placeTag ?? "");
+                  } else {
+                    print("placeTag is null");
+                  }
+                },
               ),
             ),
             Spacer(),
@@ -104,8 +112,9 @@ class _LittleMapState extends State<LittleMap> {
               width: constraints.maxWidth * 0.9,
               child: TextFormField(
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.pin_drop_outlined),
-                    hintText: _placeTag),
+                  prefixIcon: Icon(Icons.pin_drop_outlined),
+                  hintText: impression.placeTag ?? "",
+                ),
                 readOnly: true,
                 enabled: false,
               ),
