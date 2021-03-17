@@ -124,13 +124,42 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                                         ),
                                         onPressed: () {
                                           if (selectedStep < nbSteps) {
-                                            setState(() {
-                                              selectedStep++;
-                                              if (selectedStep == 2) {
-                                                impression.images =
-                                                    _sharedForm.imageList;
-                                              }
-                                            });
+                                            if (selectedStep == 0 &&
+                                                (_impression.component ==
+                                                        null ||
+                                                    _impression.pathology ==
+                                                        null ||
+                                                    _impression.typology ==
+                                                        null)) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (_) => AlertDialog(
+                                                        content: Text(
+                                                            "Please complete the form!"),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                                    primary: T
+                                                                        .primaryColor),
+                                                            child:
+                                                                Text("Close"),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ));
+                                            } else {
+                                              setState(() {
+                                                selectedStep++;
+                                                if (selectedStep == 2) {
+                                                  impression.images =
+                                                      _sharedForm.imageList;
+                                                }
+                                              });
+                                            }
                                           }
                                         },
                                         child: Text(
