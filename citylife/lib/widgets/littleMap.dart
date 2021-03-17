@@ -25,6 +25,7 @@ class _LittleMapState extends State<LittleMap> {
   LocationData _locationData;
   double _zoom = 15;
   String _placeTag = "";
+  List<Marker> _markers = [];
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
@@ -60,6 +61,7 @@ class _LittleMapState extends State<LittleMap> {
 
     _locationData = await _location.getLocation();
     _center = LatLng(_locationData.latitude, _locationData.longitude);
+    setImpressionMarker();
 
     _controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -69,6 +71,17 @@ class _LittleMapState extends State<LittleMap> {
         ),
       ),
     );
+  }
+
+  void setImpressionMarker() {
+    setState(() {
+      _markers = [
+        Marker(
+          markerId: MarkerId("myImpression"),
+          position: _center,
+        ),
+      ];
+    });
   }
 
   @override
@@ -96,6 +109,12 @@ class _LittleMapState extends State<LittleMap> {
                 tiltGesturesEnabled: false,
                 myLocationButtonEnabled: true,
                 onMapCreated: _onMapCreated,
+                onCameraMove: (position) => setState(
+                  () {
+                    _center = LatLng(
+                        position.target.latitude, position.target.longitude);
+                  },
+                ),
                 onCameraIdle: () async {
                   var placeTag = await GeocodingService.getAddressFrom(
                       _center.latitude, _center.longitude);
@@ -104,7 +123,9 @@ class _LittleMapState extends State<LittleMap> {
                   } else {
                     print("placeTag is null");
                   }
+                  setImpressionMarker();
                 },
+                markers: Set.from(_markers),
               ),
             ),
             Spacer(),
@@ -123,15 +144,5 @@ class _LittleMapState extends State<LittleMap> {
         ),
       ),
     );
-  }
-
-  void _onCameraIdle() async {
-    var placeTag = await GeocodingService.getAddressFrom(
-        _center.latitude, _center.longitude);
-    if (placeTag != null) {
-      setState(() => _placeTag = placeTag ?? "");
-    } else {
-      print("placeTag is null");
-    }
   }
 }
