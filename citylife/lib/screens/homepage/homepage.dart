@@ -19,11 +19,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: buildBottomNavigationBar(),
+      bottomNavigationBar: buildBottomNavigationBar(context),
       body: [
         Home(),
         MyImpressions(),
-        NewImpression(),
+        Container(), // ! required for the correct positioning of the widgets
         Container(
           child: GestureDetector(
             onTap: () => CustomToast.toast(context, "Ciao"),
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildBottomNavigationBar() {
+  Widget buildBottomNavigationBar(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor: T.primaryColor,
@@ -42,9 +42,16 @@ class _HomePageState extends State<HomePage> {
       child: BottomNavigationBar(
         currentIndex: _selectedItem,
         onTap: (index) {
-          setState(() {
-            _selectedItem = index;
-          });
+          if (index != 2) {
+            setState(() {
+              _selectedItem = index;
+            });
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => NewImpression(),
+            );
+          }
         },
         showSelectedLabels: false,
         showUnselectedLabels: false,

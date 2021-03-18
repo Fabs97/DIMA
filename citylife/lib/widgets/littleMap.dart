@@ -99,33 +99,39 @@ class _LittleMapState extends State<LittleMap> {
           children: [
             Container(
               height: constraints.maxHeight * 0.8,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: _zoom,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.0),
+                  topRight: Radius.circular(15.0),
                 ),
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                tiltGesturesEnabled: false,
-                myLocationButtonEnabled: true,
-                onMapCreated: _onMapCreated,
-                onCameraMove: (position) => setState(
-                  () {
-                    _center = LatLng(
-                        position.target.latitude, position.target.longitude);
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: _zoom,
+                  ),
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  tiltGesturesEnabled: false,
+                  myLocationButtonEnabled: true,
+                  onMapCreated: _onMapCreated,
+                  onCameraMove: (position) => setState(
+                    () {
+                      _center = LatLng(
+                          position.target.latitude, position.target.longitude);
+                    },
+                  ),
+                  onCameraIdle: () async {
+                    var placeTag = await GeocodingService.getAddressFrom(
+                        _center.latitude, _center.longitude);
+                    if (placeTag != null) {
+                      setState(() => impression.placeTag = placeTag ?? "");
+                    } else {
+                      print("placeTag is null");
+                    }
+                    setImpressionMarker();
                   },
+                  markers: Set.from(_markers),
                 ),
-                onCameraIdle: () async {
-                  var placeTag = await GeocodingService.getAddressFrom(
-                      _center.latitude, _center.longitude);
-                  if (placeTag != null) {
-                    setState(() => impression.placeTag = placeTag ?? "");
-                  } else {
-                    print("placeTag is null");
-                  }
-                  setImpressionMarker();
-                },
-                markers: Set.from(_markers),
               ),
             ),
             Spacer(),
