@@ -86,6 +86,19 @@ class T {
       activeTickMarkColor: T.structuralColor,
       inactiveTickMarkColor: T.structuralColor,
     ),
+    snackBarTheme: SnackBarThemeData(
+      shape: RoundedRectangleBorder(
+        side: BorderSide.none,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: T.structuralColor,
+      contentTextStyle: TextStyle(
+        fontSize: 18.0,
+      ),
+      elevation: 10,
+      actionTextColor: T.textLightColor,
+    ),
   );
 
   static final IconThemeData unselectedBottomNavBarIconTheme = IconThemeData(
