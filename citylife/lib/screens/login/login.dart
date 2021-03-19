@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/screens/login/backgroundPainter.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/theme.dart';
+import 'package:citylife/widgets/custom_toast.dart';
 import 'package:citylife/widgets/logo.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:open_mail_app/open_mail_app.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -21,6 +25,14 @@ class _LoginState extends State<Login> {
   String _email;
   String _password;
   bool _obscurePassword = true;
+  Timer _emailVerificationTimer;
+  bool _isVerifyingEmail = false;
+
+  @override
+  void dispose() {
+    if (_emailVerificationTimer != null) _emailVerificationTimer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +122,12 @@ class _LoginState extends State<Login> {
                                 L.Google,
                                 () async {
                                   try {
-                                    CLUser u = await auth.signInWithGoogle();
+                                    auth.signInWithGoogle();
                                   } catch (e) {
-                                    //TODO: implement catch statement
+                                    CustomToast.toast(
+                                        context,
+                                        e.message ??
+                                            "Error occured while authenticating");
                                   }
                                 },
                               ),
@@ -120,9 +135,12 @@ class _LoginState extends State<Login> {
                                 L.Twitter,
                                 () async {
                                   try {
-                                    CLUser u = await auth.signInWithTwitter();
+                                    auth.signInWithTwitter();
                                   } catch (e) {
-                                    //TODO: implement catch statement
+                                    CustomToast.toast(
+                                        context,
+                                        e.message ??
+                                            "Error occured while authenticating");
                                   }
                                 },
                               ),
@@ -130,10 +148,12 @@ class _LoginState extends State<Login> {
                                 L.GitHub,
                                 () async {
                                   try {
-                                    CLUser u =
-                                        await auth.signInWithGitHub(context);
+                                    auth.signInWithGitHub(context);
                                   } catch (e) {
-                                    //TODO: implement catch statement
+                                    CustomToast.toast(
+                                        context,
+                                        e.message ??
+                                            "Error occured while authenticating");
                                   }
                                 },
                               ),
@@ -141,26 +161,63 @@ class _LoginState extends State<Login> {
                                 L.Facebook,
                                 () async {
                                   try {
-                                    CLUser u = await auth.signInWithFacebook();
+                                    auth.signInWithFacebook();
                                   } catch (e) {
-                                    //TODO: implement catch statement
+                                    CustomToast.toast(
+                                        context,
+                                        e.message ??
+                                            "Error occured while authenticating");
                                   }
                                 },
                               ),
                             ],
                           ),
                           Spacer(),
-                          buildSignInButton(() async {
-                            if (_formKey.currentState.validate()) {
-                              try {
-                                CLUser u =
-                                    await auth.signInWithEmailAndPassword(
-                                        _email, _password);
-                              } catch (e) {
-                                //TODO: implement catch statement
-                              }
-                            }
-                          }, constraints.maxWidth),
+                          _isVerifyingEmail
+                              ? Container()
+                              : buildSignInButton(() async {
+                                  if (_formKey.currentState.validate()) {
+                                    try {
+                                      CLUser u =
+                                          await auth.signInWithEmailAndPassword(
+                                              _email, _password);
+                                    } on AuthException catch (e) {
+                                      if (e.message.compareTo(
+                                              "Sent verification email") ==
+                                          0) {
+                                        CustomToast.toast(
+                                            context, "${e.message} to $_email");
+                                        // TODO: iOS needs a different handling, check the documentation
+                                        var openEmailAppResult =
+                                            await OpenMailApp.openMailApp(
+                                          nativePickerTitle:
+                                              'Select email app to open',
+                                        );
+                                        if (!openEmailAppResult.didOpen ||
+                                            openEmailAppResult.canOpen) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) {
+                                              return MailAppPickerDialog(
+                                                mailApps:
+                                                    openEmailAppResult.options,
+                                              );
+                                            },
+                                          );
+                                        }
+                                        setState(
+                                            () => _isVerifyingEmail = true);
+                                        _emailVerificationTimer =
+                                            Timer.periodic(Duration(seconds: 5),
+                                                (timer) {
+                                          checkEmailVerified(auth);
+                                        });
+                                      } else {
+                                        CustomToast.toast(context, e.message);
+                                      }
+                                    }
+                                  }
+                                }, constraints.maxWidth),
                         ],
                       ),
                     ),
@@ -172,6 +229,16 @@ class _LoginState extends State<Login> {
         },
       ),
     );
+  }
+
+  Future<void> checkEmailVerified(AuthService auth) async {
+    var user = auth.auth.currentUser;
+    await user.reload();
+    if (user.emailVerified) {
+      _emailVerificationTimer.cancel();
+      auth.signInWithEmailAndPassword(_email, _password, verifiedEmail: true);
+      setState(() => _isVerifyingEmail = false);
+    }
   }
 
   Widget buildSignInButton(Function() buttonCallback, double width) {

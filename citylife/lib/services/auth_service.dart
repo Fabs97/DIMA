@@ -48,14 +48,15 @@ class AuthService with ChangeNotifier {
   ///
   /// If no user is then found, throws an [AuthException] that provides the reason
   /// why the authentication has failed
-  Future<CLUser> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<CLUser> signInWithEmailAndPassword(String email, String password,
+      {bool verifiedEmail = false}) async {
     UserCredential credential;
     final SharedPrefService _prefService =
         await SharedPrefService.getInstance();
     try {
       credential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
+      verifiedEmail = true;
     } on FirebaseAuthException catch (e, sTrace) {
       switch (e.code) {
         case "wrong-password":
@@ -67,7 +68,8 @@ class AuthService with ChangeNotifier {
             try {
               credential = await auth.createUserWithEmailAndPassword(
                   email: email, password: password);
-              break;
+              credential.user.sendEmailVerification();
+              throw new AuthException("Sent verification email");
             } on FirebaseException catch (e) {
               if (e.code.contains("email-already-in-use")) {
                 print(
@@ -85,20 +87,19 @@ class AuthService with ChangeNotifier {
       throw new AuthException("Exception: ${e.message}\nStack Trace: $sTrace");
     } finally {
       if (credential.additionalUserInfo.isNewUser) {
-        authUser = await UserAPIService.route("/new",
+        await UserAPIService.route("/new",
             body: CLUser(
               email: email,
               password: password,
               firebaseId: credential.user.uid,
             ),
             client: client);
-        if (authUser != null) _prefService.setUserWith(spUserInfoKey, authUser);
-      } else {
+      } else if (verifiedEmail) {
+        credential = await auth.signInWithEmailAndPassword(
+            email: email, password: password);
         authUser = await _getUserInfoByFirebaseId(credential.user.uid);
+        if (authUser != null) _prefService.setUserWith(spUserInfoKey, authUser);
       }
-
-      credential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
     }
     return authUser;
   }
