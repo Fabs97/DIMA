@@ -19,6 +19,7 @@ class StructuralImpression extends StatefulWidget {
 }
 
 class _StructuralImpressionState extends State<StructuralImpression> {
+  final _formKey = GlobalKey<FormState>();
   final List<Widget> steps = [];
   final SharedForm _sharedForm = SharedForm(
     watchStructural: true,
@@ -74,7 +75,9 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                           Container(
                               height: constraints.maxHeight * 0.45,
                               child: [
-                                StructuralForm(),
+                                StructuralForm(
+                                  formKey: _formKey,
+                                ),
                                 _sharedForm,
                               ].elementAt(selectedStep)),
                           Expanded(
@@ -112,31 +115,12 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                                       onPressed: () {
                                         if (selectedStep < nbSteps) {
                                           if (selectedStep == 0 &&
-                                              (_impression.component == null ||
-                                                  _impression.pathology ==
-                                                      null ||
-                                                  _impression.typology ==
-                                                      null)) {
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) => AlertDialog(
-                                                      content: Text(
-                                                          "Please complete the form!"),
-                                                      actions: [
-                                                        ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  primary: T
-                                                                      .primaryColor),
-                                                          child: Text("Close"),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ));
-                                          } else {
+                                              _formKey.currentState
+                                                  .validate()) {
+                                            setState(() {
+                                              selectedStep++;
+                                            });
+                                          } else if (selectedStep > 0) {
                                             setState(() {
                                               selectedStep++;
                                               if (selectedStep == 2) {
