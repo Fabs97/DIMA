@@ -71,11 +71,15 @@ class _SharedFormState extends State<SharedForm> {
             ),
             TextFormField(
               maxLines: 3,
-              initialValue: "Notes",
+              initialValue: "",
               decoration: InputDecoration(
+                hintText: "Notes",
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(bottom: 40.0),
-                  child: Icon(Icons.edit_outlined),
+                  child: Icon(
+                    Icons.edit_outlined,
+                    color: T.primaryColor,
+                  ),
                 ),
               ),
               onChanged: (v) => impression.notes = v,
