@@ -18,8 +18,46 @@ class UserAPIService {
         return _getByFirebaseId(subRoute, urlArgs);
       case "/update":
         return _postUserUpdate(subRoute, body);
+      case "/2fa/getSecret":
+        return _getSecret(urlArgs);
+      case "/2fa/postCode":
+        return _postCode(urlArgs, body);
       default:
         throw UserAPIException("Error in User API Service");
+    }
+  }
+
+  static Future<bool> _postCode(int userId, String code) async {
+    Response response = await _client.post(
+      APIENDPOINT + userRoute + "/2fa/$userId",
+      headers: {
+        "x-citylife-code": code,
+        "Content-Type": "application/json",
+      },
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        return true;
+      case 401:
+        return false;
+      default:
+        throw new UserAPIException(response.body?.toString() ??
+            "Error in User API Service with code ${response.statusCode}");
+    }
+  }
+
+  static Future<String> _getSecret(int userId) async {
+    Response response = await _client.get(
+      APIENDPOINT + userRoute + "/2fa/$userId",
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        return response.body;
+      default:
+        throw new UserAPIException(response.body?.toString() ??
+            "Error in User API Service with code ${response.statusCode}");
     }
   }
 
@@ -36,8 +74,7 @@ class UserAPIService {
       case 404:
       case 500:
       default:
-        throw new UserAPIException(
-            response.body?.toString() ??
+        throw new UserAPIException(response.body?.toString() ??
             "Error in User API Service with code ${response.statusCode}");
     }
   }
@@ -54,8 +91,7 @@ class UserAPIService {
       case 404:
       case 500:
       default:
-        throw new UserAPIException(
-            response.body?.toString() ??
+        throw new UserAPIException(response.body?.toString() ??
             "Error in User API Service with code ${response.statusCode}");
     }
   }
@@ -68,7 +104,7 @@ class UserAPIService {
     );
     switch (response.statusCode) {
       case 200:
-        return CLUser.fromJson(jsonDecode(response.body));
+        return CLUser.fromJson(jsonDecode(response.body.toString()));
       case 404:
       case 500:
       default:

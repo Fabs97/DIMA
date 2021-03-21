@@ -1,4 +1,6 @@
 import 'package:citylife/screens/homepage/homepage.dart';
+import 'package:citylife/screens/login/2fa_login.dart';
+import 'package:citylife/screens/login/2fa_login_state.dart';
 import 'package:citylife/screens/login/login.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
@@ -65,10 +67,19 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthService>();
-    return _isLoadingInfo
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : (!auth.isAuthenticated ? Login() : HomePage());
+    return ChangeNotifierProvider(
+      create: (_) => TwoFALoginState(),
+      child: Consumer<TwoFALoginState>(
+        builder: (_, state, __) => _isLoadingInfo
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : (!auth.isAuthenticated
+                ? Login()
+                : ((auth.authUser.twofa && !state.authenticated)
+                    ? TwoFactorsAuthentication(userId: auth.authUser.id)
+                    : HomePage())),
+      ),
+    );
   }
 }

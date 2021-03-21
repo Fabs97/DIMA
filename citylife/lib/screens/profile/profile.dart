@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:citylife/models/cl_user.dart';
+import 'package:citylife/screens/login/2fa_login_state.dart';
+import 'package:citylife/screens/profile/local_widgets/profile_two_factors_auth.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
@@ -137,6 +139,53 @@ class _ProfileState extends State<Profile> {
                                   ],
                                 ),
                               ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (!user.twofa) {
+                                    user.twofa = true;
+                                    state.hasBeenEdited = true;
+                                  }
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          ProfileTwoFactorsAuth(user: user));
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 6.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Icon(
+                                          (user?.twofa ?? false)
+                                              ? Icons.lock_outline
+                                              : Icons.lock_open_outlined,
+                                        ),
+                                      ),
+                                      Text("2 Factor Authentication"),
+                                      Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_right_outlined,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             )
                           ],
                         ),
@@ -144,10 +193,14 @@ class _ProfileState extends State<Profile> {
                         Spacer(),
                         Spacer(),
                         Spacer(),
-                        Spacer(),
                         !state.hasBeenEdited
-                            ? buildButton("Sign out", constraints.maxWidth,
-                                () => auth.signOut(context))
+                            ? Consumer<TwoFALoginState>(
+                                builder: (context, state, _) => buildButton(
+                                    "Sign out", constraints.maxWidth, () {
+                                  state.authenticated = false;
+                                  auth.signOut(context);
+                                }),
+                              )
                             : buildButton("Save profile", constraints.maxWidth,
                                 () async {
                                 user.name = state.editedName;
@@ -199,7 +252,9 @@ class _ProfileState extends State<Profile> {
         width: size,
         height: size,
         decoration: BoxDecoration(
-            shape: BoxShape.circle, gradient: T.avatarBorderGradient),
+          shape: BoxShape.circle,
+          gradient: T.avatarBorderGradient,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(

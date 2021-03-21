@@ -2,6 +2,7 @@ class CLUser {
   int id;
   String firebaseId;
   bool tech;
+  bool twofa;
   String name;
   double exp;
   String email;
@@ -12,6 +13,7 @@ class CLUser {
     this.id,
     this.firebaseId,
     this.tech,
+    this.twofa,
     this.name,
     this.exp,
     this.email,
@@ -23,6 +25,7 @@ class CLUser {
     this.id = json["id"] as int;
     this.firebaseId = json["firebaseId"] as String;
     this.tech = json["tech"] as bool ?? false;
+    this.twofa = json["twofa"] as bool ?? false;
     this.name = json["name"] as String;
     this.exp = (json["exp"]).toDouble() ?? 0.0;
     this.email = json["email"] as String;
@@ -35,6 +38,7 @@ class CLUser {
       "id": this.id,
       "firebaseId": this.firebaseId,
       "tech": this.tech ?? false,
+      "twofa": this.twofa ?? false,
       "name": this.name,
       "exp": this.exp ?? 0.0,
       "email": this.email,
