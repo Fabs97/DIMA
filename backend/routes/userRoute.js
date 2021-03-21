@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const E = require("../utils/customError");
 const U = require("../utils/utils");
+const O  = require("../utils/otp");
 
 const userService = require("../services/userService");
 
@@ -76,6 +77,28 @@ router.post("/new", async (req, res, next) => {
         });
     
     E.sendJson(res, createdUser);
+});
+
+router.post("/2fa/:userId", async (req, res, next) => {
+    const userId = req.params.userId;
+    const code = req.headers["x-citylife-code"];
+    if (!code || !userId) {
+        E.sendError(res, E.BadRequest, "Code or userId not found in request header or parameters");
+        return;
+    }
+    const result = await O.Check(code, userId);
+    
+    E.sendJson(res, result ? "OK" : "Unauthorized", result ? E.OK : E.Unauthorized);
+});
+
+router.get("/2fa/:userId", async (req, res, next) => {
+    const userId = req.params.userId;
+    if (!userId) {
+        E.sendError(res, E.BadRequest, "User id not found in request parameters");
+        return;
+    }
+    const result = await userService.getUserSecret(userId);
+    E.sendJson(res, result);
 });
 
 module.exports = router;

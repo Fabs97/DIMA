@@ -7,11 +7,13 @@ exports.up = async function (knex) {
         table.increments("id").primary().notNullable();
         table.string("firebaseId").notNullable();
         table.boolean("tech").defaultTo(false);
+        table.boolean("twofa").defaultTo(false);
         table.string("name");
         table.float("exp").defaultTo(0.0);
         table.string("email");
         table.string("password");
         table.string("avatar").defaultTo("avatar_1");
+        table.string("secret").notNullable();
     }) : null;
 };
 
