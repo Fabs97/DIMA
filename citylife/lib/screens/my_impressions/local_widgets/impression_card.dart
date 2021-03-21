@@ -162,9 +162,7 @@ class ImpressionCard extends StatelessWidget {
                           flex: 1,
                           child: Icon(
                             Icons.chevron_right,
-                            color: isStructural
-                                ? Colors.black54
-                                : T.textLightColor,
+                            color: T.textLightColor,
                             size: 49.0,
                           ),
                         ),
