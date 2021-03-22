@@ -9,6 +9,7 @@ module.exports = {
             .returning()
             .insert({
                 userId: i.userId,
+                fromTech: i.fromTech,
                 cleanness: i.cleanness,
                 happiness: i.happiness,
                 inclusiveness: i.inclusiveness,
@@ -19,7 +20,7 @@ module.exports = {
                 latitude: i.latitude,
                 longitude: i.longitude,
                 place_tag: i.place_tag
-            }, ["id", "userId", "cleanness", "happiness", "inclusiveness", "comfort", "safety", "mean", "notes", "latitude", "longitude", "created", "place_tag"])
+            }, ["id", "userId", "fromTech", "cleanness", "happiness", "inclusiveness", "comfort", "safety", "mean", "notes", "latitude", "longitude", "created", "place_tag"])
             .catch(e => {
                 if (e) {
                     console.error(`Message: ${e.message}`);

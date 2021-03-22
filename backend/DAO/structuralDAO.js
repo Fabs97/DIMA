@@ -9,6 +9,7 @@ module.exports = {
         .returning()
         .insert({
             userId: i.userId,
+            fromTech: i.fromTech,
             component: i.component,
             pathology: i.pathology,
             typology: i.typology,
@@ -16,7 +17,7 @@ module.exports = {
             latitude: i.latitude,
             longitude: i.longitude,
             place_tag: i.place_tag
-        }, ["id", "userId", "component", "pathology", "typology", "notes", "latitude", "longitude", "created", "place_tag"])
+        }, ["id", "fromTech", "userId", "component", "pathology", "typology", "notes", "latitude", "longitude", "created", "place_tag"])
         .catch(e => {
             if (e) {
                 console.error(`Message: ${e.message}`);

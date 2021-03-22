@@ -6,6 +6,7 @@ exports.up = async function(knex) {
         table.increments("id").primary().notNullable();
         table.integer("userId").unsigned();
         table.foreign("userId").references("user.id").onDelete("CASCADE");
+        table.boolean("fromTech");
        
         table.string("component");
         table.string("pathology");
