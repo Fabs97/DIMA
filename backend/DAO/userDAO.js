@@ -4,31 +4,32 @@ const E = require("../utils/customError");
 const { groupBy } = require("../utils/db");
 const base32 = require("hi-base32");
 
-// TODO: must return fields one by one, take out the secret field
-module.exports = {
-    getUserById: async (id) => {
-        let res = await db(T.userTable)
-            .select(
-                "id",
-                "firebaseId",
-                "tech",
-                "name",
-                "exp",
-                "email",
-                "password",
-                "avatar",
+const getUserByIdFunc = async (id) => {
+    let res = await db(T.userTable)
+        .select(
+            "id",
+            "firebaseId",
+            "tech",
+            "name",
+            "exp",
+            "email",
+            "password",
+            "avatar",
             "twofa")
-            .where("id", id)
-            .first()
-            .catch(e => {
-                if (e) {
-                    console.error(`Message: ${e.message}`);
-                    console.error(`Stack: ${e.stack}`);
-                    throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
-                }
-            });
-        return res;
-    },
+        .where("id", id)
+        .first()
+        .catch(e => {
+            if (e) {
+                console.error(`Message: ${e.message}`);
+                console.error(`Stack: ${e.stack}`);
+                throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
+            }
+        });
+    return res;
+};
+// TODO: must return fields one by one, take out the secret field
+module.exports = userDAO = {
+    getUserById: getUserByIdFunc,
     getUserByFirebaseId: async (id) => {
         let res = await db(T.userTable)
             .select(
@@ -123,16 +124,27 @@ module.exports = {
     },
     getUserSecret: async (userId) => {
         let res = await db(T.userTable)
-            .select("secret")
+        .select("secret")
+        .where("id", userId)
+        .first()
+        .catch(e => {
+            if (e) {
+                console.error(`Message: ${e.message}`);
+                console.error(`Stack: ${e.stack}`);
+                throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
+            }
+        });
+        return res.secret;
+    },
+    updateUserExperience: async (userId, additionalExp) => {
+        let user = await getUserByIdFunc(userId);
+        let res = await db(T.userTable)
             .where("id", userId)
-            .first()
+            .update({ exp: user.exp + additionalExp })
             .catch(e => {
                 if (e) {
-                    console.error(`Message: ${e.message}`);
-                    console.error(`Stack: ${e.stack}`);
-                    throw new E.CustomError(E.NotFound, `No available user with id ${id} in the database`);
+                    throw new E.CustomError(E.InternalServerError, "Error while trying to update user experience");
                 }
             });
-        return res.secret;
-    }
+    },
 }
