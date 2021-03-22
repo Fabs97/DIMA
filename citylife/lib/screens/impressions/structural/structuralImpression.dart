@@ -31,7 +31,9 @@ class _StructuralImpressionState extends State<StructuralImpression> {
   @override
   Widget build(BuildContext context) {
     if (_impression.userId == null) {
-      _impression.userId = context.read<AuthService>().authUser.id;
+      var auth = context.read<AuthService>();
+      _impression.userId = auth.authUser.id;
+      _impression.fromTech = auth.authUser.tech;
     }
     return ChangeNotifierProvider<CLStructural>.value(
       value: _impression,

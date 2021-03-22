@@ -12,6 +12,7 @@ class CLImpression extends ChangeNotifier {
   double longitude;
   DateTime timeStamp;
   String placeTag;
+  bool fromTech;
 
   CLImpression({
     this.notes,
@@ -20,6 +21,7 @@ class CLImpression extends ChangeNotifier {
     this.longitude,
     this.timeStamp,
     this.placeTag,
+    this.fromTech,
   });
 
   String toJson() {
@@ -31,11 +33,11 @@ class CLImpression extends ChangeNotifier {
       "id": this.id,
       "userId": this.userId,
       "notes": this.notes,
-      // "images": this.images.map((i) => null).toList(),
       "latitude": this.latitude,
       "longitude": this.longitude,
       "timeStamp": this.timeStamp.toString(),
       "placeTag": this.placeTag,
+      "fromTech": this.fromTech,
     };
   }
 
@@ -43,7 +45,7 @@ class CLImpression extends ChangeNotifier {
     this.id = json["id"] as int;
     this.userId = json["userId"] as int;
     this.notes = json["notes"] as String;
-    // this.images = json["images"].cast<String>().toList();
+    this.fromTech = json["fromTech"] as bool;
     this.latitude = json["latitude"] as double;
     this.longitude = json["longitude"] as double;
     if (json["created"] != null) {
