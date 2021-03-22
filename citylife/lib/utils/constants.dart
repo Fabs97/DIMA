@@ -9,4 +9,5 @@ enum Badge {
   Daily5,
   Daily10,
   Daily30,
+  Techie,
 }

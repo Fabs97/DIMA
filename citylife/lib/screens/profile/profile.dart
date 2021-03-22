@@ -3,13 +3,16 @@ import 'dart:math';
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/screens/login/2fa_login_state.dart';
 import 'package:citylife/screens/profile/local_widgets/profile_two_factors_auth.dart';
+import 'package:citylife/services/api_services/badge_api_service.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
+import 'package:citylife/utils/badgeDialogState.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:citylife/utils/levels.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/utils/avatar.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +27,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  ConfettiController _confettiController;
+  @override
+  void dispose() {
+    _confettiController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthService auth = context.watch<AuthService>();
@@ -43,117 +53,30 @@ class _ProfileState extends State<Profile> {
                 padding: const EdgeInsets.all(15.0),
                 child: Consumer<ProfileState>(
                   builder: (context, state, _) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Spacer(),
-                        Spacer(),
-                        buildImageAvatar(constraints.maxHeight / 4, context),
-                        buildExpBar(user),
-                        Spacer(),
-                        Column(
-                          children: [
-                            TextFormField(
-                              initialValue: user.name,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.perm_identity),
-                              ),
-                              onChanged: (v) {
-                                state.editedName = v;
-                                state.hasBeenEdited = true;
-                              },
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(
-                                  color: Colors.grey,
+                    return Consumer<BadgeDialogState>(
+                      builder: (context, badgeDialog, _) => Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Spacer(),
+                          buildImageAvatar(constraints.maxHeight / 4, context),
+                          buildExpBar(user),
+                          Spacer(),
+                          Column(
+                            children: [
+                              TextFormField(
+                                initialValue: user.name,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.perm_identity),
                                 ),
-                                color: Colors.white,
+                                onChanged: (v) {
+                                  state.editedName = v;
+                                  state.hasBeenEdited = true;
+                                },
                               ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 6.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Icon(
-                                        Icons.work_outline,
-                                        // color: T.textFieldIconColor,
-                                      ),
-                                    ),
-                                    Text("Am I a technical user?"),
-                                    Transform.rotate(
-                                      angle: pi,
-                                      child: GestureDetector(
-                                        onTap: () => showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text(
-                                              'What do you mean by "technical user"?',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            content: Text(
-                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet dignissim eros. Ut hendrerit lacinia velit, nec lacinia risus ornare id. Etiam arcu dolor, finibus quis fringilla id, pretium dignissim nisl. Curabitur nibh justo, finibus sed sem eget, blandit feugiat elit. Suspendisse tincidunt luctus nulla, eu elementum risus luctus vitae. Etiam feugiat ut lacus ac consequat. Vestibulum in leo varius, dictum lacus non, luctus velit."),
-                                            actions: [
-                                              ElevatedButton(
-                                                child: Text("Close"),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 15.0,
-                                            right: 5.0,
-                                          ),
-                                          child: Icon(
-                                            Icons.error_outline_rounded,
-                                            size: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Switch(
-                                        value: user?.tech ?? false,
-                                        // * Disable switch if user is already a techie
-                                        onChanged: !(user?.tech ?? false)
-                                            ? (v) {
-                                                setState(() {
-                                                  state.hasBeenEdited = true;
-                                                  user.tech = v;
-                                                });
-                                              }
-                                            : (v) {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (!user.twofa) {
-                                    user.twofa = true;
-                                    state.hasBeenEdited = true;
-                                  }
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          ProfileTwoFactorsAuth(user: user));
-                                });
-                              },
-                              child: Container(
+                              Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
                                   border: Border.all(
@@ -169,50 +92,153 @@ class _ProfileState extends State<Profile> {
                                       Padding(
                                         padding: const EdgeInsets.all(12.0),
                                         child: Icon(
-                                          (user?.twofa ?? false)
-                                              ? Icons.lock_outline
-                                              : Icons.lock_open_outlined,
+                                          Icons.work_outline,
+                                          // color: T.textFieldIconColor,
                                         ),
                                       ),
-                                      Text("2 Factor Authentication"),
+                                      Text("Am I a technical user?"),
+                                      Transform.rotate(
+                                        angle: pi,
+                                        child: GestureDetector(
+                                          onTap: () => showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: Text(
+                                                'What do you mean by "technical user"?',
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              content: Text(
+                                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet dignissim eros. Ut hendrerit lacinia velit, nec lacinia risus ornare id. Etiam arcu dolor, finibus quis fringilla id, pretium dignissim nisl. Curabitur nibh justo, finibus sed sem eget, blandit feugiat elit. Suspendisse tincidunt luctus nulla, eu elementum risus luctus vitae. Etiam feugiat ut lacus ac consequat. Vestibulum in leo varius, dictum lacus non, luctus velit."),
+                                              actions: [
+                                                ElevatedButton(
+                                                  child: Text("Close"),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 15.0,
+                                              right: 5.0,
+                                            ),
+                                            child: Icon(
+                                              Icons.error_outline_rounded,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                       Spacer(),
                                       Padding(
                                         padding: EdgeInsets.only(right: 8.0),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_right_outlined,
+                                        child: Switch(
+                                          value: user?.tech ?? false,
+                                          // * Disable switch if user is already a techie
+                                          onChanged: !(user?.tech ?? false)
+                                              ? (v) {
+                                                  setState(() {
+                                                    state.hasBeenEdited = true;
+                                                    state.techEdited = true;
+                                                    user.tech = v;
+                                                  });
+                                                }
+                                              : (v) {},
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        Spacer(),
-                        Spacer(),
-                        Spacer(),
-                        !state.hasBeenEdited
-                            ? Consumer<TwoFALoginState>(
-                                builder: (context, state, _) => buildButton(
-                                    "Sign out", constraints.maxWidth, () {
-                                  state.authenticated = false;
-                                  auth.signOut(context);
-                                }),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (!user.twofa) {
+                                      user.twofa = true;
+                                      state.hasBeenEdited = true;
+                                    }
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            ProfileTwoFactorsAuth(user: user));
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Icon(
+                                            (user?.twofa ?? false)
+                                                ? Icons.lock_outline
+                                                : Icons.lock_open_outlined,
+                                          ),
+                                        ),
+                                        Text("2 Factor Authentication"),
+                                        Spacer(),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Icon(
+                                            Icons.keyboard_arrow_right_outlined,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               )
-                            : buildButton("Save profile", constraints.maxWidth,
-                                () async {
-                                user.name = state.editedName;
+                            ],
+                          ),
+                          Spacer(),
+                          Spacer(),
+                          Spacer(),
+                          Spacer(),
+                          !state.hasBeenEdited
+                              ? Consumer<TwoFALoginState>(
+                                  builder: (context, state, _) => buildButton(
+                                      "Sign out", constraints.maxWidth, () {
+                                    state.authenticated = false;
+                                    auth.signOut(context);
+                                  }),
+                                )
+                              : buildButton(
+                                  "Save profile", constraints.maxWidth,
+                                  () async {
+                                  user.name = state.editedName;
 
-                                auth.authUser = await UserAPIService.route(
-                                    "/update",
-                                    body: user);
-
-                                state.hasBeenEdited = false;
-                              }),
-                        Spacer(),
-                      ],
+                                  auth.authUser = await UserAPIService.route(
+                                      "/update",
+                                      body: user);
+                                  if (state.techEdited) {
+                                    var badge = await BadgeAPIService.route(
+                                      "/techie",
+                                      urlArgs: user.id,
+                                    );
+                                    badgeDialog.showBadgeDialog(
+                                      badge,
+                                      _confettiController = ConfettiController(
+                                        duration: Duration(milliseconds: 500),
+                                      ),
+                                    );
+                                  }
+                                  state.hasBeenEdited = false;
+                                }),
+                          Spacer(),
+                        ],
+                      ),
                     );
                   },
                 ),

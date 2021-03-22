@@ -248,7 +248,6 @@ class _LoginState extends State<Login> {
       int userId, AuthService auth, BadgeDialogState state) async {
     var b = await BadgeAPIService.route("/login", urlArgs: userId);
     if (b != null) {
-      auth.reloadUser();
       state.showBadgeDialog(
         b,
         _controller = ConfettiController(

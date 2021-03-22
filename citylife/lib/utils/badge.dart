@@ -5,7 +5,7 @@ class B {
   static final Map<Badge, BadgeResources> adges = {
     Badge.Daily3: BadgeResources(
       image: AssetImage("assets/images/avatar_1.jpg"),
-      text: "logging in for 3 days consecutively",
+      text: "logging in for 3 days consecutively!",
     ),
     Badge.Daily5: BadgeResources(
       image: AssetImage("assets/images/avatar_2.jpg"),
@@ -20,6 +20,11 @@ class B {
       image: AssetImage("assets/images/avatar_4.jpg"),
       text:
           "reaching the highest daily reward! You've been with us for a month straight! Unbelievable!",
+    ),
+    Badge.Techie: BadgeResources(
+      image: AssetImage("assets/images/avatar_5.jpg"),
+      text:
+          "becoming a techie! Now your impressions are going to be even more accurate!",
     ),
   };
 }

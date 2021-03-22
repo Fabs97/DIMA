@@ -74,7 +74,7 @@ class _AuthenticateState extends State<Authenticate> {
           create: (_) => TwoFALoginState(),
         ),
         Provider(
-          create: (context) => BadgeDialogState(context),
+          create: (context) => BadgeDialogState(context, auth)
         ),
       ],
       child: Consumer<TwoFALoginState>(

@@ -1,16 +1,20 @@
+import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/badge.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class BadgeDialogState {
   BuildContext context;
-  BadgeDialogState(this.context);
+  AuthService authService;
+  BadgeDialogState(this.context, this.authService);
 
   void showBadgeDialog(badge, cont) {
     cont.play();
+    authService.reloadUser();
     showAnimatedDialog(
       context: context,
       animationType: DialogTransitionType.fadeScale,

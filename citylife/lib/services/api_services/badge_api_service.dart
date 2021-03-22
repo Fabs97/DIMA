@@ -11,12 +11,24 @@ class BadgeAPIService {
     switch (subRoute) {
       case "/login":
         return _postLoginBadge(urlArgs);
+      case "/techie":
+        return _postTechieBadge(subRoute, urlArgs);
       default:
         throw BadgeAPIException("Error in Badge API Service");
     }
   }
 
-  static Future<Badge> _postLoginBadge(userId) async {
+  static Future<Badge> _postTechieBadge(String subRoute, int userId) async {
+    Response response =
+        await _client.post(APIENDPOINT + _badgeRoute + subRoute + "/$userId");
+    if (response.statusCode >= 300) {
+      throw BadgeAPIException(response.body ?? "Error in the postLoginBadge");
+    } else {
+      return Badge.Techie;
+    }
+  }
+
+  static Future<Badge> _postLoginBadge(int userId) async {
     Response response =
         await _client.post(APIENDPOINT + _badgeRoute + "/login/$userId");
     if (response.statusCode >= 300) {

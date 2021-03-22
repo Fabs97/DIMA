@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class ProfileState with ChangeNotifier {
   bool _hasBeenEdited = false;
+  bool _techEdited = true;
 
   String _editedName;
 
@@ -13,9 +14,14 @@ class ProfileState with ChangeNotifier {
   }
 
   bool get hasBeenEdited => _hasBeenEdited;
+  bool get techEdited => _techEdited;
 
   set hasBeenEdited(v) {
     _hasBeenEdited = v;
+    notifyListeners();
+  }
+  set techEdited(v) {
+    _techEdited = v;
     notifyListeners();
   }
 
