@@ -2,9 +2,12 @@ import 'package:citylife/screens/home/home.dart';
 import 'package:citylife/screens/impressions/newImpression.dart';
 import 'package:citylife/screens/my_impressions/my_impressions.dart';
 import 'package:citylife/screens/profile/profile.dart';
+import 'package:citylife/utils/badgeDialogState.dart';
+import 'package:citylife/utils/constants.dart';
 import 'package:citylife/utils/theme.dart';
-import 'package:citylife/widgets/custom_toast.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -15,22 +18,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedItem = 0;
+  ConfettiController controller;
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: buildBottomNavigationBar(context),
-      body: [
-        Home(),
-        MyImpressions(),
-        Container(), // ! required for the correct positioning of the widgets
-        Container(
-          child: GestureDetector(
-            onTap: () => CustomToast.toast(context, "Ciao"),
+    return Consumer<BadgeDialogState>(
+      builder: (context, state, _) => Scaffold(
+        bottomNavigationBar: buildBottomNavigationBar(context),
+        body: [
+          Home(),
+          MyImpressions(),
+          Container(), // ! required for the correct positioning of the widgets
+          Container(
+            child: GestureDetector(
+              onTap: () => state.showBadgeDialog(
+                Badge.Daily3,
+                controller = ConfettiController(
+                  duration: Duration(
+                    milliseconds: 500,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-        Profile(),
-      ].elementAt(_selectedItem),
+          Profile(),
+        ].elementAt(_selectedItem),
+      ),
     );
   }
 

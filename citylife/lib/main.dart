@@ -5,6 +5,7 @@ import 'package:citylife/screens/login/login.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
 import 'package:citylife/services/storage_service.dart';
+import 'package:citylife/utils/badgeDialogState.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +68,15 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthService>();
-    return ChangeNotifierProvider(
-      create: (_) => TwoFALoginState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TwoFALoginState(),
+        ),
+        Provider(
+          create: (context) => BadgeDialogState(context),
+        ),
+      ],
       child: Consumer<TwoFALoginState>(
         builder: (_, state, __) => _isLoadingInfo
             ? Center(

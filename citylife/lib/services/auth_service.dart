@@ -34,6 +34,10 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
+  void reloadUser() {
+    _getUserInfoByFirebaseId(_authUser.firebaseId);
+  }
+
   AuthService.instance({this.auth, this.client}) {
     if (this.auth == null) this.auth = FirebaseAuth.instance;
     try {

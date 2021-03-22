@@ -5,7 +5,7 @@ import 'package:citylife/utils/constants.dart';
 import 'package:http/http.dart' show Client, Response;
 
 class UserAPIService {
-  static final String userRoute = "/user";
+  static final String _userRoute = "/user";
   static Client _client;
 
   static Future<dynamic> route(String subRoute,
@@ -29,7 +29,7 @@ class UserAPIService {
 
   static Future<bool> _postCode(int userId, String code) async {
     Response response = await _client.post(
-      APIENDPOINT + userRoute + "/2fa/$userId",
+      APIENDPOINT + _userRoute + "/2fa/$userId",
       headers: {
         "x-citylife-code": code,
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ class UserAPIService {
 
   static Future<String> _getSecret(int userId) async {
     Response response = await _client.get(
-      APIENDPOINT + userRoute + "/2fa/$userId",
+      APIENDPOINT + _userRoute + "/2fa/$userId",
     );
 
     switch (response.statusCode) {
@@ -63,7 +63,7 @@ class UserAPIService {
 
   static Future<CLUser> _postNewUser(String subRoute, CLUser user) async {
     Response response = await _client.post(
-      APIENDPOINT + userRoute + subRoute,
+      APIENDPOINT + _userRoute + subRoute,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(user.toJson()),
     );
@@ -82,7 +82,7 @@ class UserAPIService {
   static Future<CLUser> _getByFirebaseId(
       String subRoute, String firebaseId) async {
     Response response = await _client.get(
-      APIENDPOINT + userRoute + subRoute + "/$firebaseId",
+      APIENDPOINT + _userRoute + subRoute + "/$firebaseId",
     );
 
     switch (response.statusCode) {
@@ -98,7 +98,7 @@ class UserAPIService {
 
   static Future<CLUser> _postUserUpdate(String subRoute, CLUser user) async {
     Response response = await _client.post(
-      APIENDPOINT + userRoute + subRoute,
+      APIENDPOINT + _userRoute + subRoute,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(user.toJson()),
     );

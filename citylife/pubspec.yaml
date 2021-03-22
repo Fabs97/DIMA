@@ -42,6 +42,8 @@ dependencies:
   device_apps:
   android_intent:
   pin_code_fields:
+  flutter_animated_dialog: 
+  confetti:
 
 dev_dependencies:
   flutter_test:
