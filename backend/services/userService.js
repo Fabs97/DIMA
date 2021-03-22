@@ -1,3 +1,4 @@
+const badgeDAO = require("../DAO/badgeDAO"); 
 const userDAO = require("../DAO/userDAO"); 
 const bcrypt = require("bcrypt");
 
@@ -13,13 +14,15 @@ module.exports = userService = {
     },
     insertUser: async (user) => {
         if (user.password) {
-            return await bcrypt.hash(user.password, 10).then(async function(hash){
+            user = await bcrypt.hash(user.password, 10).then(async function(hash){
                 user.password = hash;
                 return await userDAO.insertUser(user);
             });
         } else {
-            return await userDAO.insertUser(user);
+            user = await userDAO.insertUser(user);
         }
+        await badgeDAO.insertBadge(user.id);
+        return user;
     },
     updateUser: async (user) => {
         return await userDAO.updateUser(user);

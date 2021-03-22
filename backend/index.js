@@ -14,8 +14,10 @@ app.use(L);
 
 const userRoute = require("./routes/userRoute");
 const impressionRoute = require("./routes/impressionRoute");
+const badgeRoute = require("./routes/badgeRoute");
 app.use("/user", userRoute);
 app.use("/impression", impressionRoute);
+app.use("/badge", badgeRoute);
 
 app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on http://localhost:${port}!`));
 
