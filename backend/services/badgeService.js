@@ -8,6 +8,7 @@ const BADGE_POINTS = {
     "daily_5": 150,
     "daily_10": 200,
     "daily_30": 300,
+    "techie": 50,
 }
 
 module.exports = badgeService = {
@@ -57,5 +58,13 @@ module.exports = badgeService = {
             }, userId);
         }
         return null;
+    },
+    techie: async (userId) => {
+        const badge = "techie";
+        await badgeDAO.putBadge({
+            technical: true
+        }, userId);
+        await userDAO.updateUserExperience(userId, BADGE_POINTS[badge]);
+        return badge;
     }
 }

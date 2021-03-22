@@ -103,7 +103,7 @@ module.exports = userDAO = {
         return res[0];
     },
     updateUser: async (user) => {
-        let res = await db(T.userTable)
+        await db(T.userTable)
             .where("id", user.id)
             .update(user)
             .returning("id",
@@ -120,7 +120,7 @@ module.exports = userDAO = {
                     throw new E.CustomError(E.NotFound, "User not found");
                 }
             });
-        return res[0];
+        return user;
     },
     getUserSecret: async (userId) => {
         let res = await db(T.userTable)
