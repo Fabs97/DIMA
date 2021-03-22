@@ -53,9 +53,11 @@ The state of art of the application includes the following features:
   - [ ] *Badges acquisition*
 ## Customer
 ![Fulvio Re Cecconi](/readme_images/cecconi.jpg)
+
 [**Fulvio Re Cecconi**](https://www4.ceda.polimi.it/manifesti/manifesti/controller/ricerche/RicercaPerDocentiPublic.do?EVN_PRODOTTI=evento&k_doc=137763&polij_device_category=DESKTOP&__pj0=0&__pj1=3b1c7a0b7e373822c5bdac98fb70ae55), associate professor at [Politecnico di Milano - Dipartimento di Architettura, Ingegneria delle Costruzioni e Ambiente Costruito](https://www.dabc.polimi.it/).
 ## Supervisor
 ![Luciano Baresi](/readme_images/baresi.jpeg)
+
 [**Luciano Baresi**](https://baresi.faculty.polimi.it/), full professor at [Politecnico di Milano - Dipartimento di Elettronica, Informazione e Bioingegneria](https://www.deib.polimi.it/en/home).
 
 ----------
