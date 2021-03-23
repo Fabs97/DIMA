@@ -9,6 +9,13 @@ module.exports = impressionService = {
         return [...emotionals, ...structurals].sort((a, b) => a.created - b.created);
     },
 
+    getImpressionsByLatLongRange: async (lat, long) => {
+        const emotionals = await emotionalDAO.getEmotionalsByLatLongRange(lat, long);
+        const structurals = await structuralDAO.getStructuralsByLatLongRange(lat, long);
+
+        return [...emotionals, ...structurals].sort((a, b) => a.created - b.created);
+    },
+
 
     insertEmotional: async (impression) => {
         return await emotionalDAO.insertEmotional(impression);

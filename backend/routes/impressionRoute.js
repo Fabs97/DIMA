@@ -93,6 +93,24 @@ router.get("/byUser/:userId", async (req, res, next) => {
     E.sendJson(res, impressions);
 });
 
+router.get("/byLatLong/:latMin/:latMax/:longMin/:longMax", async (req, res, next) => {
+    const lat = {
+        min: parseFloat(req.params.latMin),
+        max: parseFloat(req.params.latMax),
+    };
+    const long = {
+        min: parseFloat(req.params.longMin),
+        max: parseFloat(req.params.longMax),
+    };
+
+    let impressions = await impressionService
+        .getImpressionsByLatLongRange(lat, long)
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, impressions);
+});
+
 router.get("/structural/byUser/:userId", async (req, res, next) => {
     const userId = req.params.userId;
     let structurals = await impressionService
