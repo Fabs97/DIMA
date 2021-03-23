@@ -47,16 +47,17 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                 child: selectedStep == 2
                     ? Consumer<StorageService>(
                         builder: (_, storageService, __) => Container(
-                            height: constraints.maxHeight * 0.45,
-                            child: [
-                              StructuralForm(),
-                              _sharedForm,
-                              SaveImpression(
-                                isStructural: true,
-                                impression: impression,
-                                storageService: storageService,
-                              ),
-                            ].elementAt(selectedStep)),
+                          height: constraints.maxHeight * 0.45,
+                          child: [
+                            StructuralForm(),
+                            _sharedForm,
+                            SaveImpression(
+                              isStructural: true,
+                              impression: impression,
+                              storageService: storageService,
+                            ),
+                          ].elementAt(selectedStep),
+                        ),
                       )
                     : Column(
                         children: [
