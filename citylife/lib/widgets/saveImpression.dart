@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/screens/home/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum UploadStatus { Saving, Saved, Error }
 
@@ -23,7 +27,6 @@ class SaveImpression extends StatefulWidget {
 }
 
 class _SaveImpressionState extends State<SaveImpression> {
-  bool saved = false;
   UploadStatus _uploadStatus = UploadStatus.Saving;
 
   void _saveImpression(CLImpression impression, StorageService storage) async {
@@ -33,8 +36,7 @@ class _SaveImpressionState extends State<SaveImpression> {
           await ImpressionsAPIService.route("/new", body: impression);
       if (savedImpression != null) {
         // Save images to storage
-        Future.wait(storage.uploadImageList(
-                impression is CLStructural,
+        Future.wait(storage.uploadImageList(impression is CLStructural,
                 savedImpression.id, impression.images))
             .then((_) {
           setState(() => _uploadStatus = UploadStatus.Saved);
@@ -66,6 +68,11 @@ class _SaveImpressionState extends State<SaveImpression> {
 
   @override
   Widget build(BuildContext context) {
+    if (_uploadStatus == UploadStatus.Saved) {
+      Timer(const Duration(seconds: 1), () {
+        Navigator.pop(context, widget.impression);
+      });
+    }
     return Center(
       child: <UploadStatus, Widget>{
         UploadStatus.Saving: SpinKitRipple(
