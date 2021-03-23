@@ -10,8 +10,9 @@ import 'package:provider/provider.dart';
 
 class LittleMap extends StatefulWidget {
   final bool watchStructural;
+  String placeTag = "";
 
-  const LittleMap({Key key, @required this.watchStructural}) : super(key: key);
+  LittleMap({Key key, @required this.watchStructural}) : super(key: key);
   @override
   _LittleMapState createState() => _LittleMapState();
 }
@@ -24,7 +25,6 @@ class _LittleMapState extends State<LittleMap> {
   PermissionStatus _permissionGranted;
   LocationData _locationData;
   double _zoom = 15;
-  String _placeTag = "";
   List<Marker> _markers = [];
 
   void _onMapCreated(GoogleMapController _cntlr) {
@@ -124,9 +124,8 @@ class _LittleMapState extends State<LittleMap> {
                     var placeTag = await GeocodingService.getAddressFrom(
                         _center.latitude, _center.longitude);
                     if (placeTag != null) {
-                      setState(() => impression.placeTag = placeTag ?? "");
-                    } else {
-                      print("placeTag is null");
+                      impression.placeTag = placeTag ?? "";
+                      widget.placeTag = impression.placeTag;
                     }
                     setImpressionMarker();
                   },
