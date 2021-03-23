@@ -47,7 +47,7 @@ class _EmotionalFormState extends State<EmotionalForm> {
                                 color: T.textDarkColor,
                               ),
                               Container(
-                                width: constraints.maxWidth * 0.64,
+                                width: constraints.maxWidth * 0.63,
                                 child: Slider(
                                   activeColor: T.primaryColor,
                                   min: 1,

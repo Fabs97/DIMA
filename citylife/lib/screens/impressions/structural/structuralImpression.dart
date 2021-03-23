@@ -25,7 +25,7 @@ class _StructuralImpressionState extends State<StructuralImpression> {
     watchStructural: true,
   );
   int selectedStep = 0;
-  int nbSteps = 4;
+  int nbSteps = 3;
   CLStructural _impression = CLStructural();
 
   @override
