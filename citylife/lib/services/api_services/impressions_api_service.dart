@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/screens/home/home.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:http/http.dart' show Client, Response;
 
@@ -16,6 +17,8 @@ class ImpressionsAPIService {
     switch (subRoute) {
       case "/byUser":
         return _getImpressions(subRoute, urlArgs);
+      case "/byLatLong":
+        return _getImpressionsByLatLong(subRoute, urlArgs);
       case "/emotional":
       case "/structural":
         return _deleteImpression(subRoute, urlArgs);
@@ -30,6 +33,27 @@ class ImpressionsAPIService {
       String subRoute, int id) async {
     Response response = await _client.delete(
       APIENDPOINT + impressionRoute + subRoute + "/$id",
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        return _parseImpressionsJson(response.body);
+      default:
+        throw new ImpressionsAPIException(response.body?.toString() ??
+            "Error in Impression API Service with code ${response.statusCode}");
+    }
+  }
+
+  static Future<List<CLImpression>> _getImpressionsByLatLong(
+      String subRoute, HomeArguments args) async {
+    Response response = await _client.get(
+      APIENDPOINT +
+          impressionRoute +
+          subRoute +
+          "/${args.latMin}" +
+          "/${args.latMax}" +
+          "/${args.longMin}" +
+          "/${args.longMax}",
     );
 
     switch (response.statusCode) {
