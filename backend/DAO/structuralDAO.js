@@ -16,7 +16,7 @@ module.exports = {
             notes: i.notes,
             latitude: i.latitude,
             longitude: i.longitude,
-            place_tag: i.place_tag
+            place_tag: i.placeTag
         }, ["id", "fromTech", "userId", "component", "pathology", "typology", "notes", "latitude", "longitude", "created", "place_tag"])
         .catch(e => {
             if (e) {
