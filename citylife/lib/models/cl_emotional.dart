@@ -37,13 +37,13 @@ class CLEmotional extends CLImpression {
     notifyListeners();
   }
 
-  CLEmotional({
-    cleanness,
-    happiness,
-    inclusiveness,
-    comfort,
-    safety,
-  });
+  CLEmotional(
+    this._cleanness,
+    this._happiness,
+    this._inclusiveness,
+    this._comfort,
+    this._safety,
+  );
 
   String toJson() {
     var data = super.toJsonMap();
