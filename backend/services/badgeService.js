@@ -85,36 +85,54 @@ module.exports = badgeService = {
         const impressions = emotional
             ? (await emotionalDAO.getEmotionalsByUserId(userId))
             : (await structuralDAO.getStructuralsByUserId(userId));
-        let count = impressions.length;
+        const badgeFromDB = await badgeDAO.getBadgeByUserId(userId);
+        const count = impressions.length;
         let badgeUpdate = {};
         let badge;
         switch (count) {
-            case 1:
+            case 1: {
                 badge = emotional ? "emotional_1" : "structural_1"; 
-                badgeUpdate[badge] = true;
-                break;
-            case 5:
+                if(!badgeFromDB[badge]){
+                    badgeUpdate[badge] = true;
+                }
+                break
+            };
+            case 5: {
                 badge = emotional ? "emotional_5" : "structural_5"; 
-                badgeUpdate[badge] = true;
-                break;
-            case 10:
+                if(!badgeFromDB[badge]){
+                    badgeUpdate[badge] = true;
+                }
+                break
+            };
+            case 10: {
                 badge = emotional ? "emotional_10" : "structural_10"; 
-                badgeUpdate[badge] = true;
+                if(!badgeFromDB[badge]){
+                    badgeUpdate[badge] = true;
+                }
                 break;
-            case 25:
+            }
+            case 25: {
                 badge = emotional ? "emotional_25" : "structural_25"; 
-                badgeUpdate[badge] = true;
+                if(!badgeFromDB[badge]){
+                    badgeUpdate[badge] = true;
+                }
                 break;
-            case 50:
+            }
+            case 50: {
                 badge = emotional ? "emotional_50" : "structural_50"; 
-                badgeUpdate[badge] = true;
+                if(!badgeFromDB[badge]){
+                    badgeUpdate[badge] = true;
+                }
                 break;
+            }
             default:
                 break;
         }
         if (badge !== null && badge !== undefined) {
-            await badgeDAO.putBadge(badgeUpdate, userId);
-            await userDAO.updateUserExperience(userId, BADGE_POINTS[badge]);
+            if (Object.entries(badgeUpdate).length > 0) {
+                await badgeDAO.putBadge(badgeUpdate, userId);
+                await userDAO.updateUserExperience(userId, BADGE_POINTS[badge]);
+            }
         }
         return badge;
     }
