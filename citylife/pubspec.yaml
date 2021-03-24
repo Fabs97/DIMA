@@ -38,12 +38,13 @@ dependencies:
   url_launcher: ^5.7.10
   geocoding: 
   open_mail_app:
-  qr_flutter: ^4.0.0
+  qr_flutter: 
   device_apps:
   android_intent:
   pin_code_fields:
   flutter_animated_dialog: 
   confetti:
+  fluster:
 
 dev_dependencies:
   flutter_test:
