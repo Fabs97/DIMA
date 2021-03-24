@@ -1,11 +1,13 @@
-import 'package:citylife/models/cl_impression.dart';
+import 'package:citylife/screens/home/local_widgets/map_helper.dart';
 import 'package:citylife/screens/home/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
+import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:latlong/latlong.dart' as ll;
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:citylife/screens/home/local_widgets/map_marker.dart';
 
 class HomeArguments {
   final double latMin;
@@ -31,11 +33,30 @@ class _HomeState extends State<Home> {
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData _locationData;
-  double _zoom = 15;
+  double _currentZoom = 15;
   Set<Circle> _circles;
+  Set<Marker> _markers = Set();
 
-  void _onMapCreated(GoogleMapController _cntlr) {
-    _controller = _cntlr;
+  int _minClusterZoom = 0;
+  int _maxClusterZoom = 19;
+  Fluster<MapMarker> _clusterManager;
+
+  Future<void> _updateMarkers([double updatedZoom]) async {
+    if (_clusterManager == null || updatedZoom == _currentZoom) return;
+
+    if (updatedZoom != null) {
+      _currentZoom = updatedZoom;
+    }
+
+    final updatedMarkers = await MapHelper.getClusterMarkers(
+      _clusterManager,
+      _currentZoom,
+      80,
+    );
+
+    _markers
+      ..clear()
+      ..addAll(updatedMarkers);
   }
 
   @override
@@ -73,7 +94,7 @@ class _HomeState extends State<Home> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: _center,
-          zoom: _zoom,
+          zoom: _currentZoom,
         ),
       ),
     );
@@ -90,14 +111,17 @@ class _HomeState extends State<Home> {
             builder: (_, state, __) => GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _center,
-                zoom: _zoom,
+                zoom: _currentZoom,
               ),
               mapType: MapType.normal,
               myLocationEnabled: true,
               tiltGesturesEnabled: false,
               myLocationButtonEnabled: true,
-              onMapCreated: _onMapCreated,
-              markers: state.markers,
+              onCameraMove: (position) => _updateMarkers(position.zoom),
+              onMapCreated: (_cntlr) {
+                _controller = _cntlr;
+              },
+              markers: _markers,
               circles: _circles,
               onCameraIdle: () {
                 if (_controller != null) {
@@ -119,6 +143,22 @@ class _HomeState extends State<Home> {
                     state.impressions = await ImpressionsAPIService.route(
                         "/byLatLong",
                         urlArgs: args);
+
+                    _clusterManager = await MapHelper.initClusterManager(
+                      state.markers,
+                      _minClusterZoom,
+                      _maxClusterZoom,
+                    );
+
+                    final updatedMarkers = await MapHelper.getClusterMarkers(
+                      _clusterManager,
+                      _currentZoom,
+                      80,
+                    );
+
+                    _markers
+                      ..clear()
+                      ..addAll(updatedMarkers);
 
                     // _circles = Set.from([
                     //   Circle(
