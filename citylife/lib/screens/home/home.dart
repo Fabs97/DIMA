@@ -1,11 +1,13 @@
-import 'package:citylife/models/cl_impression.dart';
+import 'package:citylife/screens/home/local_widgets/map_helper.dart';
 import 'package:citylife/screens/home/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
+import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:latlong/latlong.dart' as ll;
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:citylife/screens/home/local_widgets/map_marker.dart';
 
 class HomeArguments {
   final double latMin;
@@ -25,18 +27,32 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   HomeArguments args;
-  LatLng _center = LatLng(20.5937, 78.9629);
+  LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
   Location _location = new Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData _locationData;
-  double _zoom = 15;
+  double _currentZoom = 15;
   Set<Circle> _circles;
 
-  void _onMapCreated(GoogleMapController _cntlr) {
-    _controller = _cntlr;
-  }
+  int _minClusterZoom = 0;
+  int _maxClusterZoom = 19;
+  Fluster<MapMarker> _clusterManager;
+
+  // Future<void> _updateMarkers([double updatedZoom]) async {
+  //   if (_clusterManager == null || position.zoom == _currentZoom) return;
+
+  //   _currentZoom = position.zoom;
+
+  //   final updatedMarkers = await MapHelper.getClusterMarkers(
+  //     _clusterManager,
+  //     _currentZoom,
+  //     80,
+  //   );
+
+  //   _markers = updatedMarkers.toSet();
+  // }
 
   @override
   void initState() {
@@ -73,7 +89,7 @@ class _HomeState extends State<Home> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: _center,
-          zoom: _zoom,
+          zoom: _currentZoom,
         ),
       ),
     );
@@ -90,28 +106,44 @@ class _HomeState extends State<Home> {
             builder: (_, state, __) => GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _center,
-                zoom: _zoom,
+                zoom: _currentZoom,
               ),
               mapType: MapType.normal,
               myLocationEnabled: true,
               tiltGesturesEnabled: false,
               myLocationButtonEnabled: true,
-              onMapCreated: _onMapCreated,
-              markers: state.markers,
+              markers: state.googleMarkers,
               circles: _circles,
+              onCameraMove: (position) async {
+                if (_clusterManager == null || position.zoom == _currentZoom)
+                  return;
+
+                _currentZoom = position.zoom;
+
+                final updatedMarkers = await MapHelper.getClusterMarkers(
+                  _clusterManager,
+                  _currentZoom,
+                  80,
+                );
+
+                state.googleMarkers = updatedMarkers.toSet();
+              },
+              onMapCreated: (_cntlr) {
+                _controller = _cntlr;
+              },
               onCameraIdle: () {
                 if (_controller != null) {
                   _controller.getVisibleRegion().then((bounds) async {
                     LatLng northEast = bounds.northeast;
                     LatLng southWest = bounds.southwest;
 
-                    final distance = ll.DistanceHaversine().as(
-                          ll.LengthUnit.Meter,
-                          ll.LatLng(northEast.latitude, northEast.longitude),
-                          new ll.LatLng(
-                              northEast.latitude, southWest.longitude),
-                        ) /
-                        2;
+                    // final distance = ll.DistanceHaversine().as(
+                    //       ll.LengthUnit.Meter,
+                    //       ll.LatLng(northEast.latitude, northEast.longitude),
+                    //       new ll.LatLng(
+                    //           northEast.latitude, southWest.longitude),
+                    //     ) /
+                    //     2;
 
                     args = HomeArguments(southWest.latitude, northEast.latitude,
                         southWest.longitude, northEast.longitude);
@@ -119,6 +151,20 @@ class _HomeState extends State<Home> {
                     state.impressions = await ImpressionsAPIService.route(
                         "/byLatLong",
                         urlArgs: args);
+
+                    _clusterManager = await MapHelper.initClusterManager(
+                      state.markers,
+                      _minClusterZoom,
+                      _maxClusterZoom,
+                    );
+
+                    final updatedMarkers = await MapHelper.getClusterMarkers(
+                      _clusterManager,
+                      _currentZoom,
+                      80,
+                    );
+
+                    state.googleMarkers = updatedMarkers.toSet();
 
                     // _circles = Set.from([
                     //   Circle(
