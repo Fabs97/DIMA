@@ -99,10 +99,10 @@ class ImpressionsMapState extends State<ImpressionsMap> {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: [
-          Consumer<MyMarkersState>(
-            builder: (_, state, __) => GoogleMap(
+      child: Consumer<MyMarkersState>(
+        builder: (_, state, __) => Stack(
+          children: [
+            GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _center,
                 zoom: _currentZoom,
@@ -136,20 +136,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                     LatLng northEast = bounds.northeast;
                     LatLng southWest = bounds.southwest;
 
-                    // final distance = ll.DistanceHaversine().as(
-                    //       ll.LengthUnit.Meter,
-                    //       ll.LatLng(northEast.latitude, northEast.longitude),
-                    //       new ll.LatLng(
-                    //           northEast.latitude, southWest.longitude),
-                    //     ) /
-                    //     2;
-
                     args = HomeArguments(southWest.latitude, northEast.latitude,
                         southWest.longitude, northEast.longitude);
-
-                    state.impressions = await ImpressionsAPIService.route(
-                        "/byLatLong",
-                        urlArgs: args);
 
                     _clusterManager = await MapHelper.initClusterManager(
                       state.markers,
@@ -164,24 +152,23 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                     );
 
                     state.googleMarkers = updatedMarkers.toSet();
-
-                    // _circles = Set.from([
-                    //   Circle(
-                    //       circleId: CircleId("myCircle"),
-                    //       radius: distance * .95,
-                    //       center: _center,
-                    //       fillColor: Colors.amber,
-                    //       strokeColor: Colors.amber,
-                    //       onTap: () {
-                    //         print('circle pressed');
-                    //       })
-                    // ]);
                   });
                 }
               },
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ElevatedButton(
+                onPressed: () async {
+                  state.impressions = await ImpressionsAPIService.route(
+                      "/byLatLong",
+                      urlArgs: args);
+                },
+                child: Text("Retrieve info"),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
