@@ -1,5 +1,5 @@
-import 'package:citylife/screens/home/impressions_map.dart';
 import 'package:citylife/screens/impressions/newImpression.dart';
+import 'package:citylife/screens/impressions_map/impressions_map.dart';
 import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
 import 'package:citylife/screens/my_impressions/my_impressions.dart';
 import 'package:citylife/screens/profile/profile.dart';
