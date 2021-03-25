@@ -42,6 +42,7 @@ class _ProfileState extends State<Profile> {
     return ChangeNotifierProvider(
       create: (_) => ProfileState(user.name),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: LayoutBuilder(
           builder: (context, constraints) {

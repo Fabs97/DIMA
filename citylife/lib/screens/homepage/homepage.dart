@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedItem = 0;
   ConfettiController _controller;
+  
   @override
   void dispose() {
     _controller?.dispose();
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, badgeDialog, _) => ChangeNotifierProvider(
         create: (_) => MyMarkersState(),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: T.primaryColor,

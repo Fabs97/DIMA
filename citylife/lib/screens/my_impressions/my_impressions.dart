@@ -13,6 +13,7 @@ class MyImpressions extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => MyImpressionsState(auth.authUser.id),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: LayoutBuilder(
           builder: (_, constraints) {
