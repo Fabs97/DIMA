@@ -73,9 +73,7 @@ class _AuthenticateState extends State<Authenticate> {
         ChangeNotifierProvider(
           create: (_) => TwoFALoginState(),
         ),
-        Provider(
-          create: (context) => BadgeDialogState(context, auth)
-        ),
+        Provider(create: (context) => BadgeDialogState(context, auth)),
       ],
       child: Consumer<TwoFALoginState>(
         builder: (_, state, __) => _isLoadingInfo

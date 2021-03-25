@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:citylife/models/cl_impression.dart';
+import 'package:citylife/models/cl_structural.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -30,14 +32,10 @@ class StorageService {
     return ref.putFile(image).then((snapshot) => ref.getDownloadURL());
   }
 
-  DownloadTask downloadFile(String url) {
-    return _instance.ref(url).writeToFile(File('${appDocDir.path}/$url'));
-  }
-
   List<Future<String>> uploadImageList(
       bool isStructural, int impressionId, List<File> images,
       {Reference reference}) {
-        // TODO: if the error has to be changed, check the catch in the SaveImpression widget.
+    // TODO: if the error has to be changed, check the catch in the SaveImpression widget.
     if (images == null) throw new Exception("Images list was found null");
     final Reference ref = _instance
         .ref()
@@ -51,7 +49,14 @@ class StorageService {
         .toList();
   }
 
-  List<DownloadTask> downloadImageList(List<String> urls) {
-    return urls.map((url) => downloadFile(url)).toList();
+  Future<List<Future<String>>> dowloadImpressionImages(
+      CLImpression impression) async {
+    var list = await _instance
+        .ref()
+        .child("/impressions")
+        .child("/${(impression is CLStructural) ? "structural" : "emotional"}")
+        .child("/${impression.id}")
+        .listAll();
+    return list.items.map((e) => e.getDownloadURL()).toList();
   }
 }

@@ -24,10 +24,14 @@ class _SharedFormState extends State<SharedForm> {
   File imageFile;
   List<Widget> gridView;
 
+  TextEditingController _notesController = TextEditingController();
   @override
   initState() {
     super.initState();
     imageList = <File>[];
+    _notesController.addListener(() => setState(() {
+          _notesController.text;
+        }));
   }
 
   List<File> get imageList => widget.imageList;
@@ -37,9 +41,14 @@ class _SharedFormState extends State<SharedForm> {
     gridView = [
       _addNewImage(),
       ...widget.imageList
-          .map((e) => Image(
-                image: FileImage(e),
-                fit: BoxFit.fill,
+          .map((e) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    image: FileImage(e),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ))
           .toList()
     ];
@@ -54,44 +63,44 @@ class _SharedFormState extends State<SharedForm> {
       builder: (context, constraints) => Container(
         width: constraints.maxWidth * 0.8,
         height: constraints.maxHeight,
-        child: Column(
-          children: [
-            Container(
-              height: constraints.maxHeight * 0.75,
-              child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 122.0 / 86.0,
-                      crossAxisSpacing: 3,
-                      mainAxisSpacing: 3),
-                  itemCount: gridView.length,
-                  itemBuilder: (BuildContext context, index) {
-                    return gridView[index];
-                  }),
-            ),
-            TextFormField(
-              maxLines: 3,
-              initialValue: "",
-              decoration: InputDecoration(
-                hintText: "Notes",
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
-                  child: Icon(
-                    Icons.edit_outlined,
-                    color: T.primaryColor,
-                  ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: constraints.maxHeight * 0.6,
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: 122.0 / 86.0,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: gridView,
                 ),
               ),
-              onChanged: (v) => impression.notes = v,
-            ),
-          ],
+              TextFormField(
+                controller: _notesController,
+                maxLength: 255,
+                decoration: InputDecoration(
+                  hintText: "Notes",
+                  counterText: "${_notesController.text.length}/255",
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(bottom: 40.0),
+                    child: Icon(
+                      Icons.edit_outlined,
+                      color: T.primaryColor,
+                    ),
+                  ),
+                ),
+                onChanged: (v) => impression.notes = v,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   _getPhoto(value) async {
-    PickedFile pickedFile = await ImagePicker().getImage(
+    File pickedFile = await ImagePicker.pickImage(
       source: value ? ImageSource.gallery : ImageSource.camera,
       maxWidth: 122,
       maxHeight: 86,

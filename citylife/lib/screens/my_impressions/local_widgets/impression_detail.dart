@@ -24,12 +24,12 @@ class ImpressionDetail extends StatelessWidget {
         builder: (_, __) => Consumer<ImpressionDetailState>(
           builder: (_, state, __) => LayoutBuilder(
             builder: (_, constraints) => Consumer<StorageService>(
-              builder: (_, service, __) => AlertDialog(
+              builder: (_, service, __) => Dialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                contentPadding: EdgeInsets.all(0.0),
-                content: Container(
+                insetPadding: EdgeInsets.all(0.0),
+                child: Container(
                   width: constraints.maxWidth,
                   height: constraints.maxHeight,
                   child: SingleChildScrollView(
@@ -189,16 +189,41 @@ class ImpressionDetail extends StatelessWidget {
                           ),
                         ),
                         // Images Grid
-                        Container(
-                          height: constraints.maxHeight * .2,
-                          width: constraints.maxWidth * .9,
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            children: state.images
-                                .map(
-                                  (f) => Image.file(f),
-                                )
-                                .toList(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Container(
+                            height: constraints.maxHeight * .2,
+                            width: constraints.maxWidth * .9,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: state.images
+                                    .map(
+                                      (url) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Container(
+                                          width: 100.0,
+                                          height: 100.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0),
+                                            ),
+                                            image: DecorationImage(
+                                              image: NetworkImage(url),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          // child: Image.network(url),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
                           ),
                         ),
                       ],
