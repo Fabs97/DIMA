@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
-import 'package:citylife/screens/home/home.dart';
+import 'package:citylife/screens/home/impressions_map.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:http/http.dart' show Client, Response;
 

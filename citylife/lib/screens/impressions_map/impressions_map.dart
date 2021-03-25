@@ -1,13 +1,12 @@
-import 'package:citylife/screens/home/local_widgets/map_helper.dart';
-import 'package:citylife/screens/home/local_widgets/my_markers_state.dart';
+import 'package:citylife/screens/impressions_map/local_widgets/map_helper.dart';
+import 'package:citylife/screens/impressions_map/local_widgets/map_marker.dart';
+import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:latlong/latlong.dart' as ll;
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:citylife/screens/home/local_widgets/map_marker.dart';
 
 class HomeArguments {
   final double latMin;
@@ -18,14 +17,14 @@ class HomeArguments {
   HomeArguments(this.latMin, this.latMax, this.longMin, this.longMax);
 }
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class ImpressionsMap extends StatefulWidget {
+  ImpressionsMap({Key key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  ImpressionsMapState createState() => ImpressionsMapState();
 }
 
-class _HomeState extends State<Home> {
+class ImpressionsMapState extends State<ImpressionsMap> {
   HomeArguments args;
   LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
