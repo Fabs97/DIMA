@@ -1,6 +1,6 @@
-import 'package:citylife/screens/home/home.dart';
-import 'package:citylife/screens/home/local_widgets/my_markers_state.dart';
+import 'package:citylife/screens/home/impressions_map.dart';
 import 'package:citylife/screens/impressions/newImpression.dart';
+import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
 import 'package:citylife/screens/my_impressions/my_impressions.dart';
 import 'package:citylife/screens/profile/profile.dart';
 import 'package:citylife/utils/badgeDialogState.dart';
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           body: [
-            Home(),
+            ImpressionsMap(),
             MyImpressions(),
             Container(), // ! required for the correct positioning of the widgets
             Container(
