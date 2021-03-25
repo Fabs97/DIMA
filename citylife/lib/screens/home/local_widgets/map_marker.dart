@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 class MapMarker extends Clusterable {
   String id;
   LatLng position;
-  Icon icon;
+  BitmapDescriptor icon;
 
   MapMarker({
     @required this.id,
@@ -32,5 +32,6 @@ class MapMarker extends Clusterable {
           position.latitude,
           position.longitude,
         ),
+        icon: icon,
       );
 }
