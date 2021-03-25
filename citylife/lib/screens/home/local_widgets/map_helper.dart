@@ -54,9 +54,9 @@ class MapHelper {
     if (clusterManager == null) return Future.value([]);
 
     // [southwestLng, southwestLat, northeastLng, northeastLat]
-    return Future.wait(clusterManager.clusters(
-        [-180, -85, 180, 85], currentZoom.toInt()).map((mapMarker) async {
-      return mapMarker.toMarker();
-    }).toList());
+    return Future.wait(clusterManager
+        .clusters([-180, -85, 180, 85], currentZoom.toInt())
+        .map((mapMarker) async => mapMarker.toMarker())
+        .toList());
   }
 }
