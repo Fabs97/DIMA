@@ -1,6 +1,6 @@
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
-import 'package:citylife/screens/impressions_map/local_widgets/map_marker.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

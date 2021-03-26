@@ -1,7 +1,7 @@
 import 'package:citylife/screens/badges_screen/badges_screen.dart';
 import 'package:citylife/screens/impressions/newImpression.dart';
-import 'package:citylife/screens/impressions_map/impressions_map.dart';
-import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/my_markers_state.dart';
+import 'package:citylife/screens/map_impressions/map_impressions.dart';
 import 'package:citylife/screens/my_impressions/my_impressions.dart';
 import 'package:citylife/screens/profile/profile.dart';
 import 'package:citylife/utils/badgeDialogState.dart';
@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedItem = 0;
   ConfettiController _controller;
-  
+
   @override
   void dispose() {
     _controller?.dispose();
