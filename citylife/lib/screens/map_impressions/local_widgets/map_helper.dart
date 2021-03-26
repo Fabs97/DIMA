@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:citylife/screens/impressions_map/local_widgets/map_marker.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
