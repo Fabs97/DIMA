@@ -1,7 +1,8 @@
-import 'package:citylife/screens/impressions_map/local_widgets/map_helper.dart';
-import 'package:citylife/screens/impressions_map/local_widgets/map_marker.dart';
-import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/map_helper.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
+import 'package:citylife/utils/theme.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,6 +26,7 @@ class ImpressionsMap extends StatefulWidget {
 }
 
 class ImpressionsMapState extends State<ImpressionsMap> {
+  var isVisible = true;
   HomeArguments args;
   LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
@@ -152,19 +154,53 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                     );
 
                     state.googleMarkers = updatedMarkers.toSet();
+                    setState(() {
+                      isVisible = true;
+                    });
                   });
                 }
               },
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: () async {
-                  state.impressions = await ImpressionsAPIService.route(
-                      "/byLatLong",
-                      urlArgs: args);
-                },
-                child: Text("Retrieve info"),
+            Visibility(
+              visible: isVisible,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: T.structuralColor,
+                      padding: const EdgeInsets.all(12.0),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      state.impressions = await ImpressionsAPIService.route(
+                          "/byLatLong",
+                          urlArgs: args);
+
+                      _clusterManager = await MapHelper.initClusterManager(
+                        state.markers,
+                        _minClusterZoom,
+                        _maxClusterZoom,
+                      );
+
+                      final updatedMarkers = await MapHelper.getClusterMarkers(
+                        _clusterManager,
+                        _currentZoom,
+                        80,
+                      );
+
+                      state.googleMarkers = updatedMarkers.toSet();
+
+                      setState(() {
+                        isVisible = false;
+                      });
+                    },
+                    child: Text("Retrieve info"),
+                  ),
+                ),
               ),
             )
           ],
