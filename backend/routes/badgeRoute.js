@@ -3,6 +3,18 @@ const E = require("../utils/customError");
 
 const badgeService = require("../services/badgeService");
 
+router.get("/by/:userId", async (req, res, next) => {
+    const userId = req.params.userId;
+
+    const result = await badgeService
+        .getBy(userId)
+        .catch(e => {
+            E.sendError(res, e.code ?? E.InternalServerError, e.message);
+        });
+    
+    E.sendJson(res, result);
+});
+
 router.post("/login/:userId", async (req, res, next) => {
     const userId = req.params.userId;
 

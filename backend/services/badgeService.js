@@ -26,6 +26,9 @@ const BADGE_POINTS = {
 }
 
 module.exports = badgeService = {
+    getBy: async (userId) => {
+        return await badgeDAO.getBadgeByUserId(userId);
+    },
     loggedIn: async (userId) => {
         let badge = await badgeDAO.getBadgeByUserId(userId);
         if (badge === null || badge === undefined) throw new E.CustomError(E.NotFound, "Badge not found");
