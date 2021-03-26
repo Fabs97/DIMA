@@ -29,5 +29,8 @@ module.exports = userService = {
     },
     getUserSecret: async (id) => {
         return await userDAO.getUserSecret(id);
+    },
+    getLeaderboard: async () => {
+        return await userDAO.getLeaderboard();
     }
 };
