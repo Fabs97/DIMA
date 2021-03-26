@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:http/http.dart' show Client, Response;
+import 'package:path/path.dart';
 
 class BadgeAPIService {
   static final String _badgeRoute = "/badge";
@@ -9,6 +13,8 @@ class BadgeAPIService {
       {dynamic body, dynamic urlArgs, Client client}) {
     _client = client ?? new Client();
     switch (subRoute) {
+      case "/by":
+        return _getBadge(subRoute, urlArgs);
       case "/login":
         return _postLoginBadge(urlArgs);
       case "/techie":
@@ -19,6 +25,18 @@ class BadgeAPIService {
         return _postImpressionBadge(subRoute, urlArgs, false);
       default:
         throw BadgeAPIException("Error in Badge API Service");
+    }
+  }
+
+  static Future<CLBadge> _getBadge(String subRoute, int userId) async {
+    Response response =
+        await _client.get(APIENDPOINT + _badgeRoute + subRoute + "/$userId");
+    switch (response.statusCode) {
+      case 200:
+        return CLBadge.fromJson(jsonDecode(response.body));
+      default:
+        throw new BadgeAPIException(response.body ??
+            "Error while retrieving the badges of user $userId");
     }
   }
 

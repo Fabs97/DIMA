@@ -4,7 +4,6 @@ import 'package:citylife/utils/theme.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class BadgeDialogState {

@@ -1,10 +1,10 @@
+import 'package:citylife/screens/badges_screen/badges_screen.dart';
 import 'package:citylife/screens/impressions/newImpression.dart';
 import 'package:citylife/screens/impressions_map/impressions_map.dart';
 import 'package:citylife/screens/impressions_map/local_widgets/my_markers_state.dart';
 import 'package:citylife/screens/my_impressions/my_impressions.dart';
 import 'package:citylife/screens/profile/profile.dart';
 import 'package:citylife/utils/badgeDialogState.dart';
-import 'package:citylife/utils/constants.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/saveImpression.dart';
 import 'package:confetti/confetti.dart';
@@ -98,18 +98,7 @@ class _HomePageState extends State<HomePage> {
             ImpressionsMap(),
             MyImpressions(),
             Container(), // ! required for the correct positioning of the widgets
-            Container(
-              child: GestureDetector(
-                onTap: () => badgeDialog.showBadgeDialog(
-                  Badge.Daily3,
-                  _controller = ConfettiController(
-                    duration: Duration(
-                      milliseconds: 500,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            BadgesScreen(),
             Profile(),
           ].elementAt(_selectedItem),
         ),
