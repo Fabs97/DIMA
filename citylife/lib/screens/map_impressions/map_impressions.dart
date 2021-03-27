@@ -110,7 +110,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                           80,
                         );
 
-                        state.googleMarkers = updatedMarkers.toSet();
+                        state.googleMarkers =
+                            await getNiceMarkers(updatedMarkers.toSet());
                       },
                       onMapCreated: (cntlr) {
                         _controller = cntlr;
@@ -142,7 +143,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                 80,
                               );
 
-                              state.googleMarkers = updatedMarkers.toSet();
+                              state.googleMarkers =
+                                  await getNiceMarkers(updatedMarkers.toSet());
                               state.isButtonVisible = true;
                             });
                           } else {
@@ -175,7 +177,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                 80,
                               );
 
-                              state.googleMarkers = updatedMarkers.toSet();
+                              state.googleMarkers =
+                                  await getNiceMarkers(updatedMarkers.toSet());
                               state.isFirstMove = false;
                             });
                           }
@@ -216,7 +219,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                 80,
                               );
 
-                              state.googleMarkers = updatedMarkers.toSet();
+                              state.googleMarkers =
+                                  await getNiceMarkers(updatedMarkers.toSet());
                               state.isButtonVisible = false;
                             },
                             child: Text("Retrieve info"),
@@ -241,5 +245,20 @@ class ImpressionsMapState extends State<ImpressionsMap> {
         },
       ),
     );
+  }
+
+  Future<Set<Marker>> getNiceMarkers(Set<Marker> markers) async {
+    var res = await Future.wait(
+      markers.map(
+        (m) async {
+          // TODO: implement Map Helper function
+          // var icon = await MapHelper.;
+          // TODO: rebuild marker
+          // return Marker();
+          return m;
+        },
+      ),
+    );
+    return res.toSet();
   }
 }
