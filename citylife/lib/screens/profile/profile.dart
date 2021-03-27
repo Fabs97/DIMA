@@ -112,8 +112,7 @@ class _ProfileState extends State<Profile> {
                                                 'What do you mean by "technical user"?',
                                                 textAlign: TextAlign.center,
                                               ),
-                                              content: Text(
-                                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet dignissim eros. Ut hendrerit lacinia velit, nec lacinia risus ornare id. Etiam arcu dolor, finibus quis fringilla id, pretium dignissim nisl. Curabitur nibh justo, finibus sed sem eget, blandit feugiat elit. Suspendisse tincidunt luctus nulla, eu elementum risus luctus vitae. Etiam feugiat ut lacus ac consequat. Vestibulum in leo varius, dictum lacus non, luctus velit."),
+                                              content: Text(techText),
                                               actions: [
                                                 CustomGradientButton(
                                                   title: "Close",
@@ -148,14 +147,64 @@ class _ProfileState extends State<Profile> {
                                           value: user?.tech ?? false,
                                           // * Disable switch if user is already a techie
                                           onChanged: !(user?.tech ?? false)
-                                              ? (v) {
-                                                  setState(() {
-                                                    state.hasBeenEdited = true;
-                                                    state.techEdited = true;
-                                                    user.tech = v;
-                                                  });
+                                              ? (_) async {
+                                                  var becomeTech =
+                                                      await showAnimatedDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    animationType:
+                                                        DialogTransitionType
+                                                            .fadeScale,
+                                                    builder: (_) => AlertDialog(
+                                                      title: Text(
+                                                        "Are you sure you want to become a technical user?",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      content: Text(
+                                                          "You should know exactly what we mean by \"Technical User\"!\n$techText"),
+                                                      actions: [
+                                                        CustomGradientButton(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .2,
+                                                          callback: () =>
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  true),
+                                                          title: "I'm a techie",
+                                                          height: 10.0,
+                                                        ),
+                                                        CustomGradientButton(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .2,
+                                                          callback: () =>
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  false),
+                                                          title:
+                                                              "Probably I'm not",
+                                                          height: 10.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                  if (becomeTech != null) {
+                                                    setState(() {
+                                                      state.hasBeenEdited =
+                                                          becomeTech;
+                                                      state.techEdited =
+                                                          becomeTech;
+                                                      user.tech = becomeTech;
+                                                    });
+                                                  }
                                                 }
-                                              : (v) {},
+                                              : (_) {},
                                         ),
                                       ),
                                     ],
