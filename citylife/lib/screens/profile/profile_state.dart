@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class ProfileState with ChangeNotifier {
   bool _hasBeenEdited = false;
-  bool _techEdited = true;
+  bool _techEdited = false;
 
   String _editedName;
 

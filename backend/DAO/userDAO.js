@@ -147,4 +147,15 @@ module.exports = userDAO = {
                 }
             });
     },
+    getLeaderboard: async () => {
+        return await db(T.userTable)
+            .select("id", "name", "exp", "avatar")
+            .orderBy("exp", "desc")
+            .limit(10)
+            .catch(e => {
+                if (e) {
+                    throw new E.CustomError(E.InternalServerError, "Error while trying to retrieve the user leaderboard");
+                }
+            });
+    }
 }

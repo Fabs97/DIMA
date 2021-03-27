@@ -5,6 +5,15 @@ const O  = require("../utils/otp");
 
 const userService = require("../services/userService");
 
+router.get("/leaderboard", async (req, res, next) => {
+    const leaderboard = await userService
+        .getLeaderboard()
+        .catch(e => {
+            E.sendError(res, e.code, e.message);
+        });
+    E.sendJson(res, leaderboard);
+});
+
 router.get("/byUser/:id", async (req, res, next) => {
     const userId = req.params.id;
     if (!userId) {

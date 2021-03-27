@@ -6,12 +6,12 @@ import 'package:citylife/services/api_services/badge_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/badgeDialogState.dart';
 import 'package:citylife/utils/theme.dart';
+import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:citylife/widgets/custom_toast.dart';
 import 'package:citylife/widgets/logo.dart';
 import 'package:confetti/confetti.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:open_mail_app/open_mail_app.dart';
 
@@ -186,50 +186,65 @@ class _LoginState extends State<Login> {
                             Spacer(),
                             _isVerifyingEmail
                                 ? Container()
-                                : buildSignInButton(() async {
-                                    if (_formKey.currentState.validate()) {
-                                      try {
-                                        CLUser u =
-                                            await auth.signInWithEmailAndPassword(
-                                                _email, _password);
-                                        _dailyLoginBadge(u.id, auth, state);
-                                      } on AuthException catch (e) {
-                                        if (e.message.compareTo(
-                                                "Sent verification email") ==
-                                            0) {
-                                          CustomToast.toast(
-                                              context, "${e.message} to $_email");
-                                          // TODO: iOS needs a different handling, check the documentation
-                                          var openEmailAppResult =
-                                              await OpenMailApp.openMailApp(
-                                            nativePickerTitle:
-                                                'Select email app to open',
-                                          );
-                                          if (!openEmailAppResult.didOpen ||
-                                              openEmailAppResult.canOpen) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (_) {
-                                                return MailAppPickerDialog(
-                                                  mailApps:
-                                                      openEmailAppResult.options,
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 20.0,
+                                      right: 10.0,
+                                      left: 10.0,
+                                      bottom: 30.0,
+                                    ),
+                                    child: CustomGradientButton(
+                                      title: "Sign In",
+                                      callback: () async {
+                                        if (_formKey.currentState.validate()) {
+                                          try {
+                                            CLUser u = await auth
+                                                .signInWithEmailAndPassword(
+                                                    _email, _password);
+                                            _dailyLoginBadge(u.id, auth, state);
+                                          } on AuthException catch (e) {
+                                            if (e.message.compareTo(
+                                                    "Sent verification email") ==
+                                                0) {
+                                              CustomToast.toast(context,
+                                                  "${e.message} to $_email");
+                                              // TODO: iOS needs a different handling, check the documentation
+                                              var openEmailAppResult =
+                                                  await OpenMailApp.openMailApp(
+                                                nativePickerTitle:
+                                                    'Select email app to open',
+                                              );
+                                              if (!openEmailAppResult.didOpen ||
+                                                  openEmailAppResult.canOpen) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) {
+                                                    return MailAppPickerDialog(
+                                                      mailApps:
+                                                          openEmailAppResult
+                                                              .options,
+                                                    );
+                                                  },
                                                 );
-                                              },
-                                            );
+                                              }
+                                              setState(() =>
+                                                  _isVerifyingEmail = true);
+                                              _emailVerificationTimer =
+                                                  Timer.periodic(
+                                                      Duration(seconds: 5),
+                                                      (timer) {
+                                                checkEmailVerified(auth, state);
+                                              });
+                                            } else {
+                                              CustomToast.toast(
+                                                  context, e.message);
+                                            }
                                           }
-                                          setState(
-                                              () => _isVerifyingEmail = true);
-                                          _emailVerificationTimer =
-                                              Timer.periodic(Duration(seconds: 5),
-                                                  (timer) {
-                                            checkEmailVerified(auth, state);
-                                          });
-                                        } else {
-                                          CustomToast.toast(context, e.message);
                                         }
-                                      }
-                                    }
-                                  }, constraints.maxWidth),
+                                      },
+                                      width: constraints.maxWidth,
+                                    ),
+                                  ),
                           ],
                         ),
                       ),
@@ -270,34 +285,6 @@ class _LoginState extends State<Login> {
       _dailyLoginBadge(u.id, auth, state);
       setState(() => _isVerifyingEmail = false);
     }
-  }
-
-  Widget buildSignInButton(Function() buttonCallback, double width) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 20.0,
-        right: 10.0,
-        left: 10.0,
-        bottom: 30.0,
-      ),
-      child: GradientButton(
-        callback: buttonCallback,
-        gradient: T.buttonGradient,
-        increaseWidthBy: width,
-        increaseHeightBy: 20.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Sign In",
-            style: TextStyle(
-              color: T.textLightColor,
-              fontSize: 16.0,
-            ),
-          ),
-        ),
-        shadowColor: Colors.black.withOpacity(.25),
-      ),
-    );
   }
 
   Widget buildPasswordFormField() {
