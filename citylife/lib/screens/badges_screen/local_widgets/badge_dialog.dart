@@ -1,6 +1,7 @@
 import 'package:citylife/utils/badge.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:citylife/utils/theme.dart';
+import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:flutter/material.dart';
 
 class BadgeDialog extends StatelessWidget {
@@ -47,11 +48,13 @@ class BadgeDialog extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            ElevatedButton(
-              onPressed: () {
+            CustomGradientButton(
+              callback: () {
                 Navigator.pop(context);
               },
-              child: Text("Got it!"),
+              width: MediaQuery.of(context).size.width * .2,
+              height: 15.0,
+              title: "Got it!",
             )
           ],
         ),
