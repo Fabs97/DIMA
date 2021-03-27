@@ -26,7 +26,6 @@ class ImpressionsMap extends StatefulWidget {
 }
 
 class ImpressionsMapState extends State<ImpressionsMap> {
-  var isVisible = true;
   HomeArguments args;
   LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
@@ -41,20 +40,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
   int _maxClusterZoom = 19;
   Fluster<MapMarker> _clusterManager;
 
-  // Future<void> _updateMarkers([double updatedZoom]) async {
-  //   if (_clusterManager == null || position.zoom == _currentZoom) return;
-
-  //   _currentZoom = position.zoom;
-
-  //   final updatedMarkers = await MapHelper.getClusterMarkers(
-  //     _clusterManager,
-  //     _currentZoom,
-  //     80,
-  //   );
-
-  //   _markers = updatedMarkers.toSet();
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -67,33 +52,25 @@ class ImpressionsMapState extends State<ImpressionsMap> {
     _controller.dispose();
   }
 
-  void _checkLocationPermission() async {
+  Future<LatLng> _checkLocationPermission() async {
     _serviceEnabled = await _location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await _location.requestService();
       if (!_serviceEnabled) {
-        return;
+        throw new Exception("Could not enable location");
       }
     }
     _permissionGranted = await _location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await _location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
-        return;
+        throw new Exception("Please grant access to location service");
       }
     }
 
     _locationData = await _location.getLocation();
     _center = LatLng(_locationData.latitude, _locationData.longitude);
-
-    _controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: _center,
-          zoom: _currentZoom,
-        ),
-      ),
-    );
+    return _center;
   }
 
   @override
@@ -101,110 +78,167 @@ class ImpressionsMapState extends State<ImpressionsMap> {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: Consumer<MyMarkersState>(
-        builder: (_, state, __) => Stack(
-          children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: _currentZoom,
-              ),
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              tiltGesturesEnabled: false,
-              myLocationButtonEnabled: true,
-              markers: state.googleMarkers,
-              circles: _circles,
-              onCameraMove: (position) async {
-                if (_clusterManager == null || position.zoom == _currentZoom)
-                  return;
-
-                _currentZoom = position.zoom;
-
-                final updatedMarkers = await MapHelper.getClusterMarkers(
-                  _clusterManager,
-                  _currentZoom,
-                  80,
-                );
-
-                state.googleMarkers = updatedMarkers.toSet();
-              },
-              onMapCreated: (_cntlr) {
-                _controller = _cntlr;
-              },
-              onCameraIdle: () {
-                if (_controller != null) {
-                  _controller.getVisibleRegion().then((bounds) async {
-                    LatLng northEast = bounds.northeast;
-                    LatLng southWest = bounds.southwest;
-
-                    args = HomeArguments(southWest.latitude, northEast.latitude,
-                        southWest.longitude, northEast.longitude);
-
-                    _clusterManager = await MapHelper.initClusterManager(
-                      state.markers,
-                      _minClusterZoom,
-                      _maxClusterZoom,
-                    );
-
-                    final updatedMarkers = await MapHelper.getClusterMarkers(
-                      _clusterManager,
-                      _currentZoom,
-                      80,
-                    );
-
-                    state.googleMarkers = updatedMarkers.toSet();
-                    setState(() {
-                      isVisible = true;
-                    });
-                  });
-                }
-              },
-            ),
-            Visibility(
-              visible: isVisible,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: T.structuralColor,
-                      padding: const EdgeInsets.all(12.0),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0),
+      child: FutureBuilder(
+        future: _checkLocationPermission(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return Consumer<MyMarkersState>(
+                builder: (_, state, __) => Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: _center,
+                        zoom: _currentZoom,
                       ),
+                      mapType: MapType.normal,
+                      myLocationEnabled: true,
+                      tiltGesturesEnabled: false,
+                      myLocationButtonEnabled: true,
+                      markers: state.googleMarkers,
+                      circles: _circles,
+                      onCameraMove: (position) async {
+                        if (_clusterManager == null ||
+                            position.zoom == _currentZoom) return;
+
+                        _currentZoom = position.zoom;
+
+                        final updatedMarkers =
+                            await MapHelper.getClusterMarkers(
+                          _clusterManager,
+                          _currentZoom,
+                          80,
+                        );
+
+                        state.googleMarkers = updatedMarkers.toSet();
+                      },
+                      onMapCreated: (cntlr) {
+                        _controller = cntlr;
+                      },
+                      onCameraIdle: () {
+                        if (_controller != null) {
+                          if (!state.isFirstMove) {
+                            _controller.getVisibleRegion().then((bounds) async {
+                              LatLng northEast = bounds.northeast;
+                              LatLng southWest = bounds.southwest;
+
+                              args = HomeArguments(
+                                  southWest.latitude,
+                                  northEast.latitude,
+                                  southWest.longitude,
+                                  northEast.longitude);
+
+                              _clusterManager =
+                                  await MapHelper.initClusterManager(
+                                state.markers,
+                                _minClusterZoom,
+                                _maxClusterZoom,
+                              );
+
+                              final updatedMarkers =
+                                  await MapHelper.getClusterMarkers(
+                                _clusterManager,
+                                _currentZoom,
+                                80,
+                              );
+
+                              state.googleMarkers = updatedMarkers.toSet();
+                              state.isButtonVisible = true;
+                            });
+                          } else {
+                            _controller.getVisibleRegion().then((bounds) async {
+                              LatLng northEast = bounds.northeast;
+                              LatLng southWest = bounds.southwest;
+
+                              args = HomeArguments(
+                                  southWest.latitude,
+                                  northEast.latitude,
+                                  southWest.longitude,
+                                  northEast.longitude);
+
+                              state.impressions =
+                                  await ImpressionsAPIService.route(
+                                      "/byLatLong",
+                                      urlArgs: args);
+
+                              _clusterManager =
+                                  await MapHelper.initClusterManager(
+                                state.markers,
+                                _minClusterZoom,
+                                _maxClusterZoom,
+                              );
+
+                              final updatedMarkers =
+                                  await MapHelper.getClusterMarkers(
+                                _clusterManager,
+                                _currentZoom,
+                                80,
+                              );
+
+                              state.googleMarkers = updatedMarkers.toSet();
+                              state.isFirstMove = false;
+                            });
+                          }
+                        }
+                      },
                     ),
-                    onPressed: () async {
-                      state.impressions = await ImpressionsAPIService.route(
-                          "/byLatLong",
-                          urlArgs: args);
+                    Visibility(
+                      visible: state.isButtonVisible,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: T.structuralColor,
+                              padding: const EdgeInsets.all(12.0),
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0),
+                              ),
+                            ),
+                            onPressed: () async {
+                              state.impressions =
+                                  await ImpressionsAPIService.route(
+                                      "/byLatLong",
+                                      urlArgs: args);
 
-                      _clusterManager = await MapHelper.initClusterManager(
-                        state.markers,
-                        _minClusterZoom,
-                        _maxClusterZoom,
-                      );
+                              _clusterManager =
+                                  await MapHelper.initClusterManager(
+                                state.markers,
+                                _minClusterZoom,
+                                _maxClusterZoom,
+                              );
 
-                      final updatedMarkers = await MapHelper.getClusterMarkers(
-                        _clusterManager,
-                        _currentZoom,
-                        80,
-                      );
+                              final updatedMarkers =
+                                  await MapHelper.getClusterMarkers(
+                                _clusterManager,
+                                _currentZoom,
+                                80,
+                              );
 
-                      state.googleMarkers = updatedMarkers.toSet();
-
-                      setState(() {
-                        isVisible = false;
-                      });
-                    },
-                    child: Text("Retrieve info"),
-                  ),
+                              state.googleMarkers = updatedMarkers.toSet();
+                              state.isButtonVisible = false;
+                            },
+                            child: Text("Retrieve info"),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            )
-          ],
-        ),
+              );
+            } else {
+              // ! Has error, show some kind of user notification!
+              // * Create some kind of message (maybe a small icon)
+              // * and show a CustomToast notifying the user of the problem
+              return Container();
+            }
+          } else {
+            // ! Waiting for data, show something else
+            // * Create something like Circular Progress Indicator or something else
+            return Container();
+          }
+        },
       ),
     );
   }
