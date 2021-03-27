@@ -15,6 +15,7 @@ import 'package:citylife/utils/avatar.dart';
 import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:provider/provider.dart';
 
 import 'profile_state.dart';
@@ -101,8 +102,11 @@ class _ProfileState extends State<Profile> {
                                       Transform.rotate(
                                         angle: pi,
                                         child: GestureDetector(
-                                          onTap: () => showDialog(
+                                          onTap: () => showAnimatedDialog(
                                             context: context,
+                                            barrierDismissible: true,
+                                            animationType:
+                                                DialogTransitionType.fadeScale,
                                             builder: (context) => AlertDialog(
                                               title: Text(
                                                 'What do you mean by "technical user"?',
@@ -111,11 +115,16 @@ class _ProfileState extends State<Profile> {
                                               content: Text(
                                                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet dignissim eros. Ut hendrerit lacinia velit, nec lacinia risus ornare id. Etiam arcu dolor, finibus quis fringilla id, pretium dignissim nisl. Curabitur nibh justo, finibus sed sem eget, blandit feugiat elit. Suspendisse tincidunt luctus nulla, eu elementum risus luctus vitae. Etiam feugiat ut lacus ac consequat. Vestibulum in leo varius, dictum lacus non, luctus velit."),
                                               actions: [
-                                                ElevatedButton(
-                                                  child: Text("Close"),
-                                                  onPressed: () {
+                                                CustomGradientButton(
+                                                  title: "Close",
+                                                  callback: () {
                                                     Navigator.pop(context);
                                                   },
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .1,
+                                                  height: 10.0,
                                                 ),
                                               ],
                                             ),
