@@ -30,8 +30,8 @@ class ImpressionDetail extends StatelessWidget {
                 ),
                 insetPadding: EdgeInsets.all(0.0),
                 child: Container(
-                  width: constraints.maxWidth,
-                  height: constraints.maxHeight,
+                  width: constraints.maxWidth * .9,
+                  height: constraints.maxHeight * .9,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
