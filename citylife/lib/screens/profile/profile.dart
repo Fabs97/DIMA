@@ -12,9 +12,9 @@ import 'package:citylife/utils/constants.dart';
 import 'package:citylife/utils/levels.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/utils/avatar.dart';
+import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'profile_state.dart';
@@ -209,34 +209,41 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           !state.hasBeenEdited
                               ? Consumer<TwoFALoginState>(
-                                  builder: (context, state, _) => buildButton(
-                                      "Sign out", constraints.maxWidth, () {
-                                    state.authenticated = false;
-                                    auth.signOut(context);
-                                  }),
+                                  builder: (context, state, _) =>
+                                      CustomGradientButton(
+                                    title: "Sign out",
+                                    width: constraints.maxWidth,
+                                    callback: () {
+                                      state.authenticated = false;
+                                      auth.signOut(context);
+                                    },
+                                  ),
                                 )
-                              : buildButton(
-                                  "Save profile", constraints.maxWidth,
-                                  () async {
-                                  user.name = state.editedName;
+                              : CustomGradientButton(
+                                  title: "Save profile",
+                                  width: constraints.maxWidth,
+                                  callback: () async {
+                                    user.name = state.editedName;
 
-                                  auth.authUser = await UserAPIService.route(
-                                      "/update",
-                                      body: user);
-                                  if (state.techEdited) {
-                                    var badge = await BadgeAPIService.route(
-                                      "/techie",
-                                      urlArgs: user.id,
-                                    );
-                                    badgeDialog.showBadgeDialog(
-                                      badge,
-                                      _confettiController = ConfettiController(
-                                        duration: Duration(milliseconds: 500),
-                                      ),
-                                    );
-                                  }
-                                  state.hasBeenEdited = false;
-                                }),
+                                    auth.authUser = await UserAPIService.route(
+                                        "/update",
+                                        body: user);
+                                    if (state.techEdited) {
+                                      var badge = await BadgeAPIService.route(
+                                        "/techie",
+                                        urlArgs: user.id,
+                                      );
+                                      badgeDialog.showBadgeDialog(
+                                        badge,
+                                        _confettiController =
+                                            ConfettiController(
+                                          duration: Duration(milliseconds: 500),
+                                        ),
+                                      );
+                                    }
+                                    state.hasBeenEdited = false;
+                                  },
+                                ),
                           Spacer(),
                         ],
                       ),
@@ -251,69 +258,46 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  GradientButton buildButton(String title, double width, Function() callback) {
-    return GradientButton(
-      callback: callback,
-      gradient: T.buttonGradient,
-      increaseWidthBy: width,
-      increaseHeightBy: 20.0,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: T.textLightColor,
-            fontSize: 16.0,
-          ),
-        ),
-      ),
-      shadowColor: Colors.black.withOpacity(.25),
-    );
-  }
-
   Widget buildImageAvatar(double size, BuildContext context) {
     final authService = context.read<AuthService>();
-    return Hero(
-      tag: "avatar_selection",
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: T.avatarBorderGradient,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              image: DecorationImage(
-                image: Avatars.avatars[authService.authUser.avatar],
-                fit: BoxFit.cover,
-              ),
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: T.avatarBorderGradient,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            image: DecorationImage(
+              image: Avatars.avatars[authService.authUser.avatar],
+              fit: BoxFit.cover,
             ),
-            child: GestureDetector(
-              onTap: () async {
-                final newAvatar = await buildAvatarDialog(context);
-                if (newAvatar != null &&
-                    newAvatar != authService.authUser.avatar) {
-                  try {
-                    CLUser user = authService.authUser;
-                    user.avatar = newAvatar;
+          ),
+          child: GestureDetector(
+            onTap: () async {
+              final newAvatar = await buildAvatarDialog(context);
+              if (newAvatar != null &&
+                  newAvatar != authService.authUser.avatar) {
+                try {
+                  CLUser user = authService.authUser;
+                  user.avatar = newAvatar;
 
-                    await UserAPIService.route("/update", body: user);
-                    // If everything went smoothly, then change the avatar
-                    final sp = await SharedPrefService.getInstance();
-                    await sp.setUserWith(spUserInfoKey, user);
+                  await UserAPIService.route("/update", body: user);
+                  // If everything went smoothly, then change the avatar
+                  final sp = await SharedPrefService.getInstance();
+                  await sp.setUserWith(spUserInfoKey, user);
 
-                    authService.authUser = user;
-                  } catch (e) {
-                    print("[Profile]::buildImageAvatar - $e");
-                  }
+                  authService.authUser = user;
+                } catch (e) {
+                  print("[Profile]::buildImageAvatar - $e");
                 }
-              },
-            ),
+              }
+            },
           ),
         ),
       ),
@@ -331,26 +315,23 @@ class _ProfileState extends State<Profile> {
             color: T.textDarkColor,
           ),
         ),
-        content: Hero(
-          tag: "avatar_selection",
-          child: Container(
-            width: 10, // Needed just because
-            child: GridView.count(
-              crossAxisCount: 2,
-              children: Avatars.avatars.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context, entry.key);
-                    },
-                    child: Container(
-                      child: Image(image: entry.value),
-                    ),
+        content: Container(
+          width: 10, // Needed just because
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: Avatars.avatars.entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context, entry.key);
+                  },
+                  child: Container(
+                    child: Image(image: entry.value),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),

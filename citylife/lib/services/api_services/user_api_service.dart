@@ -12,6 +12,8 @@ class UserAPIService {
       {dynamic body, dynamic urlArgs, Client client}) {
     _client = client ?? new Client();
     switch (subRoute) {
+      case "/leaderboard":
+        return _getLeaderboard(subRoute);
       case "/new":
         return _postNewUser(subRoute, body);
       case "/byFirebase":
@@ -24,6 +26,23 @@ class UserAPIService {
         return _postCode(urlArgs, body);
       default:
         throw UserAPIException("Error in User API Service");
+    }
+  }
+
+  static Future<List<CLUser>> _getLeaderboard(String subRoute) async {
+    Response response = await _client.get(
+      APIENDPOINT + _userRoute + subRoute,
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        {
+          var body = jsonDecode(response.body);
+          return body.map((e) => CLUser.fromJson(e)).toList().cast<CLUser>();
+        }
+      default:
+        throw new UserAPIException(
+            response.body ?? "Error while retrieving the user leaderboard");
     }
   }
 

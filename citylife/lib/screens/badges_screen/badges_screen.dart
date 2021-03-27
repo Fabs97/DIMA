@@ -1,13 +1,17 @@
 import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/screens/badges_screen/badges_screen_state.dart';
 import 'package:citylife/screens/badges_screen/local_widgets/badge_dialog.dart';
+import 'package:citylife/screens/badges_screen/local_widgets/leaderboard.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/badge.dart';
 import 'package:citylife/utils/hero_dialog_route.dart';
 import 'package:citylife/utils/theme.dart';
+import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:citylife/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 class BadgesScreen extends StatelessWidget {
@@ -39,49 +43,102 @@ class BadgesScreen extends StatelessWidget {
                         CLBadge badge = snapshot.data;
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: SafeArea(
-                            child: GridView.count(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 30.0,
-                              crossAxisSpacing: 20.0,
-                              children: badge.badges.entries
-                                  .map(
-                                    (e) => GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          HeroDialogRoute(
-                                            builder: (context) => BadgeDialog(
-                                              acquired: e.value,
-                                              badge: e.key,
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: constraints.maxWidth,
+                                height: constraints.maxHeight,
+                                child: SafeArea(
+                                  child: GridView.count(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 30.0,
+                                    crossAxisSpacing: 20.0,
+                                    children: badge.badges.entries
+                                        .map(
+                                          (e) => GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                HeroDialogRoute(
+                                                  builder: (_) => BadgeDialog(
+                                                    acquired: e.value,
+                                                    badge: e.key,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Hero(
+                                              tag: e.key.toString(),
+                                              child: Container(
+                                                foregroundDecoration:
+                                                    BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                  color: e.value
+                                                      ? Colors.transparent
+                                                      : Colors.grey,
+                                                  backgroundBlendMode:
+                                                      BlendMode.saturation,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                  image: DecorationImage(
+                                                      image:
+                                                          B.adges[e.key].image),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                      child: Hero(
-                                        tag: e.key.toString(),
-                                        child: Container(
-                                          foregroundDecoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            color: e.value
-                                                ? Colors.transparent
-                                                : Colors.grey,
-                                            backgroundBlendMode:
-                                                BlendMode.saturation,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            image: DecorationImage(
-                                                image: B.adges[e.key].image),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10.0,
+                                right: 10.0,
+                                left: 10.0,
+                                child: CustomGradientButton(
+                                  titleWidget: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Icon(
+                                        Icons.emoji_events_outlined,
+                                        size: 32.0,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                        ),
+                                        child: Text(
+                                          "Leaderboard",
+                                          style: TextStyle(
+                                            color: T.textLightColor,
+                                            fontSize: 20.0,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
+                                    ],
+                                  ),
+                                  callback: () {
+                                    showAnimatedDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      animationType:
+                                          DialogTransitionType.rotate3D,
+                                      builder: (_) => Leaderboard(),
+                                    );
+                                  },
+                                  width: constraints.maxWidth * .6,
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }
