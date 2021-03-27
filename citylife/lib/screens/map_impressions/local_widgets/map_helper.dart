@@ -12,6 +12,7 @@ class MapHelper {
   /// Here we're also setting up the cluster marker itself, also with an [clusterImageUrl].
   ///
   /// For more info about customizing your clustering logic check the [Fluster] constructor.
+
   static Future<Fluster<MapMarker>> initClusterManager(
     List<MapMarker> markers,
     int minZoom,
@@ -62,8 +63,10 @@ class MapHelper {
           mapMarker.pointsSize,
           T.primaryColor,
           T.textLightColor,
-          100,
+          115,
         );
+      } else {
+        mapMarker.icon = await getIconMarker();
       }
       return mapMarker.toMarker();
     }).toList());
@@ -103,6 +106,26 @@ class MapHelper {
         radius - textPainter.height / 2,
       ),
     );
+    final image = await pictureRecorder.endRecording().toImage(
+          radius.toInt() * 2,
+          radius.toInt() * 2,
+        );
+    final data = await image.toByteData(format: ImageByteFormat.png);
+    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  }
+
+  static Future<BitmapDescriptor> getIconMarker() async {
+    final PictureRecorder pictureRecorder = PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    final Paint paint = Paint()..color = T.emotionalColor;
+
+    final double radius = 40;
+    canvas.drawCircle(
+      Offset(radius, radius),
+      radius,
+      paint,
+    );
+
     final image = await pictureRecorder.endRecording().toImage(
           radius.toInt() * 2,
           radius.toInt() * 2,
