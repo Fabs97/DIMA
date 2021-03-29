@@ -8,11 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapHelper {
-  /// Inits the cluster manager with all the [MapMarker] to be displayed on the map.
-  /// Here we're also setting up the cluster marker itself, also with an [clusterImageUrl].
-  ///
-  /// For more info about customizing your clustering logic check the [Fluster] constructor.
-
   static Future<Fluster<MapMarker>> initClusterManager(
     List<MapMarker> markers,
     int minZoom,
@@ -61,12 +56,10 @@ class MapHelper {
       if (mapMarker.isCluster) {
         mapMarker.icon = await _getClusterMarker(
           mapMarker.pointsSize,
-          T.primaryColor,
-          T.textLightColor,
           115,
         );
       } else {
-        mapMarker.icon = await getIconMarker();
+        mapMarker.icon = await getIconMarker(mapMarker.id);
       }
       return mapMarker.toMarker();
     }).toList());
@@ -74,20 +67,18 @@ class MapHelper {
 
   static Future<BitmapDescriptor> _getClusterMarker(
     int clusterSize,
-    Color clusterColor,
-    Color textColor,
     int width,
   ) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = clusterColor;
+    final Paint paint = Paint()..color = T.primaryColor;
     final TextPainter textPainter = TextPainter(
       textDirection: TextDirection.ltr,
     );
     final double radius = width / 2;
     canvas.drawCircle(
       Offset(radius, radius),
-      radius,
+      radius + 5,
       paint,
     );
     textPainter.text = TextSpan(
@@ -95,7 +86,7 @@ class MapHelper {
       style: TextStyle(
         fontSize: radius - 5,
         fontWeight: FontWeight.bold,
-        color: textColor,
+        color: T.textLightColor,
       ),
     );
     textPainter.layout();
@@ -114,10 +105,11 @@ class MapHelper {
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
 
-  static Future<BitmapDescriptor> getIconMarker() async {
+  static Future<BitmapDescriptor> getIconMarker(String markerId) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = T.emotionalColor;
+    final Paint paint = Paint()
+      ..color = markerId[0] == 's' ? T.structuralColor : T.emotionalColor;
 
     final double radius = 40;
     canvas.drawCircle(
