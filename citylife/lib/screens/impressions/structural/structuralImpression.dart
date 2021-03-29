@@ -1,6 +1,4 @@
-import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
-import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';

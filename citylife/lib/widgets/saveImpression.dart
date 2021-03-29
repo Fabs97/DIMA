@@ -5,7 +5,6 @@ import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/storage_service.dart';
-import 'package:citylife/utils/badgeDialogState.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,4 @@
 import 'package:citylife/models/cl_emotional.dart';
-import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/services/geocoding_service.dart';
 import 'package:flutter/material.dart';

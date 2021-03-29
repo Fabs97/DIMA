@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:http/http.dart' show Client, Response;
-import 'package:path/path.dart';
 
 class BadgeAPIService {
   static final String _badgeRoute = "/badge";
