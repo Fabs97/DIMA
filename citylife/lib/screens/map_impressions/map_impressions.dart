@@ -35,7 +35,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
   PermissionStatus _permissionGranted;
   LocationData _locationData;
   double _currentZoom = 15;
-  Set<Circle> _circles;
 
   int _minClusterZoom = 0;
   int _maxClusterZoom = 19;
@@ -97,7 +96,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       tiltGesturesEnabled: false,
                       myLocationButtonEnabled: true,
                       markers: state.googleMarkers,
-                      circles: _circles,
                       onCameraMove: (position) async {
                         if (_clusterManager == null ||
                             position.zoom == _currentZoom) return;
@@ -236,8 +234,10 @@ class ImpressionsMapState extends State<ImpressionsMap> {
               return Container();
             }
           } else {
-            return CircularProgressIndicator(
-              backgroundColor: T.primaryColor,
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: T.primaryColor,
+              ),
             );
           }
         },
