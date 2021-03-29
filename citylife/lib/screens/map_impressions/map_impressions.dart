@@ -49,7 +49,7 @@ class ImpressionsMapState extends State<ImpressionsMap> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _controller?.dispose();
   }
 
   Future<LatLng> _checkLocationPermission() async {
