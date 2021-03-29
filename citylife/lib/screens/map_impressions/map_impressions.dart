@@ -3,6 +3,7 @@ import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
 import 'package:citylife/screens/map_impressions/local_widgets/my_markers_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/utils/theme.dart';
+import 'package:citylife/widgets/custom_toast.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -111,9 +112,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                         );
 
                         state.googleMarkers = updatedMarkers.toSet();
-
-                        // state.googleMarkers =
-                        //     await getNiceMarkers(updatedMarkers.toSet());
                       },
                       onMapCreated: (cntlr) {
                         _controller = cntlr;
@@ -147,8 +145,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                               state.googleMarkers = updatedMarkers.toSet();
 
-                              // state.googleMarkers =
-                              //     await getNiceMarkers(updatedMarkers.toSet());
                               state.isButtonVisible = true;
                             });
                           } else {
@@ -183,8 +179,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                               state.googleMarkers = updatedMarkers.toSet();
 
-                              // state.googleMarkers =
-                              //     await getNiceMarkers(updatedMarkers.toSet());
                               state.isFirstMove = false;
                             });
                           }
@@ -227,8 +221,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                               state.googleMarkers = updatedMarkers.toSet();
 
-                              // state.googleMarkers =
-                              //     await getNiceMarkers(updatedMarkers.toSet());
                               state.isButtonVisible = false;
                             },
                             child: Text("Retrieve info"),
@@ -240,34 +232,16 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                 ),
               );
             } else {
-              // ! Has error, show some kind of user notification!
-              // * Create some kind of message (maybe a small icon)
-              // * and show a CustomToast notifying the user of the problem
+              CustomToast.toast(context, "Oops, something went wrong");
               return Container();
             }
           } else {
-            // ! Waiting for data, show something else
-            // * Create something like Circular Progress Indicator or something else
-            return Container();
+            return CircularProgressIndicator(
+              backgroundColor: T.primaryColor,
+            );
           }
         },
       ),
     );
   }
-
-  // Future<Set<Marker>> getNiceMarkers(Set<Marker> markers) async {
-  //   var res = await Future.wait(
-  //     markers.map(
-  //       (m) async {
-  //         var icon = await MapHelper.getIconMarker();
-  //         return Marker(
-  //           markerId: m.markerId,
-  //           position: m.position,
-  //           icon: icon,
-  //         );
-  //       },
-  //     ),
-  //   );
-  //   return res.toSet();
-  // }
 }
