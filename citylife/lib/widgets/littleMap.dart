@@ -17,7 +17,7 @@ class LittleMap extends StatefulWidget {
 }
 
 class _LittleMapState extends State<LittleMap> {
-  LatLng _center = LatLng(20.5937, 78.9629);
+  LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
   Location _location = new Location();
   bool _serviceEnabled;
