@@ -71,7 +71,7 @@ class MapHelper {
   ) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = T.primaryColor;
+    final Paint paint = Paint()..color = Colors.cyan[300];
     final TextPainter textPainter = TextPainter(
       textDirection: TextDirection.ltr,
     );
