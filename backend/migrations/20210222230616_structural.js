@@ -10,7 +10,7 @@ exports.up = async function(knex) {
        
         table.string("component");
         table.string("pathology");
-        table.enum("typology", ["Repair", "Add new", "Replace"]);
+        table.enum("typology", ["Add new", "Repair", "Replace", "Restore", "Upgrade"]);
         table.float("mean");
        
         table.string("notes");

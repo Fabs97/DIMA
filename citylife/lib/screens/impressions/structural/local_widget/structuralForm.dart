@@ -14,7 +14,14 @@ class StructuralForm extends StatefulWidget {
 }
 
 class _StructuralFormState extends State<StructuralForm> {
-  String _value;
+  String _selectedTypology;
+  List<String> _typologies = [
+    'Add new',
+    'Raplace',
+    'Repair',
+    'Restore',
+    'Upgrade'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -75,44 +82,29 @@ class _StructuralFormState extends State<StructuralForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        border: Border.all(color: Colors.grey[300], width: 1.0),
-                        borderRadius: BorderRadius.circular(8.0),
+                    child: DropdownButtonFormField(
+                      value: _selectedTypology,
+                      items: _typologies.map((typology) {
+                        return DropdownMenuItem(
+                          child: Text(typology),
+                          value: typology,
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          structuralImpression.typology = value;
+                          _selectedTypology = value;
+                        });
+                      },
+                      hint: Text(
+                        'Type of Intervention',
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          items: [
-                            DropdownMenuItem<String>(
-                              child: Text('Repair'),
-                              value: 'Repair',
-                            ),
-                            DropdownMenuItem<String>(
-                              child: Text('Add new'),
-                              value: 'Add new',
-                            ),
-                            DropdownMenuItem<String>(
-                              child: Text('Replace'),
-                              value: 'Replace',
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              structuralImpression.typology = value;
-                              _value = value;
-                            });
-                          },
-                          hint: Text('Type of Intervention'),
-                          validator: (value) {
-                            if (value == null)
-                              return "Please choose a type of intervention";
-                            return null;
-                          },
-                          value: _value,
-                        ),
-                      ),
+                      validator: (value) {
+                        if (value == null)
+                          return "Please choose a type of intervention";
+                        return null;
+                      },
                     ),
                   ),
                 ],
