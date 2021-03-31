@@ -1,5 +1,4 @@
 import 'package:citylife/models/cl_emotional.dart';
-import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/services/geocoding_service.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class LittleMap extends StatefulWidget {
 }
 
 class _LittleMapState extends State<LittleMap> {
-  LatLng _center = LatLng(20.5937, 78.9629);
+  LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
   Location _location = new Location();
   bool _serviceEnabled;
@@ -63,7 +62,7 @@ class _LittleMapState extends State<LittleMap> {
     _center = LatLng(_locationData.latitude, _locationData.longitude);
     setImpressionMarker();
 
-    _controller.animateCamera(
+    _controller?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: _center,

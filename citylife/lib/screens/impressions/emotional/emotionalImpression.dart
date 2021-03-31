@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_emotional.dart';
-import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';

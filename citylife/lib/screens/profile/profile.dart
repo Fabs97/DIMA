@@ -215,7 +215,7 @@ class _ProfileState extends State<Profile> {
                                 onTap: () {
                                   setState(() {
                                     if (!user.twofa) {
-                                      user.twofa = true;
+                                      // user.twofa = true;
                                       state.hasBeenEdited = true;
                                     }
                                     showDialog(

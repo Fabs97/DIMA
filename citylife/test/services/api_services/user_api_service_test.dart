@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,8 +11,7 @@ main() {
     final String route = "/new";
 
     test("returns a CLUser if the response code is 200", () async {
-      dynamic result =
-          await UserAPIService.route(route,
+      dynamic result = await UserAPIService.route(route,
           body: DBMock.userWithoutId, client: DBMock.userMockClient);
       expect(result, isA<CLUser>());
     });
@@ -44,7 +41,6 @@ main() {
   group("GET by FirebaseId -", () {
     final String route = "/byFirebase";
     test("returns a CLUser if the response code is 200", () async {
-
       dynamic result = await UserAPIService.route(route,
           urlArgs: "testFirebaseId", client: DBMock.userMockClient);
       expect(result, isA<CLUser>());

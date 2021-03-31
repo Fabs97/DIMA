@@ -1,5 +1,6 @@
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/screens/map_impressions/local_widgets/map_helper.dart';
 import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,12 +50,13 @@ class MyMarkersState with ChangeNotifier {
     );
   }
 
-  void add(CLImpression imp) {
+  void add(CLImpression imp) async {
     _impressions.add(imp);
     var marker = getMarker(imp);
     _markers.add(marker);
+    marker.icon = await MapHelper.getIconMarker(marker.id);
     _googleMarkers
-        .add(MapMarker(position: marker.position, id: marker.id).toMarker());
+        .add(marker.toMarker());
     notifyListeners();
   }
 }

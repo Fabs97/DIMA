@@ -3,6 +3,7 @@ import 'package:citylife/screens/my_impressions/local_widgets/impression_detail.
 import 'package:citylife/screens/my_impressions/my_impressions_state.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/utils/emotional_utils.dart';
+import 'package:citylife/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:citylife/utils/theme.dart';
@@ -46,13 +47,13 @@ class ImpressionCard extends StatelessWidget {
                 );
               },
               onDismissed: (direction) async {
-                // TODO: add try catch with toast
                 try {
                   state.impressions = await ImpressionsAPIService.route(
                       isStructural ? "/structural" : "/emotional",
                       urlArgs: impression.id);
                 } catch (e) {
-                  print(e);
+                  CustomToast.toast(
+                      context, e.message ?? "Oops, something went wrong");
                 }
               },
               background: Container(

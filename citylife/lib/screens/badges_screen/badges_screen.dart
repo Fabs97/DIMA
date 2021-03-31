@@ -11,7 +11,6 @@ import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:citylife/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 class BadgesScreen extends StatelessWidget {
