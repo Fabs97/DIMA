@@ -31,7 +31,7 @@ jobs:
       - name: Fetching dependencies
         run: flutter pub get
       - name: Running application tests
-        run: flutter test --coverage
+        run: flutter test --coverage && curl -s https://codecov.io/bash -o codecov.sh
       - name: Upload Test coverage to CodeCov project
         uses: codecov/codecov-action@v1.2.1 
         with: 
