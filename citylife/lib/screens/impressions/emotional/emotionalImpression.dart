@@ -62,82 +62,87 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                                 ),
                               ].elementAt(selectedStep)),
                         )
-                      : Column(
-                          children: [
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                child: _map),
-                            Container(
-                              width: constraints.maxWidth * 0.7,
-                              child: Divider(
-                                height: 50,
-                                thickness: 3,
-                                color: T.textDarkColor,
+                      : ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.minHeight,
+                            maxHeight: constraints.maxHeight,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: _map,
                               ),
-                            ),
-                            Consumer<StorageService>(
-                              builder: (_, storageService, __) => Container(
-                                height: constraints.maxHeight * 0.4,
+                              Flexible(
+                                flex: 5,
                                 child: [
                                   EmotionalForm(),
                                   _sharedForm,
-                                  SaveImpression(
-                                    isStructural: false,
-                                    impression: impression,
-                                    storageService: storageService,
-                                  ),
                                 ].elementAt(selectedStep),
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                StepsIndicator(
-                                  selectedStep: selectedStep,
-                                  nbSteps: nbSteps,
-                                  unselectedStepColorIn: T.emotionalColor,
-                                  unselectedStepColorOut: T.emotionalColor,
-                                  selectedStepColorIn: T.structuralColor,
-                                  selectedStepColorOut: T.structuralColor,
-                                  doneLineColor: T.emotionalColor,
-                                  doneStepColor: T.emotionalColor,
-                                  undoneLineColor: T.emotionalColor,
-                                  doneStepSize: 13,
-                                  unselectedStepSize: 13,
-                                  selectedStepSize: 13,
-                                  lineLength: 40,
-                                  enableLineAnimation: true,
-                                  enableStepAnimation: true,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 45),
-                                  child: MaterialButton(
-                                    color: T.primaryColor,
-                                    shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(20.0),
-                                    ),
-                                    onPressed: () {
-                                      if (selectedStep < nbSteps) {
-                                        setState(() {
-                                          selectedStep++;
-                                          if (selectedStep == 2) {
-                                            impression.images =
-                                                _sharedForm.imageList;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: Text(
-                                      'Next',
-                                      style: TextStyle(color: T.textLightColor),
-                                    ),
+                              Flexible(
+                                flex: 1,
+                                child: Align(
+                                  alignment: FractionalOffset.bottomCenter,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      StepsIndicator(
+                                        selectedStep: selectedStep,
+                                        nbSteps: nbSteps,
+                                        unselectedStepColorIn: T.emotionalColor,
+                                        unselectedStepColorOut:
+                                            T.emotionalColor,
+                                        selectedStepColorIn: T.structuralColor,
+                                        selectedStepColorOut: T.structuralColor,
+                                        doneLineColor: T.emotionalColor,
+                                        doneStepColor: T.emotionalColor,
+                                        undoneLineColor: T.emotionalColor,
+                                        doneStepSize: 13,
+                                        unselectedStepSize: 13,
+                                        selectedStepSize: 13,
+                                        lineLength: 40,
+                                        enableLineAnimation: true,
+                                        enableStepAnimation: true,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 45),
+                                        child: MaterialButton(
+                                          color: T.primaryColor,
+                                          shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(20.0),
+                                          ),
+                                          onPressed: () {
+                                            if (selectedStep < nbSteps) {
+                                              setState(() {
+                                                selectedStep++;
+                                                if (selectedStep == 2) {
+                                                  impression.images =
+                                                      _sharedForm.imageList;
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: Text(
+                                            'Next',
+                                            style: TextStyle(
+                                                color: T.textLightColor),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              Spacer(),
+                            ],
+                          ),
                         ),
                 );
               },
