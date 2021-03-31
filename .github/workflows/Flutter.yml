@@ -39,7 +39,7 @@ jobs:
           working-directory: ./citylife
           verbose: true
       - name: Build Flutter apk
-        run: flutter build apk
+        run: flutter build apk --dart-define=CITYLIFE_TWITTER_CONSUMER_KEY=${{secrets.CITYLIFE_TWITTER_CONSUMER_KEY}} --dart-define=CITYLIFE_TWITTER_CONSUMER_SECRET=${{secrets.CITYLIFE_TWITTER_CONSUMER_SECRET}} --dart-define=CITYLIFE_GITHUB_CLIENT_ID=${{secrets.CITYLIFE_GITHUB_CLIENT_ID}} --dart-define=CITYLIFE_GITHUB_CLIENT_SECRET=${{secrets.CITYLIFE_GITHUB_CLIENT_SECRET}} --dart-define=CITYLIFE_AUTH_REDIRECT_URL=${{secrets.CITYLIFE_AUTH_REDIRECT_URL}}
       - name: Deploy apk to Firebase App Distribution Service
         uses: wzieba/Firebase-Distribution-Github-Action@v1.3.2
         with:
