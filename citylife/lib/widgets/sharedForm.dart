@@ -83,10 +83,10 @@ class _SharedFormState extends State<SharedForm> {
                     children: gridView,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Flexible(
-                    flex: 1,
+                Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
                       maxLines: null,
                       controller: _notesController,
