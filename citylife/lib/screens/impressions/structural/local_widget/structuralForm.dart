@@ -17,7 +17,7 @@ class _StructuralFormState extends State<StructuralForm> {
   String _selectedTypology;
   List<String> _typologies = [
     'Add new',
-    'Raplace',
+    'Replace',
     'Repair',
     'Restore',
     'Upgrade'
