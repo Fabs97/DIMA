@@ -2,7 +2,6 @@ import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/custom_toast.dart';
-import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -123,18 +122,14 @@ class _ProfileTwoFactorsAuthState extends State<ProfileTwoFactorsAuth> {
                           borderRadius: new BorderRadius.circular(20.0),
                         ),
                         onPressed: () async {
-                          bool hasBeenOpened = await DeviceApps.openApp(
-                              "com.google.android.apps.authenticator2");
-                          if (!hasBeenOpened) {
-                            if (await canLaunch(data))
-                              await launch(data);
-                            else {
-                              Navigator.pop(context);
-                              CustomToast.toast(
-                                context,
-                                'Could not open the Google Authenticator app, please install it and try again',
-                              );
-                            }
+                          if (await canLaunch(data))
+                            await launch(data);
+                          else {
+                            Navigator.pop(context);
+                            CustomToast.toast(
+                              context,
+                              'Could not open the Google Authenticator app, please install it and try again',
+                            );
                           }
                         },
                         child: Text(
