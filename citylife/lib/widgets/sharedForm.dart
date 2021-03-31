@@ -74,7 +74,7 @@ class _SharedFormState extends State<SharedForm> {
             child: Column(
               children: [
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: GridView.count(
                     crossAxisCount: 2,
                     childAspectRatio: 122.0 / 86.0,
@@ -90,17 +90,14 @@ class _SharedFormState extends State<SharedForm> {
                     child: TextFormField(
                       maxLines: null,
                       controller: _notesController,
-                      textAlignVertical: TextAlignVertical.top,
+                      textAlignVertical: TextAlignVertical.center,
                       maxLength: 255,
                       decoration: InputDecoration(
                         hintText: "Notes",
                         counterText: "${_notesController.text.length}/255",
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom: 40.0),
-                          child: Icon(
-                            Icons.edit_outlined,
-                            color: T.primaryColor,
-                          ),
+                        prefixIcon: Icon(
+                          Icons.edit_outlined,
+                          color: T.primaryColor,
                         ),
                       ),
                       onChanged: (v) => impression.notes = v,
