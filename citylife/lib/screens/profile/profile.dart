@@ -109,7 +109,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                     child: Padding(
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 6.0),
+                                          EdgeInsets.symmetric(vertical: 4.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -274,7 +274,7 @@ class _ProfileState extends State<Profile> {
                                       ),
                                       child: Padding(
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 6.0),
+                                            EdgeInsets.symmetric(vertical: 4.0),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
