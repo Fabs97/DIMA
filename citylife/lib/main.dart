@@ -76,15 +76,19 @@ class _AuthenticateState extends State<Authenticate> {
         Provider(create: (context) => BadgeDialogState(context, auth)),
       ],
       child: Consumer<TwoFALoginState>(
-        builder: (_, state, __) => _isLoadingInfo
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : (!auth.isAuthenticated
-                ? Login()
-                : ((auth.authUser.twofa && !state.authenticated)
-                    ? TwoFactorsAuthentication(userId: auth.authUser.id)
-                    : HomePage())),
+        builder: (_, state, __) {
+          return _isLoadingInfo
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : (!auth.isAuthenticated
+                  ? Login()
+                  : ((auth.authUser.twofa && !state.authenticated)
+                      ? TwoFactorsAuthentication(userId: auth.authUser.id)
+                      : HomePage(
+                          userId: auth.authUser.id,
+                        )));
+        },
       ),
     );
   }

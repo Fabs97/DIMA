@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class SharedForm extends StatefulWidget {
   List<File> imageList;
   final bool watchStructural;
@@ -40,15 +41,17 @@ class _SharedFormState extends State<SharedForm> {
     gridView = [
       _addNewImage(),
       ...widget.imageList
-          .map((e) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  image: DecorationImage(
-                    image: FileImage(e),
-                    fit: BoxFit.fill,
-                  ),
+          .map(
+            (e) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                image: DecorationImage(
+                  image: FileImage(e),
+                  fit: BoxFit.fill,
                 ),
-              ))
+              ),
+            ),
+          )
           .toList()
     ];
   }
@@ -59,39 +62,53 @@ class _SharedFormState extends State<SharedForm> {
         ? context.watch<CLStructural>()
         : context.watch<CLEmotional>();
     return LayoutBuilder(
-      builder: (context, constraints) => Container(
-        width: constraints.maxWidth * 0.8,
-        height: constraints.maxHeight,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: constraints.maxHeight * 0.6,
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: 122.0 / 86.0,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: gridView,
+      builder: (context, constraints) => SingleChildScrollView(
+        child: Container(
+          width: constraints.maxWidth * 0.8,
+          height: constraints.maxHeight,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.minHeight,
+              maxHeight: constraints.maxHeight,
+            ),
+            child: Column(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    childAspectRatio: 122.0 / 86.0,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    children: gridView,
+                  ),
                 ),
-              ),
-              TextFormField(
-                controller: _notesController,
-                maxLength: 255,
-                decoration: InputDecoration(
-                  hintText: "Notes",
-                  counterText: "${_notesController.text.length}/255",
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 40.0),
-                    child: Icon(
-                      Icons.edit_outlined,
-                      color: T.primaryColor,
+                Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextFormField(
+                      maxLines: null,
+                      controller: _notesController,
+                      textAlignVertical: TextAlignVertical.top,
+                      maxLength: 255,
+                      decoration: InputDecoration(
+                        hintText: "Notes",
+                        counterText: "${_notesController.text.length}/255",
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.only(bottom: 40.0),
+                          child: Icon(
+                            Icons.edit_outlined,
+                            color: T.primaryColor,
+                          ),
+                        ),
+                      ),
+                      onChanged: (v) => impression.notes = v,
                     ),
                   ),
                 ),
-                onChanged: (v) => impression.notes = v,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -146,14 +163,15 @@ class _SharedFormState extends State<SharedForm> {
 
   Widget _addNewImage() {
     return ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(primary: Color(0xFFC4C4C4)),
-        onPressed: () {
-          _showPicker(context);
-        },
-        icon: Icon(
-          Icons.add_a_photo_outlined,
-          color: T.textLightColor,
-        ),
-        label: Text(""));
+      style: ElevatedButton.styleFrom(primary: Color(0xFFC4C4C4)),
+      onPressed: () {
+        _showPicker(context);
+      },
+      icon: Icon(
+        Icons.add_a_photo_outlined,
+        color: T.textLightColor,
+      ),
+      label: Text(""),
+    );
   }
 }

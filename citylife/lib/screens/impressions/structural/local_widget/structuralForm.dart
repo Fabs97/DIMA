@@ -17,7 +17,7 @@ class _StructuralFormState extends State<StructuralForm> {
   String _selectedTypology;
   List<String> _typologies = [
     'Add new',
-    'Raplace',
+    'Replace',
     'Repair',
     'Restore',
     'Upgrade'
@@ -28,11 +28,11 @@ class _StructuralFormState extends State<StructuralForm> {
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         width: constraints.maxWidth * 0.9,
-        height: constraints.maxHeight * 0.6,
-        child: SingleChildScrollView(
-          child: Consumer<CLStructural>(
-            builder: (context, structuralImpression, _) => Form(
-              key: widget.formKey,
+        // height: constraints.maxHeight * 0.6,
+        child: Consumer<CLStructural>(
+          builder: (context, structuralImpression, _) => Form(
+            key: widget.formKey,
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
