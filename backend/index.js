@@ -1,0 +1,24 @@
+const express = require('express');
+const app = express();
+const swaggerUI = require("swagger-ui-express");
+const APIDocumentation = require("./docs/openapi");
+const cors = require("cors");
+const port = process.env.PORT || 3000;
+const L = require("./utils/logger");
+
+app.use(cors());
+
+app.use("/apis", swaggerUI.serve, swaggerUI.setup(APIDocumentation));
+app.use(express.json());
+app.use(L);
+
+const userRoute = require("./routes/userRoute");
+const impressionRoute = require("./routes/impressionRoute");
+const badgeRoute = require("./routes/badgeRoute");
+app.use("/user", userRoute);
+app.use("/impression", impressionRoute);
+app.use("/badge", badgeRoute);
+
+app.listen(port, () => console.log(`CityLife backend is ready to know what you think of our city on http://localhost:${port}!`));
+
+module.exports = app;

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "79611151858",
+    "project_id": "citylife-c2d0c",
+    "storage_bucket": "citylife-c2d0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79611151858:android:ec15c1109c1c2cf0fc176b",
+        "android_client_info": {
+          "package_name": "com.casiano.citylife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79611151858-lis8hinne5as7kdep5r0etumu8e0a4un.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.casiano.citylife",
+            "certificate_hash": "68a5270fb29c84c4d171d663b954bf1944e35e19"
+          }
+        },
+        {
+          "client_id": "79611151858-q24tergjnbcfk1v2ke714n9i9bsnq6he.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.casiano.citylife",
+            "certificate_hash": "d54256e1dc9c71ad6badf3390509d85b38b9f375"
+          }
+        },
+        {
+          "client_id": "79611151858-2v28h4piepaqol3jkoc4dppcvl3696ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO9cIDmqwnaC7GqO1WpQhSGPmnqvW5GFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79611151858-2v28h4piepaqol3jkoc4dppcvl3696ao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
