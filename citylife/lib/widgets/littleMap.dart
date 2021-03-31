@@ -62,7 +62,7 @@ class _LittleMapState extends State<LittleMap> {
     _center = LatLng(_locationData.latitude, _locationData.longitude);
     setImpressionMarker();
 
-    _controller.animateCamera(
+    _controller?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: _center,
