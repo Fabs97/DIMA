@@ -30,7 +30,7 @@ dependencies:
   intl: ^0.16.1
   latlong: ^0.6.1
   location: ^3.2.4
-  path: ^1.8.0
+  path: 
   provider: ^4.3.3
   shared_preferences: ^2.0.3
   flutter_spinkit: "^4.1.2"
