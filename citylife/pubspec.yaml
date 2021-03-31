@@ -22,7 +22,7 @@ dependencies:
   geocoder: ^0.2.1
   github_sign_in: ^0.0.3
   google_fonts: ^1.1.2
-  google_maps_flutter: ^1.1.1
+  google_maps_flutter: 1.1.1
   google_sign_in: ^4.5.9
   gradient_widgets: ^0.5.2
   http: ^0.12.2
