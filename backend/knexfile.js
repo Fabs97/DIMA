@@ -4,7 +4,7 @@ let DBConnection;
 
 switch (environment) {
     case "production": {
-        DBConnection = process.env.CITYLIFE_DB_URL;
+        DBConnection = process.env.CITYLIFE_DB_URL + "?sslmode=require";
         break;
     }
     case "development": {
