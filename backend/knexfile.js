@@ -4,7 +4,7 @@ let DBConnection;
 
 switch (environment) {
     case "production": {
-        DBConnection{
+        DBConnection = {
             connectionString: process.env.CITYLIFE_DB_URL,
             ssl: { rejectUnauthorized: false },
         };
