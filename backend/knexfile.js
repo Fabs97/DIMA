@@ -30,9 +30,7 @@ module.exports = {
     migrations: {
     directory: './migrations'
   },
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: true,
   seeds: {
     directory: './seeds'
   }
