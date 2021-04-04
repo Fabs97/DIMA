@@ -4,7 +4,10 @@ let DBConnection;
 
 switch (environment) {
     case "production": {
-        DBConnection = process.env.CITYLIFE_DB_URL;
+        DBConnection{
+            connectionString: process.env.CITYLIFE_DB_URL,
+            ssl: { rejectUnauthorized: false },
+        };
         break;
     }
     case "development": {
@@ -30,7 +33,6 @@ module.exports = {
     migrations: {
     directory: './migrations'
   },
-  ssl: true,
   seeds: {
     directory: './seeds'
   }
