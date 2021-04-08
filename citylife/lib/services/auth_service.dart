@@ -145,7 +145,8 @@ class AuthService with ChangeNotifier {
       return await _socialSignIn(googleCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGoogle - $e\n$sTrace");
-      return null;
+      throw new AuthException(
+          "Could not sign in with Google, please try again");
     }
   }
 
@@ -179,11 +180,13 @@ class AuthService with ChangeNotifier {
       } else {
         print(
             "[AuthService]::signInWithGithub - Status not ok: ${result.status}");
-        return null;
+        throw new AuthException(
+            "Could not sign in with Github, status: ${result.status}");
       }
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGitHub - $e\n$sTrace");
-      return null;
+      throw new AuthException(
+          "Could not sign in with Github, please try again");
     }
   }
 
@@ -199,7 +202,8 @@ class AuthService with ChangeNotifier {
       return await _socialSignIn(facebookAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithFacebook - $e\n$sTrace");
-      return null;
+      throw new AuthException(
+          "Could not sign in with Facebook, please try again");
     }
     // Trigger the sign-in flow
   }
@@ -233,7 +237,8 @@ class AuthService with ChangeNotifier {
       return await _socialSignIn(twitterAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithTwitter - $e\n$sTrace");
-      return null;
+      throw new AuthException(
+          "Could not sign in with Twitter, please try again");
     }
   }
 

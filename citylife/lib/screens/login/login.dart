@@ -203,9 +203,10 @@ class _LoginState extends State<Login> {
                                                     _email, _password);
                                             _dailyLoginBadge(u.id, auth, state);
                                           } on AuthException catch (e) {
-                                            if (e.message.compareTo(
+                                            if (e.message?.compareTo(
                                                     "Sent verification email") ==
-                                                0) {
+                                                0 ??
+                                                false) {
                                               CustomToast.toast(context,
                                                   "${e.message} to $_email");
                                               // TODO: iOS needs a different handling, check the documentation
