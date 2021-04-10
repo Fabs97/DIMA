@@ -204,8 +204,8 @@ class _LoginState extends State<Login> {
                                             _dailyLoginBadge(u.id, auth, state);
                                           } on AuthException catch (e) {
                                             if (e.message?.compareTo(
-                                                    "Sent verification email") ==
-                                                0 ??
+                                                        "Sent verification email") ==
+                                                    0 ??
                                                 false) {
                                               CustomToast.toast(context,
                                                   "${e.message} to $_email");
@@ -341,15 +341,23 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildSocialLoginButton(AssetImage logo, Function() callback,
-      {double size = 100}) {
-    return FloatingActionButton(
-      backgroundColor: T.textLightColor,
-      onPressed: callback,
-      child: Image(
-        image: logo,
-        width: size,
-        height: size,
-        color: null,
+      {double size = 70}) {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      child: ClipOval(
+        child: Material(
+          child: InkWell(
+            splashColor: T.primaryColor,
+            onTap: callback,
+            child: Image(
+              image: logo,
+              width: size,
+              height: size,
+              color: null,
+            ),
+          ),
+          color: Colors.transparent,
+        ),
       ),
     );
   }
