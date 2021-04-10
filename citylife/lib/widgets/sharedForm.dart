@@ -85,23 +85,20 @@ class _SharedFormState extends State<SharedForm> {
                 ),
                 Flexible(
                   flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextFormField(
-                      maxLines: null,
-                      controller: _notesController,
-                      textAlignVertical: TextAlignVertical.center,
-                      maxLength: 255,
-                      decoration: InputDecoration(
-                        hintText: "Notes",
-                        counterText: "${_notesController.text.length}/255",
-                        prefixIcon: Icon(
-                          Icons.edit_outlined,
-                          color: T.primaryColor,
-                        ),
+                  child: TextFormField(
+                    maxLines: null,
+                    controller: _notesController,
+                    textAlignVertical: TextAlignVertical.center,
+                    maxLength: 255,
+                    decoration: InputDecoration(
+                      hintText: "Notes",
+                      counterText: "${_notesController.text.length}/255",
+                      prefixIcon: Icon(
+                        Icons.edit_outlined,
+                        color: T.primaryColor,
                       ),
-                      onChanged: (v) => impression.notes = v,
                     ),
+                    onChanged: (v) => impression.notes = v,
                   ),
                 ),
               ],
