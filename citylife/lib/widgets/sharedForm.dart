@@ -112,8 +112,6 @@ class _SharedFormState extends State<SharedForm> {
   _getPhoto(value) async {
     File pickedFile = await ImagePicker.pickImage(
       source: value ? ImageSource.gallery : ImageSource.camera,
-      maxWidth: 122,
-      maxHeight: 86,
     );
     if (pickedFile != null) {
       setState(() {
