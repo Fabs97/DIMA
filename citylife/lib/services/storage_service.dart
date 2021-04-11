@@ -2,21 +2,11 @@ import 'dart:io';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 
 class StorageService {
   FirebaseStorage _instance = FirebaseStorage.instance;
-  Directory appDocDir;
-
-  StorageService() {
-    initState();
-  }
-
-  initState() async {
-    appDocDir = await getApplicationDocumentsDirectory();
-  }
 
   Future<String> uploadImage(bool isStructural, int impressionId, File image,
       {Reference reference}) {

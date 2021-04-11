@@ -29,7 +29,8 @@ class BadgeAPIService {
 
   static Future<CLBadge> _getBadge(String subRoute, int userId) async {
     Response response =
-        await _client.get(APIENDPOINT + _badgeRoute + subRoute + "/$userId");
+        await _client
+        .get(Uri.parse(APIENDPOINT + _badgeRoute + subRoute + "/$userId"));
     switch (response.statusCode) {
       case 200:
         return CLBadge.fromJson(jsonDecode(response.body));
@@ -41,7 +42,8 @@ class BadgeAPIService {
 
   static Future<Badge> _postTechieBadge(String subRoute, int userId) async {
     Response response =
-        await _client.post(APIENDPOINT + _badgeRoute + subRoute + "/$userId");
+        await _client
+        .post(Uri.parse(APIENDPOINT + _badgeRoute + subRoute + "/$userId"));
     if (response.statusCode >= 300) {
       throw BadgeAPIException(response.body ?? "Error in the postLoginBadge");
     } else {
@@ -52,7 +54,8 @@ class BadgeAPIService {
   static Future<Badge> _postImpressionBadge(
       String subRoute, int userId, bool isEmotional) async {
     Response response =
-        await _client.post(APIENDPOINT + _badgeRoute + subRoute + "/$userId");
+        await _client
+        .post(Uri.parse(APIENDPOINT + _badgeRoute + subRoute + "/$userId"));
     if (response.statusCode >= 300) {
       throw BadgeAPIException(response.body ?? "Error in the postLoginBadge");
     } else {
@@ -85,7 +88,8 @@ class BadgeAPIService {
 
   static Future<Badge> _postLoginBadge(int userId) async {
     Response response =
-        await _client.post(APIENDPOINT + _badgeRoute + "/login/$userId");
+        await _client
+        .post(Uri.parse(APIENDPOINT + _badgeRoute + "/login/$userId"));
     if (response.statusCode >= 300) {
       throw BadgeAPIException(response.body ?? "Error in the postLoginBadge");
     } else {
