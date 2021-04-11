@@ -79,7 +79,10 @@ class _AuthenticateState extends State<Authenticate> {
         builder: (_, state, __) {
           return _isLoadingInfo
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        new AlwaysStoppedAnimation<Color>(T.primaryColor),
+                  ),
                 )
               : (!auth.isAuthenticated
                   ? Login()
