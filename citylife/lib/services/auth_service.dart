@@ -247,6 +247,8 @@ class AuthService with ChangeNotifier {
   }
 
   Future<CLUser> _socialSignIn(AuthCredential authCredential) async {
+    try {
+      
     UserCredential credential = await auth.signInWithCredential(authCredential);
     authUser = credential.additionalUserInfo.isNewUser
         ? await UserAPIService.route("/new",
@@ -258,6 +260,9 @@ class AuthService with ChangeNotifier {
             client: client)
         : await _getUserInfoByFirebaseId(credential.user.uid);
     return authUser;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void signOut(BuildContext context) async {
