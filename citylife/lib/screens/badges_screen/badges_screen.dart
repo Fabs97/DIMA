@@ -142,7 +142,12 @@ class BadgesScreen extends StatelessWidget {
                         );
                       }
                     } else {
-                      return CircularProgressIndicator();
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              new AlwaysStoppedAnimation<Color>(T.primaryColor),
+                        ),
+                      );
                     }
                   },
                 );

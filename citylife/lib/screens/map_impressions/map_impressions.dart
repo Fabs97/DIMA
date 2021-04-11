@@ -236,7 +236,7 @@ class ImpressionsMapState extends State<ImpressionsMap> {
           } else {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: T.primaryColor,
+                valueColor: new AlwaysStoppedAnimation<Color>(T.primaryColor),
               ),
             );
           }
