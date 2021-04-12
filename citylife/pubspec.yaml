@@ -24,7 +24,7 @@ dependencies:
     git: git://github.com/eudangeld/flutter_twitter_login.git
   geocoder: ^0.2.1
   github_sign_in: ^0.0.3
-  google_maps_flutter:
+  google_maps_flutter: ^2.0.3
   google_sign_in: ^4.5.9
   gradient_widgets: ^0.5.2
   http: ^0.13.0
@@ -32,7 +32,7 @@ dependencies:
   intl: ^0.17.0
   latlong: ^0.6.1
   location: ^4.1.1
-  path: 
+  path: ^1.8.0 
   provider: ^4.3.3
   plugin_platform_interface: ^2.0.0
   shared_preferences: ^2.0.3
@@ -40,13 +40,13 @@ dependencies:
   steps_indicator: ^1.2.0
   uni_links: ^0.4.0
   url_launcher: ^6.0.3
-  geocoding: 
-  open_mail_app:
-  qr_flutter: 
-  pin_code_fields:
-  flutter_animated_dialog: 
-  confetti:
-  fluster:
+  geocoding: ^2.0.0
+  open_mail_app: ^0.1.1
+  qr_flutter: ^4.0.0
+  pin_code_fields: ^7.0.0
+  flutter_animated_dialog: ^2.0.0
+  confetti: ^0.5.5
+  fluster: ^1.1.2
 
 dev_dependencies:
   flutter_test:
