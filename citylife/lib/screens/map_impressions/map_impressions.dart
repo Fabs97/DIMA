@@ -95,7 +95,7 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       myLocationEnabled: true,
                       tiltGesturesEnabled: false,
                       myLocationButtonEnabled: true,
-                      markers: state.googleMarkers,
+                      markers: state.googleMarkers ?? Set(),
                       onCameraMove: (position) async {
                         if (_clusterManager == null ||
                             position.zoom == _currentZoom) return;
@@ -114,10 +114,12 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       onMapCreated: (cntlr) {
                         _controller = cntlr;
                       },
-                      onCameraIdle: () {
+                      onCameraIdle: () async {
                         if (_controller != null) {
-                          if (!state.isFirstMove) {
-                            _controller.getVisibleRegion().then((bounds) async {
+                          try {
+                            await _controller
+                                .getVisibleRegion()
+                                .then((bounds) async {
                               LatLng northEast = bounds.northeast;
                               LatLng southWest = bounds.southwest;
 
@@ -126,6 +128,13 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                   northEast.latitude,
                                   southWest.longitude,
                                   northEast.longitude);
+
+                              if (state.isFirstMove) {
+                                state.impressions =
+                                    await ImpressionsAPIService.route(
+                                        "/byLatLong",
+                                        urlArgs: args);
+                              }
 
                               _clusterManager =
                                   await MapHelper.initClusterManager(
@@ -143,42 +152,15 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                               state.googleMarkers = updatedMarkers.toSet();
 
-                              state.isButtonVisible = true;
+                              if (!state.isFirstMove) {
+                                state.isButtonVisible = true;
+                              } else {
+                                state.isFirstMove = false;
+                              }
                             });
-                          } else {
-                            _controller.getVisibleRegion().then((bounds) async {
-                              LatLng northEast = bounds.northeast;
-                              LatLng southWest = bounds.southwest;
-
-                              args = HomeArguments(
-                                  southWest.latitude,
-                                  northEast.latitude,
-                                  southWest.longitude,
-                                  northEast.longitude);
-
-                              state.impressions =
-                                  await ImpressionsAPIService.route(
-                                      "/byLatLong",
-                                      urlArgs: args);
-
-                              _clusterManager =
-                                  await MapHelper.initClusterManager(
-                                state.markers,
-                                _minClusterZoom,
-                                _maxClusterZoom,
-                              );
-
-                              final updatedMarkers =
-                                  await MapHelper.getClusterMarkers(
-                                _clusterManager,
-                                _currentZoom,
-                                80,
-                              );
-
-                              state.googleMarkers = updatedMarkers.toSet();
-
-                              state.isFirstMove = false;
-                            });
+                          } catch (e, sTrace) {
+                            print(e);
+                            print(sTrace);
                           }
                         }
                       },

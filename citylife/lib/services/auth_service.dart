@@ -146,8 +146,7 @@ class AuthService with ChangeNotifier {
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGoogle - $e\n$sTrace");
       throw new AuthException(
-        e.message ?? 
-          "Could not sign in with Google, please try again");
+          e.message ?? "Could not sign in with Google, please try again");
     }
   }
 
@@ -187,26 +186,25 @@ class AuthService with ChangeNotifier {
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGitHub - $e\n$sTrace");
       throw new AuthException(
-          e.message ?? 
-          "Could not sign in with Github, please try again");
+          e.message ?? "Could not sign in with Github, please try again");
     }
   }
 
   Future<CLUser> signInWithFacebook() async {
     try {
-      final AccessToken accessToken = await FacebookAuth.instance.login();
-
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.accessToken == null)
+        throw new AuthException("Access token is null");
       // Create a credential from the access token
       final FacebookAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(accessToken.token);
+          FacebookAuthProvider.credential(loginResult.accessToken.token);
 
       // Once signed in, return the UserCredential
       return await _socialSignIn(facebookAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithFacebook - $e\n$sTrace");
       throw new AuthException(
-          e.message ?? 
-          "Could not sign in with Facebook, please try again");
+          e.message ?? "Could not sign in with Facebook, please try again");
     }
     // Trigger the sign-in flow
   }
@@ -241,23 +239,27 @@ class AuthService with ChangeNotifier {
     } catch (e, sTrace) {
       print("[AuthService]::signInWithTwitter - $e\n$sTrace");
       throw new AuthException(
-          e.message ?? 
-          "Could not sign in with Twitter, please try again");
+          e.message ?? "Could not sign in with Twitter, please try again");
     }
   }
 
   Future<CLUser> _socialSignIn(AuthCredential authCredential) async {
-    UserCredential credential = await auth.signInWithCredential(authCredential);
-    authUser = credential.additionalUserInfo.isNewUser
-        ? await UserAPIService.route("/new",
-            body: CLUser(
-              email: credential.user.email,
-              name: credential.user.displayName,
-              firebaseId: credential.user.uid,
-            ),
-            client: client)
-        : await _getUserInfoByFirebaseId(credential.user.uid);
-    return authUser;
+    try {
+      UserCredential credential =
+          await auth.signInWithCredential(authCredential);
+      authUser = credential.additionalUserInfo.isNewUser
+          ? await UserAPIService.route("/new",
+              body: CLUser(
+                email: credential.user.email,
+                name: credential.user.displayName,
+                firebaseId: credential.user.uid,
+              ),
+              client: client)
+          : await _getUserInfoByFirebaseId(credential.user.uid);
+      return authUser;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void signOut(BuildContext context) async {

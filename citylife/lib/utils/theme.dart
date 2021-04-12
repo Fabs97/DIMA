@@ -81,7 +81,7 @@ class T {
       tickMarkShape: RoundSliderTickMarkShape(),
       trackShape: GradientRectSliderTrackShape(
         gradient: sliderTrackGradient,
-        darkenInactive: false,
+        darkenInactive: true,
       ),
       activeTickMarkColor: T.structuralColor,
       inactiveTickMarkColor: T.structuralColor,

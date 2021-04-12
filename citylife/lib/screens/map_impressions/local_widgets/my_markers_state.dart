@@ -34,29 +34,40 @@ class MyMarkersState with ChangeNotifier {
   }
 
   set impressions(v) {
-    _impressions = v;
-    _markers = List.from(v.map((i) => getMarker(i)).toList());
-    _googleMarkers = Set.from(v.map((i) {
-      var m = getMarker(i);
-      return MapMarker(position: m.position, id: m.id).toMarker();
-    }).toList());
-    notifyListeners();
+    MapHelper.getIconMarker("s").then((structuralBitmap) =>
+        MapHelper.getIconMarker("e").then((emotionalBitmap) {
+          _impressions = v;
+          _markers = List.from(v
+              .map((i) => getMarker(
+                    i,
+                    bitmap:
+                        i is CLStructural ? structuralBitmap : emotionalBitmap,
+                  ))
+              .toList());
+          _googleMarkers = Set.from(v.map((i) {
+            return getMarker(i,
+                    bitmap:
+                        i is CLStructural ? structuralBitmap : emotionalBitmap)
+                .toMarker();
+          }).toList());
+          notifyListeners();
+        }));
   }
 
-  MapMarker getMarker(CLImpression imp) {
+  MapMarker getMarker(CLImpression imp, {BitmapDescriptor bitmap}) {
     return MapMarker(
-      id: "${imp is CLStructural ? "s" : "c"}${imp.id}",
+      id: "${imp is CLStructural ? "s" : "e"}${imp.id}",
       position: LatLng(imp.latitude, imp.longitude),
+      icon: bitmap,
     );
   }
 
   void add(CLImpression imp) async {
     _impressions.add(imp);
     var marker = getMarker(imp);
-    _markers.add(marker);
     marker.icon = await MapHelper.getIconMarker(marker.id);
-    _googleMarkers
-        .add(marker.toMarker());
+    _markers.add(marker);
+    _googleMarkers.add(marker.toMarker());
     notifyListeners();
   }
 }

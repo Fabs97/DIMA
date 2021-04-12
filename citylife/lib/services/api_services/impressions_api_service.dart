@@ -32,7 +32,7 @@ class ImpressionsAPIService {
   static Future<List<CLImpression>> _deleteImpression(
       String subRoute, int id) async {
     Response response = await _client.delete(
-      APIENDPOINT + impressionRoute + subRoute + "/$id",
+      Uri.parse(APIENDPOINT + impressionRoute + subRoute + "/$id"),
     );
 
     switch (response.statusCode) {
@@ -47,13 +47,13 @@ class ImpressionsAPIService {
   static Future<List<CLImpression>> _getImpressionsByLatLong(
       String subRoute, HomeArguments args) async {
     Response response = await _client.get(
-      APIENDPOINT +
+      Uri.parse(APIENDPOINT +
           impressionRoute +
           subRoute +
           "/${args.latMin}" +
           "/${args.latMax}" +
           "/${args.longMin}" +
-          "/${args.longMax}",
+          "/${args.longMax}"),
     );
 
     switch (response.statusCode) {
@@ -68,7 +68,7 @@ class ImpressionsAPIService {
   static Future<List<CLImpression>> _getImpressions(
       String subRoute, int id) async {
     Response response = await _client.get(
-      APIENDPOINT + impressionRoute + subRoute + "/$id",
+      Uri.parse(APIENDPOINT + impressionRoute + subRoute + "/$id"),
     );
 
     switch (response.statusCode) {
@@ -83,10 +83,10 @@ class ImpressionsAPIService {
   static Future<CLImpression> _postImpression(
       String subRoute, CLImpression impression) async {
     Response response = await _client.post(
-      APIENDPOINT +
+      Uri.parse(APIENDPOINT +
           impressionRoute +
           "${impression is CLStructural ? "/structural" : "/emotional"}" +
-          subRoute,
+          subRoute),
       headers: {"Content-Type": "application/json"},
       body: impression.toJson(),
     );

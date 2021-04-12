@@ -30,6 +30,7 @@ class _LoginState extends State<Login> {
   bool _obscurePassword = true;
   Timer _emailVerificationTimer;
   bool _isVerifyingEmail = false;
+  bool _isLoggingIn = false;
   ConfettiController _controller;
   @override
   void dispose() {
@@ -127,6 +128,7 @@ class _LoginState extends State<Login> {
                                   L.Google,
                                   () async {
                                     try {
+                                      setState(() => _isLoggingIn = true);
                                       CLUser u = await auth.signInWithGoogle();
                                       _dailyLoginBadge(u.id, auth, state);
                                     } catch (e) {
@@ -134,6 +136,8 @@ class _LoginState extends State<Login> {
                                           context,
                                           e.message ??
                                               "Error occured while authenticating");
+                                    } finally {
+                                      setState(() => _isLoggingIn = false);
                                     }
                                   },
                                 ),
@@ -141,6 +145,8 @@ class _LoginState extends State<Login> {
                                   L.Twitter,
                                   () async {
                                     try {
+                                      setState(() => _isLoggingIn = true);
+
                                       CLUser u = await auth.signInWithTwitter();
                                       _dailyLoginBadge(u.id, auth, state);
                                     } catch (e) {
@@ -148,6 +154,8 @@ class _LoginState extends State<Login> {
                                           context,
                                           e.message ??
                                               "Error occured while authenticating");
+                                    } finally {
+                                      setState(() => _isLoggingIn = false);
                                     }
                                   },
                                 ),
@@ -155,6 +163,7 @@ class _LoginState extends State<Login> {
                                   L.GitHub,
                                   () async {
                                     try {
+                                      setState(() => _isLoggingIn = true);
                                       CLUser u =
                                           await auth.signInWithGitHub(context);
                                       _dailyLoginBadge(u.id, auth, state);
@@ -163,6 +172,8 @@ class _LoginState extends State<Login> {
                                           context,
                                           e.message ??
                                               "Error occured while authenticating");
+                                    } finally {
+                                      setState(() => _isLoggingIn = false);
                                     }
                                   },
                                 ),
@@ -170,6 +181,7 @@ class _LoginState extends State<Login> {
                                   L.Facebook,
                                   () async {
                                     try {
+                                      setState(() => _isLoggingIn = true);
                                       CLUser u =
                                           await auth.signInWithFacebook();
                                       _dailyLoginBadge(u.id, auth, state);
@@ -178,6 +190,8 @@ class _LoginState extends State<Login> {
                                           context,
                                           e.message ??
                                               "Error occured while authenticating");
+                                    } finally {
+                                      setState(() => _isLoggingIn = false);
                                     }
                                   },
                                 ),
@@ -198,10 +212,13 @@ class _LoginState extends State<Login> {
                                       callback: () async {
                                         if (_formKey.currentState.validate()) {
                                           try {
+                                            setState(() => _isLoggingIn = true);
                                             CLUser u = await auth
                                                 .signInWithEmailAndPassword(
                                                     _email, _password);
                                             _dailyLoginBadge(u.id, auth, state);
+                                            setState(
+                                                () => _isLoggingIn = false);
                                           } on AuthException catch (e) {
                                             if (e.message?.compareTo(
                                                         "Sent verification email") ==
@@ -237,6 +254,8 @@ class _LoginState extends State<Login> {
                                                 checkEmailVerified(auth, state);
                                               });
                                             } else {
+                                              setState(
+                                                  () => _isLoggingIn = false);
                                               CustomToast.toast(
                                                   context, e.message);
                                             }
@@ -251,7 +270,23 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                )
+                ),
+                if (_isLoggingIn)
+                  Stack(
+                    children: [
+                      Container(
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight,
+                        color: Colors.black45,
+                      ),
+                      Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              new AlwaysStoppedAnimation<Color>(T.primaryColor),
+                        ),
+                      )
+                    ],
+                  )
               ],
             ),
           );
@@ -284,7 +319,10 @@ class _LoginState extends State<Login> {
       CLUser u = await auth.signInWithEmailAndPassword(_email, _password,
           verifiedEmail: true);
       _dailyLoginBadge(u.id, auth, state);
-      setState(() => _isVerifyingEmail = false);
+      setState(() {
+        _isVerifyingEmail = false;
+        _isLoggingIn = false;
+      });
     }
   }
 

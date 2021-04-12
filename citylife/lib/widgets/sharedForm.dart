@@ -24,6 +24,8 @@ class _SharedFormState extends State<SharedForm> {
   File imageFile;
   List<Widget> gridView;
 
+  final _picker = ImagePicker();
+
   TextEditingController _notesController = TextEditingController();
   @override
   initState() {
@@ -110,10 +112,9 @@ class _SharedFormState extends State<SharedForm> {
   }
 
   _getPhoto(value) async {
-    File pickedFile = await ImagePicker.pickImage(
+    PickedFile pickedFile = await _picker.getImage(
       source: value ? ImageSource.gallery : ImageSource.camera,
-      maxWidth: 122,
-      maxHeight: 86,
+      preferredCameraDevice: CameraDevice.rear,
     );
     if (pickedFile != null) {
       setState(() {

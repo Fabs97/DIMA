@@ -31,7 +31,7 @@ class UserAPIService {
 
   static Future<List<CLUser>> _getLeaderboard(String subRoute) async {
     Response response = await _client.get(
-      APIENDPOINT + _userRoute + subRoute,
+      Uri.parse(APIENDPOINT + _userRoute + subRoute),
     );
 
     switch (response.statusCode) {
@@ -48,7 +48,7 @@ class UserAPIService {
 
   static Future<bool> _postCode(int userId, String code) async {
     Response response = await _client.post(
-      APIENDPOINT + _userRoute + "/2fa/$userId",
+      Uri.parse(APIENDPOINT + _userRoute + "/2fa/$userId"),
       headers: {
         "x-citylife-code": code,
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ class UserAPIService {
 
   static Future<String> _getSecret(int userId) async {
     Response response = await _client.get(
-      APIENDPOINT + _userRoute + "/2fa/$userId",
+      Uri.parse(APIENDPOINT + _userRoute + "/2fa/$userId"),
     );
 
     switch (response.statusCode) {
@@ -82,7 +82,7 @@ class UserAPIService {
 
   static Future<CLUser> _postNewUser(String subRoute, CLUser user) async {
     Response response = await _client.post(
-      APIENDPOINT + _userRoute + subRoute,
+      Uri.parse(APIENDPOINT + _userRoute + subRoute),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(user.toJson()),
     );
@@ -101,7 +101,7 @@ class UserAPIService {
   static Future<CLUser> _getByFirebaseId(
       String subRoute, String firebaseId) async {
     Response response = await _client.get(
-      APIENDPOINT + _userRoute + subRoute + "/$firebaseId",
+      Uri.parse(APIENDPOINT + _userRoute + subRoute + "/$firebaseId"),
     );
 
     switch (response.statusCode) {
@@ -117,7 +117,7 @@ class UserAPIService {
 
   static Future<CLUser> _postUserUpdate(String subRoute, CLUser user) async {
     Response response = await _client.post(
-      APIENDPOINT + _userRoute + subRoute,
+      Uri.parse(APIENDPOINT + _userRoute + subRoute),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(user.toJson()),
     );
