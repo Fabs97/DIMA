@@ -95,7 +95,7 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       myLocationEnabled: true,
                       tiltGesturesEnabled: false,
                       myLocationButtonEnabled: true,
-                      markers: state.googleMarkers,
+                      markers: state.googleMarkers ?? Set(),
                       onCameraMove: (position) async {
                         if (_clusterManager == null ||
                             position.zoom == _currentZoom) return;
@@ -114,72 +114,49 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       onMapCreated: (cntlr) {
                         _controller = cntlr;
                       },
-                      onCameraIdle: () {
+                      onCameraIdle: () async {
                         if (_controller != null) {
-                          if (!state.isFirstMove) {
-                            _controller.getVisibleRegion().then((bounds) async {
-                              LatLng northEast = bounds.northeast;
-                              LatLng southWest = bounds.southwest;
+                          await _controller
+                              .getVisibleRegion()
+                              .then((bounds) async {
+                            LatLng northEast = bounds.northeast;
+                            LatLng southWest = bounds.southwest;
 
-                              args = HomeArguments(
-                                  southWest.latitude,
-                                  northEast.latitude,
-                                  southWest.longitude,
-                                  northEast.longitude);
-
-                              _clusterManager =
-                                  await MapHelper.initClusterManager(
-                                state.markers,
-                                _minClusterZoom,
-                                _maxClusterZoom,
-                              );
-
-                              final updatedMarkers =
-                                  await MapHelper.getClusterMarkers(
-                                _clusterManager,
-                                _currentZoom,
-                                80,
-                              );
-
-                              state.googleMarkers = updatedMarkers.toSet();
-
-                              state.isButtonVisible = true;
-                            });
-                          } else {
-                            _controller.getVisibleRegion().then((bounds) async {
-                              LatLng northEast = bounds.northeast;
-                              LatLng southWest = bounds.southwest;
-
-                              args = HomeArguments(
-                                  southWest.latitude,
-                                  northEast.latitude,
-                                  southWest.longitude,
-                                  northEast.longitude);
-
+                            args = HomeArguments(
+                                southWest.latitude,
+                                northEast.latitude,
+                                southWest.longitude,
+                                northEast.longitude);
+                            
+                            if (state.isFirstMove) {
                               state.impressions =
                                   await ImpressionsAPIService.route(
                                       "/byLatLong",
                                       urlArgs: args);
+                            }
+                            
+                            _clusterManager =
+                                await MapHelper.initClusterManager(
+                              state.markers,
+                              _minClusterZoom,
+                              _maxClusterZoom,
+                            );
 
-                              _clusterManager =
-                                  await MapHelper.initClusterManager(
-                                state.markers,
-                                _minClusterZoom,
-                                _maxClusterZoom,
-                              );
+                            final updatedMarkers =
+                                await MapHelper.getClusterMarkers(
+                              _clusterManager,
+                              _currentZoom,
+                              80,
+                            );
 
-                              final updatedMarkers =
-                                  await MapHelper.getClusterMarkers(
-                                _clusterManager,
-                                _currentZoom,
-                                80,
-                              );
+                            state.googleMarkers = updatedMarkers.toSet();
 
-                              state.googleMarkers = updatedMarkers.toSet();
-
+                            if (!state.isFirstMove) {
+                              state.isButtonVisible = true;
+                            } else {
                               state.isFirstMove = false;
-                            });
-                          }
+                            }
+                          });
                         }
                       },
                     ),
@@ -202,6 +179,7 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                   await ImpressionsAPIService.route(
                                       "/byLatLong",
                                       urlArgs: args);
+                                      
 
                               _clusterManager =
                                   await MapHelper.initClusterManager(
