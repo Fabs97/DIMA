@@ -116,47 +116,52 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                       },
                       onCameraIdle: () async {
                         if (_controller != null) {
-                          await _controller
-                              .getVisibleRegion()
-                              .then((bounds) async {
-                            LatLng northEast = bounds.northeast;
-                            LatLng southWest = bounds.southwest;
+                          try {
+                            await _controller
+                                .getVisibleRegion()
+                                .then((bounds) async {
+                              LatLng northEast = bounds.northeast;
+                              LatLng southWest = bounds.southwest;
 
-                            args = HomeArguments(
-                                southWest.latitude,
-                                northEast.latitude,
-                                southWest.longitude,
-                                northEast.longitude);
-                            
-                            if (state.isFirstMove) {
-                              state.impressions =
-                                  await ImpressionsAPIService.route(
-                                      "/byLatLong",
-                                      urlArgs: args);
-                            }
-                            
-                            _clusterManager =
-                                await MapHelper.initClusterManager(
-                              state.markers,
-                              _minClusterZoom,
-                              _maxClusterZoom,
-                            );
+                              args = HomeArguments(
+                                  southWest.latitude,
+                                  northEast.latitude,
+                                  southWest.longitude,
+                                  northEast.longitude);
 
-                            final updatedMarkers =
-                                await MapHelper.getClusterMarkers(
-                              _clusterManager,
-                              _currentZoom,
-                              80,
-                            );
+                              if (state.isFirstMove) {
+                                state.impressions =
+                                    await ImpressionsAPIService.route(
+                                        "/byLatLong",
+                                        urlArgs: args);
+                              }
 
-                            state.googleMarkers = updatedMarkers.toSet();
+                              _clusterManager =
+                                  await MapHelper.initClusterManager(
+                                state.markers,
+                                _minClusterZoom,
+                                _maxClusterZoom,
+                              );
 
-                            if (!state.isFirstMove) {
-                              state.isButtonVisible = true;
-                            } else {
-                              state.isFirstMove = false;
-                            }
-                          });
+                              final updatedMarkers =
+                                  await MapHelper.getClusterMarkers(
+                                _clusterManager,
+                                _currentZoom,
+                                80,
+                              );
+
+                              state.googleMarkers = updatedMarkers.toSet();
+
+                              if (!state.isFirstMove) {
+                                state.isButtonVisible = true;
+                              } else {
+                                state.isFirstMove = false;
+                              }
+                            });
+                          } catch (e, sTrace) {
+                            print(e);
+                            print(sTrace);
+                          }
                         }
                       },
                     ),
@@ -179,7 +184,6 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                   await ImpressionsAPIService.route(
                                       "/byLatLong",
                                       urlArgs: args);
-                                      
 
                               _clusterManager =
                                   await MapHelper.initClusterManager(
