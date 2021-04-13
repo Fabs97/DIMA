@@ -34,7 +34,8 @@ void main() {
 
       var result = await UserAPIService.route('/leaderboard', client: client);
 
-      expect(result, isA<List<CLUser>>());
+      expect(result, isList);
+      expect(result, everyElement(isA<CLUser>()));
 
       var previousExp;
       result.forEach((element) {
