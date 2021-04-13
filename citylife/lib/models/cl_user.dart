@@ -46,4 +46,21 @@ class CLUser {
       "avatar": this.avatar,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CLUser &&
+        this.id == other.id &&
+        this.firebaseId == other.firebaseId &&
+        this.tech == other.tech &&
+        this.twofa == other.twofa &&
+        this.name == other.name &&
+        this.exp == other.exp &&
+        this.email == other.email &&
+        this.password == other.password &&
+        this.avatar == other.avatar;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }

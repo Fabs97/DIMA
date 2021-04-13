@@ -15,6 +15,8 @@ class CLImpression extends ChangeNotifier {
   bool fromTech;
 
   CLImpression({
+    this.id,
+    this.userId,
     this.notes,
     this.images,
     this.latitude,

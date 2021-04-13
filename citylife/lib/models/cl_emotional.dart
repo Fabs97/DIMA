@@ -42,8 +42,27 @@ class CLEmotional extends CLImpression {
     this._happiness,
     this._inclusiveness,
     this._comfort,
-    this._safety,
-  );
+    this._safety, {
+    id,
+    userId,
+    notes,
+    images,
+    latitude,
+    longitude,
+    timeStamp,
+    placeTag,
+    fromTech,
+  }) : super(
+          id: id,
+          userId: userId,
+          notes: notes,
+          images: images,
+          latitude: latitude,
+          longitude: longitude,
+          timeStamp: timeStamp,
+          placeTag: placeTag,
+          fromTech: fromTech,
+        );
 
   String toJson() {
     var data = super.toJsonMap();

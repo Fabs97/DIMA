@@ -11,7 +11,26 @@ class CLStructural extends CLImpression {
     this.component,
     this.pathology,
     this.typology,
-  });
+    id,
+    userId,
+    notes,
+    images,
+    latitude,
+    longitude,
+    timeStamp,
+    placeTag,
+    fromTech,
+  }) : super(
+          id: id,
+          userId: userId,
+          notes: notes,
+          images: images,
+          latitude: latitude,
+          longitude: longitude,
+          timeStamp: timeStamp,
+          placeTag: placeTag,
+          fromTech: fromTech,
+        );
 
   String toJson() {
     var data = super.toJsonMap();

@@ -39,7 +39,10 @@ class ImpressionsAPIService {
       case 200:
         return _parseImpressionsJson(response.body);
       default:
-        throw new ImpressionsAPIException(response.body?.toString() ??
+        throw new ImpressionsAPIException((response.body != null &&
+                    response.body.isNotEmpty
+                ? response.body
+                : null) ??
             "Error in Impression API Service with code ${response.statusCode}");
     }
   }
@@ -60,7 +63,10 @@ class ImpressionsAPIService {
       case 200:
         return _parseImpressionsJson(response.body);
       default:
-        throw new ImpressionsAPIException(response.body?.toString() ??
+        throw new ImpressionsAPIException((response.body != null &&
+                    response.body.isNotEmpty
+                ? response.body
+                : null) ??
             "Error in Impression API Service with code ${response.statusCode}");
     }
   }
@@ -75,7 +81,10 @@ class ImpressionsAPIService {
       case 200:
         return _parseImpressionsJson(response.body);
       default:
-        throw new ImpressionsAPIException(response.body?.toString() ??
+        throw new ImpressionsAPIException((response.body != null &&
+                    response.body.isNotEmpty
+                ? response.body
+                : null) ??
             "Error in Impression API Service with code ${response.statusCode}");
     }
   }
@@ -94,19 +103,22 @@ class ImpressionsAPIService {
       case 200:
         return _parseImpression(jsonDecode(response.body));
       default:
-        throw new ImpressionsAPIException(response.body?.toString() ??
+        throw new ImpressionsAPIException((response.body != null &&
+                    response.body.isNotEmpty
+                ? response.body
+                : null) ??
             "Error in Impression API Service with code ${response.statusCode}");
     }
   }
 
   static List<CLImpression> _parseImpressionsJson(String json) {
-    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    var res =
-        parsed.map((e) => _parseImpression(e)).cast<CLImpression>().toList();
-    return res;
+    final parsed = jsonDecode(json);
+    return List.from(parsed.map((e) => _parseImpression(e)));
   }
 
-  static CLImpression _parseImpression(Map<String, dynamic> i) {
+  static CLImpression _parseImpression(Object impression) {
+    Map<String, dynamic> i =
+        impression is String ? jsonDecode(impression) : impression;
     if (i.keys.contains("component") ||
         i.keys.contains("pathology") ||
         i.keys.contains("typology")) {
