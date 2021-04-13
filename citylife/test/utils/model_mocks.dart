@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/models/cl_user.dart';
+import 'package:citylife/utils/constants.dart';
 
 class MockModel {
   static CLUser getUser({
@@ -89,5 +91,45 @@ class MockModel {
         timeStamp: timeStamp ?? DateTime.now(),
         placeTag: placeTag ?? "Test Placetag",
         fromTech: fromTech ?? false,
+      );
+  static CLBadge getBadge({
+    id,
+    userId,
+    daily3,
+    daily5,
+    daily10,
+    daily30,
+    techie,
+    structural1,
+    structural5,
+    structural10,
+    structural25,
+    structural50,
+    emotional1,
+    emotional5,
+    emotional10,
+    emotional25,
+    emotional50,
+  }) =>
+      CLBadge(
+        id: id ?? 1,
+        userId: userId ?? 1,
+        badges: <Badge, bool>{
+          Badge.Daily3: daily3 ?? false,
+          Badge.Daily5: daily5 ?? false,
+          Badge.Daily10: daily10 ?? false,
+          Badge.Daily30: daily30 ?? false,
+          Badge.Techie: techie ?? false,
+          Badge.Structural1: structural1 ?? false,
+          Badge.Structural5: structural5 ?? false,
+          Badge.Structural10: structural10 ?? false,
+          Badge.Structural25: structural25 ?? false,
+          Badge.Structural50: structural50 ?? false,
+          Badge.Emotional1: emotional1 ?? false,
+          Badge.Emotional5: emotional5 ?? false,
+          Badge.Emotional10: emotional10 ?? false,
+          Badge.Emotional25: emotional25 ?? false,
+          Badge.Emotional50: emotional50 ?? false,
+        },
       );
 }

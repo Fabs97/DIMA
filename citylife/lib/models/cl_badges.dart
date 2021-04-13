@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:citylife/utils/constants.dart';
 
 class CLBadge {
@@ -8,8 +10,9 @@ class CLBadge {
   CLBadge({
     this.id,
     this.userId,
+    badges,
   }) {
-    badges = Map<Badge, bool>();
+    this.badges = badges ?? Map<Badge, bool>();
   }
 
   CLBadge.fromJson(Map<String, dynamic> json) {
@@ -54,4 +57,6 @@ class CLBadge {
     data['emotional_50'] = this.badges[Badge.Emotional50];
     return data;
   }
+
+  String toJsonString() => jsonEncode(this.toJson());
 }

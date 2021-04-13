@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
-import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/map_impressions/map_impressions.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/utils/constants.dart';
