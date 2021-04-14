@@ -13,6 +13,7 @@ import 'user_api_service_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
+  final UserAPIService userAPIService = UserAPIService();
   group('/leaderboard', () {
     test('returns a list of CLUsers if the http call completes successfully',
         () async {
@@ -32,7 +33,7 @@ void main() {
         (_) async => http.Response(jsonEncode(leadeboard), 200),
       );
 
-      var result = await UserAPIService.route('/leaderboard', client: client);
+      var result = await userAPIService.route('/leaderboard', client: client);
 
       expect(result, isList);
       expect(result, everyElement(isA<CLUser>()));
@@ -58,7 +59,7 @@ void main() {
       );
 
       try {
-        await UserAPIService.route("/leaderboard", client: client);
+        await userAPIService.route("/leaderboard", client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, errorMessage);
@@ -77,7 +78,7 @@ void main() {
       );
 
       try {
-        await UserAPIService.route("/leaderboard", client: client);
+        await userAPIService.route("/leaderboard", client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, "Error while retrieving the user leaderboard");
@@ -101,7 +102,7 @@ void main() {
         (_) async => http.Response(jsonEncode(userWithId), 200),
       );
 
-      var result = await UserAPIService.route(
+      var result = await userAPIService.route(
         "/new",
         body: userWithoudId,
         client: client,
@@ -125,7 +126,7 @@ void main() {
       );
 
       try {
-        await UserAPIService.route("/new", body: userWithoudId, client: client);
+        await userAPIService.route("/new", body: userWithoudId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, errorMessage);
@@ -147,7 +148,7 @@ void main() {
       );
 
       try {
-        await UserAPIService.route("/new", body: userWithoudId, client: client);
+        await userAPIService.route("/new", body: userWithoudId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, "Error in User API Service with code 404");
@@ -166,7 +167,7 @@ void main() {
             '$APIENDPOINT${UserAPIService.userRoute}/byFirebase/$firebaseId'),
       )).thenAnswer((_) async => http.Response(jsonEncode(user), 200));
 
-      var result = await UserAPIService.route("/byFirebase",
+      var result = await userAPIService.route("/byFirebase",
           urlArgs: firebaseId, client: client);
 
       expect(result, isA<CLUser>());
@@ -182,7 +183,7 @@ void main() {
             '$APIENDPOINT${UserAPIService.userRoute}/byFirebase/$firebaseId'),
       )).thenAnswer((_) async => http.Response(errorMessage, 400));
       try {
-        await UserAPIService.route("/byFirebase",
+        await userAPIService.route("/byFirebase",
             urlArgs: firebaseId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
@@ -200,7 +201,7 @@ void main() {
             '$APIENDPOINT${UserAPIService.userRoute}/byFirebase/$firebaseId'),
       )).thenAnswer((_) async => http.Response("", 400));
       try {
-        await UserAPIService.route("/byFirebase",
+        await userAPIService.route("/byFirebase",
             urlArgs: firebaseId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
@@ -221,7 +222,7 @@ void main() {
       )).thenAnswer((_) async => http.Response(jsonEncode(user), 200));
 
       var result =
-          await UserAPIService.route("/update", body: user, client: client);
+          await userAPIService.route("/update", body: user, client: client);
 
       expect(result, isA<CLUser>());
       expect(result, equals(user));
@@ -236,7 +237,7 @@ void main() {
         body: jsonEncode(user.toJson()),
       )).thenAnswer((_) async => http.Response(errorMessage, 400));
       try {
-        await UserAPIService.route("/update", body: user, client: client);
+        await userAPIService.route("/update", body: user, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, errorMessage);
@@ -253,7 +254,7 @@ void main() {
         body: jsonEncode(user.toJson()),
       )).thenAnswer((_) async => http.Response("", 400));
       try {
-        await UserAPIService.route("/update", body: user, client: client);
+        await userAPIService.route("/update", body: user, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
         expect(e.message, "Error in User API Service with code 400");
@@ -271,7 +272,7 @@ void main() {
         Uri.parse('$APIENDPOINT${UserAPIService.userRoute}/2fa/$userId'),
       )).thenAnswer((_) async => http.Response(secret, 200));
 
-      var result = await UserAPIService.route("/2fa/getSecret",
+      var result = await userAPIService.route("/2fa/getSecret",
           urlArgs: userId, client: client);
       expect(result, isA<String>());
       expect(result, equals(secret));
@@ -286,7 +287,7 @@ void main() {
       )).thenAnswer((_) async => http.Response(errorMessage, 400));
 
       try {
-        await UserAPIService.route("/2fa/getSecret",
+        await userAPIService.route("/2fa/getSecret",
             urlArgs: userId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
@@ -304,7 +305,7 @@ void main() {
       )).thenAnswer((_) async => http.Response("", 400));
 
       try {
-        await UserAPIService.route("/2fa/getSecret",
+        await userAPIService.route("/2fa/getSecret",
             urlArgs: userId, client: client);
       } catch (e) {
         expect(e, isA<UserAPIException>());
@@ -327,7 +328,7 @@ void main() {
         },
       )).thenAnswer((_) async => http.Response("", 200));
 
-      var result = await UserAPIService.route(
+      var result = await userAPIService.route(
         "/2fa/postCode",
         urlArgs: userId,
         body: code,
@@ -349,7 +350,7 @@ void main() {
         },
       )).thenAnswer((_) async => http.Response("", 401));
 
-      var result = await UserAPIService.route(
+      var result = await userAPIService.route(
         "/2fa/postCode",
         urlArgs: userId,
         body: code,
@@ -372,7 +373,7 @@ void main() {
           (_) async => http.Response("Error while posting 2FA code", 404));
 
       try {
-        await UserAPIService.route(
+        await userAPIService.route(
           "/2fa/postCode",
           urlArgs: userId,
           body: code,
@@ -395,7 +396,7 @@ void main() {
       )).thenAnswer((_) async => http.Response("", 404));
 
       try {
-        await UserAPIService.route(
+        await userAPIService.route(
           "/2fa/postCode",
           urlArgs: userId,
           body: code,
@@ -409,7 +410,7 @@ void main() {
 
   test('default switch throws [UserAPIException]', () async {
     try {
-      await UserAPIService.route("errorRoute");
+      await userAPIService.route("errorRoute");
     } catch (e) {
       expect(e, isA<UserAPIException>());
       expect(e.message, "Error in User API Service");

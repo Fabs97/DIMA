@@ -8,8 +8,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileTwoFactorsAuth extends StatefulWidget {
+  final UserAPIService userAPIService;
   final CLUser user;
-  ProfileTwoFactorsAuth({Key key, @required this.user}) : super(key: key);
+  ProfileTwoFactorsAuth(
+      {Key key, @required this.user, @required this.userAPIService})
+      : super(key: key);
 
   @override
   _ProfileTwoFactorsAuthState createState() => _ProfileTwoFactorsAuthState();
@@ -24,7 +27,8 @@ class _ProfileTwoFactorsAuthState extends State<ProfileTwoFactorsAuth> {
 
   String _secret;
   void init() {
-    UserAPIService.route("/2fa/getSecret", urlArgs: widget.user.id)
+    widget.userAPIService
+        .route("/2fa/getSecret", urlArgs: widget.user.id)
         .then((secret) => setState(() => _secret = secret.replaceAll('"', "")));
   }
 

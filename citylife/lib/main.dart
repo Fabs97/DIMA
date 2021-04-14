@@ -2,6 +2,7 @@ import 'package:citylife/screens/homepage/homepage.dart';
 import 'package:citylife/screens/login/2fa_login.dart';
 import 'package:citylife/screens/login/2fa_login_state.dart';
 import 'package:citylife/screens/login/login.dart';
+import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
 import 'package:citylife/services/storage_service.dart';
@@ -18,6 +19,7 @@ void main() async {
 }
 
 class CityLife extends StatelessWidget {
+  final UserAPIService _userAPIService = UserAPIService();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -25,8 +27,10 @@ class CityLife extends StatelessWidget {
         FutureProvider.value(
           value: SharedPrefService.getInstance(),
         ),
+        Provider.value(value: _userAPIService),
         ChangeNotifierProvider<AuthService>(
-            create: (_) => AuthService.instance()),
+          create: (_) => AuthService.instance(userAPIService: _userAPIService),
+        ),
         Provider.value(value: StorageService()),
       ],
       child: NotificationListener(

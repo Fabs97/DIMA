@@ -30,6 +30,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   ConfettiController _confettiController;
   FocusNode _focusNode;
+  UserAPIService _userAPIService;
   @override
   void dispose() {
     _confettiController?.dispose();
@@ -43,6 +44,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final AuthService auth = context.watch<AuthService>();
+    _userAPIService = context.read<UserAPIService>();
     final CLUser user = auth.authUser;
 
     return ChangeNotifierProvider(
@@ -260,7 +262,10 @@ class _ProfileState extends State<Profile> {
                                             context: context,
                                             builder: (_) =>
                                                 ProfileTwoFactorsAuth(
-                                                    user: user));
+                                                  user: user,
+                                                  userAPIService:
+                                                      _userAPIService,
+                                                ));
                                       });
                                     },
                                     child: Container(
@@ -330,9 +335,8 @@ class _ProfileState extends State<Profile> {
 
                                     user.name = state.editedName;
 
-                                    auth.authUser = await UserAPIService.route(
-                                        "/update",
-                                        body: user);
+                                    auth.authUser = await _userAPIService
+                                        .route("/update", body: user);
                                     if (state.techEdited) {
                                       var badge = await BadgeAPIService.route(
                                         "/techie",
@@ -392,7 +396,7 @@ class _ProfileState extends State<Profile> {
                   CLUser user = authService.authUser;
                   user.avatar = newAvatar;
 
-                  await UserAPIService.route("/update", body: user);
+                  await _userAPIService.route("/update", body: user);
                   // If everything went smoothly, then change the avatar
                   final sp = await SharedPrefService.getInstance();
                   await sp.setUserWith(spUserInfoKey, user);

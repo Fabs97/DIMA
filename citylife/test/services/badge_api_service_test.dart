@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
-import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/utils/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
