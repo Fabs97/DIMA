@@ -30,6 +30,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   ConfettiController _confettiController;
   FocusNode _focusNode;
+  UserAPIService _userAPIService;
   @override
   void dispose() {
     _confettiController?.dispose();
@@ -42,324 +43,344 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService auth = context.watch<AuthService>();
-    final CLUser user = auth.authUser;
+    return Consumer2<AuthService, UserAPIService>(
+      builder: (context, auth, userAPIService, _) {
+        _userAPIService = userAPIService;
+        final CLUser user = auth.authUser;
 
-    return ChangeNotifierProvider(
-      create: (_) => ProfileState(user.name),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: T.backgroundColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Consumer<ProfileState>(
-                  builder: (context, state, _) {
-                    return Consumer<BadgeDialogState>(
-                      builder: (context, badgeDialog, _) => Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Spacer(),
-                          buildImageAvatar(constraints.maxHeight / 4, context),
-                          buildExpBar(user),
-                          Spacer(),
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: TextFormField(
-                                    initialValue: user.name,
-                                    focusNode: _focusNode,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.perm_identity,
-                                        color: Colors.black,
-                                        size: 26.0,
-                                      ),
-                                    ),
-                                    onChanged: (v) {
-                                      _unfocus();
-                                      state.editedName = v;
-                                      state.hasBeenEdited = true;
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-                                      color: Colors.grey[100],
-                                    ),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 4.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Icon(
-                                              Icons.work_outline,
-                                              // color: T.textFieldIconColor,
-                                            ),
+        return ChangeNotifierProvider(
+          create: (_) => ProfileState(user.name),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.transparent,
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: T.backgroundColor,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Consumer<ProfileState>(
+                      builder: (context, state, _) {
+                        return Consumer<BadgeDialogState>(
+                          builder: (context, badgeDialog, _) => Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Spacer(),
+                              buildImageAvatar(
+                                  constraints.maxHeight / 4, context),
+                              buildExpBar(user),
+                              Spacer(),
+                              SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: TextFormField(
+                                        initialValue: user.name,
+                                        focusNode: _focusNode,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.perm_identity,
+                                            color: Colors.black,
+                                            size: 26.0,
                                           ),
-                                          Text("Am I a technical user?"),
-                                          Transform.rotate(
-                                            angle: pi,
-                                            child: GestureDetector(
-                                              onTap: () => showAnimatedDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                animationType:
-                                                    DialogTransitionType
-                                                        .fadeScale,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                  title: Text(
-                                                    'What do you mean by "technical user"?',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  content: Text(techText),
-                                                  actions: [
-                                                    CustomGradientButton(
-                                                      title: "Close",
-                                                      callback: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      width:
-                                                          MediaQuery.of(context)
+                                        ),
+                                        onChanged: (v) {
+                                          _unfocus();
+                                          state.editedName = v;
+                                          state.hasBeenEdited = true;
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                          ),
+                                          color: Colors.grey[100],
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Icon(
+                                                  Icons.work_outline,
+                                                  // color: T.textFieldIconColor,
+                                                ),
+                                              ),
+                                              Text("Am I a technical user?"),
+                                              Transform.rotate(
+                                                angle: pi,
+                                                child: GestureDetector(
+                                                  onTap: () =>
+                                                      showAnimatedDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    animationType:
+                                                        DialogTransitionType
+                                                            .fadeScale,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      title: Text(
+                                                        'What do you mean by "technical user"?',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      content: Text(techText),
+                                                      actions: [
+                                                        CustomGradientButton(
+                                                          title: "Close",
+                                                          callback: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          width: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
                                                               .1,
-                                                      height: 10.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  top: 15.0,
-                                                  right: 5.0,
-                                                ),
-                                                child: Icon(
-                                                  Icons.error_outline_rounded,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 8.0),
-                                            child: Switch(
-                                              value: user?.tech ?? false,
-                                              // * Disable switch if user is already a techie
-                                              onChanged: !(user?.tech ?? false)
-                                                  ? (_) async {
-                                                      _unfocus();
-
-                                                      var becomeTech =
-                                                          await showAnimatedDialog(
-                                                        context: context,
-                                                        barrierDismissible:
-                                                            true,
-                                                        animationType:
-                                                            DialogTransitionType
-                                                                .fadeScale,
-                                                        builder: (_) =>
-                                                            AlertDialog(
-                                                          title: Text(
-                                                            "Are you sure you want to become a technical user?",
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                          content: Text(
-                                                              "You should know exactly what we mean by \"Technical User\"!\n$techText"),
-                                                          actions: [
-                                                            CustomGradientButton(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  .2,
-                                                              callback: () =>
-                                                                  Navigator.pop(
-                                                                      context,
-                                                                      true),
-                                                              title:
-                                                                  "I'm a techie",
-                                                              height: 10.0,
-                                                            ),
-                                                            CustomGradientButton(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  .2,
-                                                              callback: () =>
-                                                                  Navigator.pop(
-                                                                      context,
-                                                                      false),
-                                                              title:
-                                                                  "Probably I'm not",
-                                                              height: 10.0,
-                                                            ),
-                                                          ],
+                                                          height: 10.0,
                                                         ),
-                                                      );
-                                                      if (becomeTech != null) {
-                                                        setState(() {
-                                                          state.hasBeenEdited =
-                                                              becomeTech;
-                                                          state.techEdited =
-                                                              becomeTech;
-                                                          user.tech =
-                                                              becomeTech;
-                                                        });
-                                                      }
-                                                    }
-                                                  : (_) {},
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 15.0,
+                                                      right: 5.0,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons
+                                                          .error_outline_rounded,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 8.0),
+                                                child: Switch(
+                                                  value: user?.tech ?? false,
+                                                  // * Disable switch if user is already a techie
+                                                  onChanged:
+                                                      !(user?.tech ?? false)
+                                                          ? (_) async {
+                                                              _unfocus();
+
+                                                              var becomeTech =
+                                                                  await showAnimatedDialog(
+                                                                context:
+                                                                    context,
+                                                                barrierDismissible:
+                                                                    true,
+                                                                animationType:
+                                                                    DialogTransitionType
+                                                                        .fadeScale,
+                                                                builder: (_) =>
+                                                                    AlertDialog(
+                                                                  title: Text(
+                                                                    "Are you sure you want to become a technical user?",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                  content: Text(
+                                                                      "You should know exactly what we mean by \"Technical User\"!\n$techText"),
+                                                                  actions: [
+                                                                    CustomGradientButton(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          .2,
+                                                                      callback: () => Navigator.pop(
+                                                                          context,
+                                                                          true),
+                                                                      title:
+                                                                          "I'm a techie",
+                                                                      height:
+                                                                          10.0,
+                                                                    ),
+                                                                    CustomGradientButton(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          .2,
+                                                                      callback: () => Navigator.pop(
+                                                                          context,
+                                                                          false),
+                                                                      title:
+                                                                          "Probably I'm not",
+                                                                      height:
+                                                                          10.0,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                              if (becomeTech !=
+                                                                  null) {
+                                                                setState(() {
+                                                                  state.hasBeenEdited =
+                                                                      becomeTech;
+                                                                  state.techEdited =
+                                                                      becomeTech;
+                                                                  user.tech =
+                                                                      becomeTech;
+                                                                });
+                                                              }
+                                                            }
+                                                          : (_) {},
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _unfocus();
+
+                                          setState(() {
+                                            if (!user.twofa) {
+                                              // user.twofa = true;
+                                              state.hasBeenEdited = true;
+                                            }
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    ProfileTwoFactorsAuth(
+                                                      user: user,
+                                                      userAPIService:
+                                                          _userAPIService,
+                                                    ));
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                            color: Colors.grey[100],
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 4.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Icon(
+                                                    (user?.twofa ?? false)
+                                                        ? Icons.lock_outline
+                                                        : Icons
+                                                            .lock_open_outlined,
+                                                  ),
+                                                ),
+                                                Text("2 Factor Authentication"),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 8.0),
+                                                  child: Icon(
+                                                    Icons
+                                                        .keyboard_arrow_right_outlined,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    )
+                                  ],
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _unfocus();
+                              ),
+                              Spacer(),
+                              Spacer(),
+                              Spacer(),
+                              Spacer(),
+                              !state.hasBeenEdited
+                                  ? Consumer<TwoFALoginState>(
+                                      builder: (context, state, _) =>
+                                          CustomGradientButton(
+                                        title: "Sign out",
+                                        width: constraints.maxWidth,
+                                        callback: () {
+                                          state.authenticated = false;
+                                          auth.signOut(context);
+                                        },
+                                      ),
+                                    )
+                                  : CustomGradientButton(
+                                      title: "Save profile",
+                                      width: constraints.maxWidth,
+                                      callback: () async {
+                                        _unfocus();
 
-                                      setState(() {
-                                        if (!user.twofa) {
-                                          // user.twofa = true;
-                                          state.hasBeenEdited = true;
+                                        user.name = state.editedName;
+
+                                        auth.authUser = await _userAPIService
+                                            .route("/update", body: user);
+                                        if (state.techEdited) {
+                                          var badge =
+                                              await BadgeAPIService.route(
+                                            "/techie",
+                                            urlArgs: user.id,
+                                          );
+                                          badgeDialog.showBadgeDialog(
+                                            badge,
+                                            _confettiController =
+                                                ConfettiController(
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                            ),
+                                          );
                                         }
-                                        showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                ProfileTwoFactorsAuth(
-                                                    user: user));
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                        ),
-                                        color: Colors.grey[100],
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 4.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: Icon(
-                                                (user?.twofa ?? false)
-                                                    ? Icons.lock_outline
-                                                    : Icons.lock_open_outlined,
-                                              ),
-                                            ),
-                                            Text("2 Factor Authentication"),
-                                            Spacer(),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 8.0),
-                                              child: Icon(
-                                                Icons
-                                                    .keyboard_arrow_right_outlined,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                        state.hasBeenEdited = false;
+                                      },
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
+                              Spacer(),
+                            ],
                           ),
-                          Spacer(),
-                          Spacer(),
-                          Spacer(),
-                          Spacer(),
-                          !state.hasBeenEdited
-                              ? Consumer<TwoFALoginState>(
-                                  builder: (context, state, _) =>
-                                      CustomGradientButton(
-                                    title: "Sign out",
-                                    width: constraints.maxWidth,
-                                    callback: () {
-                                      state.authenticated = false;
-                                      auth.signOut(context);
-                                    },
-                                  ),
-                                )
-                              : CustomGradientButton(
-                                  title: "Save profile",
-                                  width: constraints.maxWidth,
-                                  callback: () async {
-                                    _unfocus();
-
-                                    user.name = state.editedName;
-
-                                    auth.authUser = await UserAPIService.route(
-                                        "/update",
-                                        body: user);
-                                    if (state.techEdited) {
-                                      var badge = await BadgeAPIService.route(
-                                        "/techie",
-                                        urlArgs: user.id,
-                                      );
-                                      badgeDialog.showBadgeDialog(
-                                        badge,
-                                        _confettiController =
-                                            ConfettiController(
-                                          duration: Duration(milliseconds: 500),
-                                        ),
-                                      );
-                                    }
-                                    state.hasBeenEdited = false;
-                                  },
-                                ),
-                          Spacer(),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -392,7 +413,7 @@ class _ProfileState extends State<Profile> {
                   CLUser user = authService.authUser;
                   user.avatar = newAvatar;
 
-                  await UserAPIService.route("/update", body: user);
+                  await _userAPIService.route("/update", body: user);
                   // If everything went smoothly, then change the avatar
                   final sp = await SharedPrefService.getInstance();
                   await sp.setUserWith(spUserInfoKey, user);

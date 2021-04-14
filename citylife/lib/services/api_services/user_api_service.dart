@@ -6,9 +6,9 @@ import 'package:http/http.dart' show Client, Response;
 
 class UserAPIService {
   static final String userRoute = "/user";
-  static Client _client;
+  Client _client;
 
-  static Future<dynamic> route(String subRoute,
+  Future<dynamic> route(String subRoute,
       {dynamic body, dynamic urlArgs, Client client}) {
     _client = client ?? new Client();
     switch (subRoute) {
@@ -29,7 +29,7 @@ class UserAPIService {
     }
   }
 
-  static Future<List<CLUser>> _getLeaderboard(String subRoute) async {
+  Future<List<CLUser>> _getLeaderboard(String subRoute) async {
     Response response = await _client.get(
       Uri.parse(APIENDPOINT + userRoute + subRoute),
     );
@@ -49,7 +49,7 @@ class UserAPIService {
     }
   }
 
-  static Future<bool> _postCode(int userId, String code) async {
+  Future<bool> _postCode(int userId, String code) async {
     Response response = await _client.post(
       Uri.parse(APIENDPOINT + userRoute + "/2fa/$userId"),
       headers: {
@@ -72,7 +72,7 @@ class UserAPIService {
     }
   }
 
-  static Future<String> _getSecret(int userId) async {
+  Future<String> _getSecret(int userId) async {
     Response response = await _client.get(
       Uri.parse(APIENDPOINT + userRoute + "/2fa/$userId"),
     );
@@ -89,7 +89,7 @@ class UserAPIService {
     }
   }
 
-  static Future<CLUser> _postNewUser(String subRoute, CLUser user) async {
+  Future<CLUser> _postNewUser(String subRoute, CLUser user) async {
     Response response = await _client.post(
       Uri.parse(APIENDPOINT + userRoute + subRoute),
       headers: {"Content-Type": "application/json"},
@@ -110,7 +110,7 @@ class UserAPIService {
     }
   }
 
-  static Future<CLUser> _getByFirebaseId(
+  Future<CLUser> _getByFirebaseId(
       String subRoute, String firebaseId) async {
     Response response = await _client.get(
       Uri.parse(APIENDPOINT + userRoute + subRoute + "/$firebaseId"),
@@ -130,7 +130,7 @@ class UserAPIService {
     }
   }
 
-  static Future<CLUser> _postUserUpdate(String subRoute, CLUser user) async {
+  Future<CLUser> _postUserUpdate(String subRoute, CLUser user) async {
     Response response = await _client.post(
       Uri.parse(APIENDPOINT + userRoute + subRoute),
       headers: {"Content-Type": "application/json"},

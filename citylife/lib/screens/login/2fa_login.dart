@@ -96,8 +96,10 @@ class _TwoFactosrAuthenticationState extends State<TwoFactorsAuthentication> {
                               horizontal: 30,
                               vertical: 8.0,
                             ),
-                            child: Consumer<TwoFALoginState>(
-                              builder: (context, state, _) => PinCodeTextField(
+                            child: Consumer2(
+                              builder: (context, TwoFALoginState state,
+                                      UserAPIService userAPIService, _) =>
+                                  PinCodeTextField(
                                 appContext: context,
                                 pastedTextStyle: TextStyle(
                                   color: Colors.green.shade600,
@@ -123,7 +125,7 @@ class _TwoFactosrAuthenticationState extends State<TwoFactorsAuthentication> {
                                 errorAnimationDuration: 800,
                                 keyboardType: TextInputType.number,
                                 onCompleted: (v) async {
-                                  var res = await UserAPIService.route(
+                                  var res = await userAPIService.route(
                                     "/2fa/postCode",
                                     urlArgs: widget.userId,
                                     body: v,

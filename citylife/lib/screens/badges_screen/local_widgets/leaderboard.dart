@@ -4,15 +4,17 @@ import 'package:citylife/utils/avatar.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Leaderboard extends StatelessWidget {
   const Leaderboard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final UserAPIService userAPIService = context.read<UserAPIService>();
     return AlertDialog(
       content: FutureBuilder(
-        future: UserAPIService.route("/leaderboard"),
+        future: userAPIService.route("/leaderboard"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {

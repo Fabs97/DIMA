@@ -8,18 +8,15 @@ class SharedPrefService {
   static SharedPrefService _instance;
   static SharedPreferences _preferences;
 
-  static Future<SharedPrefService> getInstance() async {
+  static Future<SharedPrefService> getInstance(
+      {SharedPreferences sharedPreferences}) async {
     if (_instance == null) {
       _instance = SharedPrefService();
     }
     if (_preferences == null) {
-      _preferences = await SharedPreferences.getInstance();
+      _preferences = sharedPreferences ?? await SharedPreferences.getInstance();
     }
     return _instance;
-  }
-
-  String getStringBy(String key) {
-    return _getByKey(key) as String;
   }
 
   CLUser getUserBy(String key) {

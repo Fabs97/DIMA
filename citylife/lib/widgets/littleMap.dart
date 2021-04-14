@@ -1,4 +1,5 @@
 import 'package:citylife/models/cl_emotional.dart';
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/services/geocoding_service.dart';
 import 'package:citylife/utils/theme.dart';
@@ -86,89 +87,93 @@ class _LittleMapState extends State<LittleMap> {
 
   @override
   Widget build(BuildContext context) {
-    final impression = widget.watchStructural
-        ? context.watch<CLStructural>()
-        : context.watch<CLEmotional>();
-    impression.latitude = _center.latitude;
-    impression.longitude = _center.longitude;
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: constraints.minHeight,
-            maxHeight: constraints.maxHeight,
-          ),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 5,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    topRight: Radius.circular(15.0),
-                  ),
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _center,
-                      zoom: _zoom,
-                    ),
-                    mapType: MapType.normal,
-                    myLocationEnabled: true,
-                    tiltGesturesEnabled: false,
-                    myLocationButtonEnabled: true,
-                    onMapCreated: _onMapCreated,
-                    onCameraMove: (position) => setState(
-                      () {
-                        _center = LatLng(position.target.latitude,
-                            position.target.longitude);
-                      },
-                    ),
-                    onCameraIdle: () async {
-                      var placeTag = await GeocodingService.getAddressFrom(
-                          _center.latitude, _center.longitude);
-                      if (placeTag != null) {
-                        impression.placeTag = placeTag ?? "";
-                        widget.placeTag = impression.placeTag;
-                      }
-                      setImpressionMarker();
-                    },
-                    markers: Set.from(_markers),
-                  ),
-                ),
+    return Consumer<CLImpression>(
+      builder: (_, impression, __) {
+        impression = widget.watchStructural
+            ? impression as CLStructural
+            : impression as CLEmotional;
+        impression.latitude = _center.latitude;
+        impression.longitude = _center.longitude;
+        return LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.minHeight,
+                maxHeight: constraints.maxHeight,
               ),
-              Flexible(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    width: constraints.maxWidth * 0.9,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.pin_drop_outlined),
-                        hintText: impression.placeTag ?? "",
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 5,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        topRight: Radius.circular(15.0),
                       ),
-                      readOnly: true,
-                      enabled: false,
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: _center,
+                          zoom: _zoom,
+                        ),
+                        mapType: MapType.normal,
+                        myLocationEnabled: true,
+                        tiltGesturesEnabled: false,
+                        myLocationButtonEnabled: true,
+                        onMapCreated: _onMapCreated,
+                        onCameraMove: (position) => setState(
+                          () {
+                            _center = LatLng(position.target.latitude,
+                                position.target.longitude);
+                          },
+                        ),
+                        onCameraIdle: () async {
+                          var placeTag = await GeocodingService.getAddressFrom(
+                              _center.latitude, _center.longitude);
+                          if (placeTag != null) {
+                            impression.placeTag = placeTag ?? "";
+                            widget.placeTag = impression.placeTag;
+                          }
+                          setImpressionMarker();
+                        },
+                        markers: Set.from(_markers),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  // height: constraints.maxHeight * 0.03,
-                  width: constraints.maxWidth * 0.7,
-                  child: Divider(
-                    height: 50,
-                    thickness: 3,
-                    color: T.textDarkColor,
+                  Flexible(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        width: constraints.maxWidth * 0.9,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.pin_drop_outlined),
+                            hintText: impression.placeTag ?? "",
+                          ),
+                          readOnly: true,
+                          enabled: false,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      // height: constraints.maxHeight * 0.03,
+                      width: constraints.maxWidth * 0.7,
+                      child: Divider(
+                        height: 50,
+                        thickness: 3,
+                        color: T.textDarkColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

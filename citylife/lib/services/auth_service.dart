@@ -20,6 +20,8 @@ class AuthException implements Exception {
 class AuthService with ChangeNotifier {
   FirebaseAuth auth;
   final Client client;
+  final UserAPIService userAPIService;
+  final SharedPrefService sharedPrefService;
 
   CLUser _authUser;
 
@@ -38,10 +40,15 @@ class AuthService with ChangeNotifier {
     _getUserInfoByFirebaseId(_authUser.firebaseId);
   }
 
-  AuthService.instance({this.auth, this.client}) {
+  AuthService.instance({
+    this.auth,
+    this.client,
+    @required this.userAPIService,
+    this.sharedPrefService,
+  }) {
     if (this.auth == null) this.auth = FirebaseAuth.instance;
     try {
-      getUserInformation();
+      getUserInformation(sharedPrefService);
     } catch (e) {
       print(e);
     }
@@ -53,10 +60,10 @@ class AuthService with ChangeNotifier {
   /// If no user is then found, throws an [AuthException] that provides the reason
   /// why the authentication has failed
   Future<CLUser> signInWithEmailAndPassword(String email, String password,
-      {bool verifiedEmail = false}) async {
+      {bool verifiedEmail = false, SharedPrefService prefService}) async {
     UserCredential credential;
     final SharedPrefService _prefService =
-        await SharedPrefService.getInstance();
+        prefService ?? await SharedPrefService.getInstance();
     try {
       credential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -90,15 +97,19 @@ class AuthService with ChangeNotifier {
     } catch (e, sTrace) {
       throw new AuthException("Exception: ${e.message}\nStack Trace: $sTrace");
     } finally {
-      if (credential.additionalUserInfo.isNewUser) {
-        await UserAPIService.route("/new",
-            body: CLUser(
-              email: email,
-              password: password,
-              firebaseId: credential.user.uid,
-            ),
-            client: client);
+      if (credential?.additionalUserInfo?.isNewUser ?? false) {
+        authUser = await userAPIService.route(
+          "/new",
+          body: CLUser(
+            email: email,
+            password: password,
+            firebaseId: credential.user.uid,
+          ),
+          client: client,
+        );
       } else if (verifiedEmail) {
+        // ! Can't be tested due to double auth.signInWithEmailAndPassword calls
+        // ! One would need to throw an error and one answer, but this is not possible
         credential = await auth.signInWithEmailAndPassword(
             email: email, password: password);
         authUser = await _getUserInfoByFirebaseId(credential.user.uid);
@@ -109,14 +120,15 @@ class AuthService with ChangeNotifier {
   }
 
   Future<CLUser> checkUserInfoPersistence({SharedPrefService service}) async {
-    if (service == null) service = await SharedPrefService.getInstance();
+    service = service ?? await SharedPrefService.getInstance();
     authUser = service.getUserBy(spUserInfoKey);
     return authUser;
   }
 
-  Future<CLUser> _getUserInfoByFirebaseId(String firebaseId) async {
-    final prefService = await SharedPrefService.getInstance();
-    final user = await UserAPIService.route(
+  Future<CLUser> _getUserInfoByFirebaseId(String firebaseId,
+      {SharedPrefService prefService}) async {
+    prefService = prefService ?? await SharedPrefService.getInstance();
+    final user = await userAPIService.route(
       "/byFirebase",
       urlArgs: firebaseId,
       client: client,
@@ -128,7 +140,8 @@ class AuthService with ChangeNotifier {
   Future<CLUser> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount googleUser =
+          await GoogleSignIn().signIn();
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
@@ -142,7 +155,7 @@ class AuthService with ChangeNotifier {
       );
 
       // Once signed in, return the UserCredential
-      return await _socialSignIn(googleCredential);
+      return await socialSignIn(googleCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithGoogle - $e\n$sTrace");
       throw new AuthException(
@@ -176,7 +189,7 @@ class AuthService with ChangeNotifier {
             GithubAuthProvider.credential(result.token);
 
         // Once signed in, return the UserCredential
-        return await _socialSignIn(githubAuthCredential);
+        return await socialSignIn(githubAuthCredential);
       } else {
         print(
             "[AuthService]::signInWithGithub - Status not ok: ${result.status}");
@@ -200,7 +213,7 @@ class AuthService with ChangeNotifier {
           FacebookAuthProvider.credential(loginResult.accessToken.token);
 
       // Once signed in, return the UserCredential
-      return await _socialSignIn(facebookAuthCredential);
+      return await socialSignIn(facebookAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithFacebook - $e\n$sTrace");
       throw new AuthException(
@@ -235,7 +248,7 @@ class AuthService with ChangeNotifier {
       );
 
       // Once signed in, return the UserCredential
-      return await _socialSignIn(twitterAuthCredential);
+      return await socialSignIn(twitterAuthCredential);
     } catch (e, sTrace) {
       print("[AuthService]::signInWithTwitter - $e\n$sTrace");
       throw new AuthException(
@@ -243,12 +256,12 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<CLUser> _socialSignIn(AuthCredential authCredential) async {
+  Future<CLUser> socialSignIn(AuthCredential authCredential) async {
     try {
       UserCredential credential =
           await auth.signInWithCredential(authCredential);
       authUser = credential.additionalUserInfo.isNewUser
-          ? await UserAPIService.route("/new",
+          ? await userAPIService.route("/new",
               body: CLUser(
                 email: credential.user.email,
                 name: credential.user.displayName,
@@ -273,11 +286,15 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  void getUserInformation() {
-    _getUserInfoByFirebaseId(auth.currentUser.uid).then((userInfo) {
-      if (userInfo != null) {
-        authUser = userInfo;
-      }
-    });
+  void getUserInformation(SharedPrefService sharedPrefService) {
+    if (auth.currentUser != null) {
+      _getUserInfoByFirebaseId(auth.currentUser.uid,
+              prefService: sharedPrefService)
+          .then((userInfo) {
+        if (userInfo != null) {
+          authUser = userInfo;
+        }
+      });
+    }
   }
 }
