@@ -22,7 +22,6 @@ class AuthService with ChangeNotifier {
   final Client client;
   final UserAPIService userAPIService;
   final SharedPrefService sharedPrefService;
-  final GoogleSignIn googleSignIn;
 
   CLUser _authUser;
 
@@ -41,12 +40,12 @@ class AuthService with ChangeNotifier {
     _getUserInfoByFirebaseId(_authUser.firebaseId);
   }
 
-  AuthService.instance(
-      {this.auth,
-      this.client,
-      @required this.userAPIService,
-      this.sharedPrefService,
-      this.googleSignIn}) {
+  AuthService.instance({
+    this.auth,
+    this.client,
+    @required this.userAPIService,
+    this.sharedPrefService,
+  }) {
     if (this.auth == null) this.auth = FirebaseAuth.instance;
     try {
       getUserInformation(sharedPrefService);
@@ -142,7 +141,7 @@ class AuthService with ChangeNotifier {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount googleUser =
-          await (googleSignIn ?? GoogleSignIn()).signIn();
+          await GoogleSignIn().signIn();
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
