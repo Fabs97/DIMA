@@ -7,9 +7,9 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 
+import '../mocks/api_services_mock.dart';
 import '../mocks/firebase_auth_mock.dart';
 import '../mocks/shared_pref_service_mock.dart';
-import '../mocks/user_api_service_mock.dart';
 import '../utils/mock_firebase_credential.dart';
 import '../utils/model_mocks.dart';
 import 'auth_service_test.mocks.dart';

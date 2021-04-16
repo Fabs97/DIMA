@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class BadgeDialogState {
-  BuildContext context;
   AuthService authService;
-  BadgeDialogState(this.context, this.authService);
+  BadgeDialogState(this.authService);
 
-  void showBadgeDialog(badge, cont) {
+  void showBadgeDialog(badge, cont, context) {
     cont.play();
     authService.reloadUser();
     showAnimatedDialog(

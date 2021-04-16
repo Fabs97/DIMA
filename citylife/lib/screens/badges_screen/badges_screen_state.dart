@@ -10,11 +10,13 @@ class BadgesScreenState with ChangeNotifier {
     notifyListeners();
   }
 
-  BadgesScreenState(int userId) {
+  final BadgeAPIService badgeAPIService;
+
+  BadgesScreenState(int userId, {@required this.badgeAPIService}) {
     initState(userId);
   }
 
   void initState(int userId) async {
-    badge = await BadgeAPIService.route("/by", urlArgs: userId);
+    badge = await badgeAPIService.route("/by", urlArgs: userId);
   }
 }

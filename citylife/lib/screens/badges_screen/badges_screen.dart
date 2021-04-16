@@ -18,10 +18,13 @@ class BadgesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthService>(
-      builder: (context, authService, __) =>
+    return Consumer2<AuthService, BadgeAPIService>(
+      builder: (context, authService, badgeAPIService, __) =>
           ChangeNotifierProvider<BadgesScreenState>(
-        create: (_) => BadgesScreenState(authService.authUser.id),
+        create: (_) => BadgesScreenState(
+          authService.authUser.id,
+          badgeAPIService: badgeAPIService,
+        ),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           body: Container(
@@ -31,7 +34,7 @@ class BadgesScreen extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return FutureBuilder(
-                  future: BadgeAPIService.route("/by",
+                  future: badgeAPIService.route("/by",
                       urlArgs: authService.authUser.id),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {

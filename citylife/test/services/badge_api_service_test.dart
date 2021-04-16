@@ -16,6 +16,7 @@ void main() {
   final errorMessage = "Generic error from the backend";
   final userId = 1;
   final client = MockClient();
+  final badgeAPIService = BadgeAPIService();
   group('/by', () {
     test("returns a user's [CLBadge] if the http call completes successfully",
         () async {
@@ -23,7 +24,7 @@ void main() {
       when(client.get(
         Uri.parse('$APIENDPOINT${BadgeAPIService.badgeRoute}/by/$userId'),
       )).thenAnswer((_) async => http.Response(jsonEncode(badge), 200));
-      var result = await BadgeAPIService.route(
+      var result = await badgeAPIService.route(
         '/by',
         urlArgs: userId,
         client: client,
@@ -38,7 +39,7 @@ void main() {
 
       var result;
       try {
-        await BadgeAPIService.route(
+        await badgeAPIService.route(
           '/by',
           urlArgs: userId,
           client: client,
@@ -57,7 +58,7 @@ void main() {
 
       var result;
       try {
-        await BadgeAPIService.route(
+        await badgeAPIService.route(
           '/by',
           urlArgs: userId,
           client: client,
@@ -83,7 +84,7 @@ void main() {
                 '$APIENDPOINT${BadgeAPIService.badgeRoute}/login/$userId'),
           )).thenAnswer((_) async => http.Response("\"daily_$daily\"", 200));
 
-          var result = await BadgeAPIService.route(
+          var result = await badgeAPIService.route(
             "/login",
             urlArgs: userId,
             client: client,
@@ -100,7 +101,7 @@ void main() {
 
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/login",
           urlArgs: userId,
           client: client,
@@ -119,7 +120,7 @@ void main() {
 
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/login",
           urlArgs: userId,
           client: client,
@@ -144,7 +145,7 @@ void main() {
                 '$APIENDPOINT${BadgeAPIService.badgeRoute}/impression/structural/$userId')))
             .thenAnswer(
                 (_) async => http.Response("\"structural_$number\"", 200));
-        var result = await BadgeAPIService.route(
+        var result = await badgeAPIService.route(
           "/impression/structural",
           urlArgs: userId,
           client: client,
@@ -164,7 +165,7 @@ void main() {
                 '$APIENDPOINT${BadgeAPIService.badgeRoute}/impression/emotional/$userId')))
             .thenAnswer(
                 (_) async => http.Response("\"emotional_$number\"", 200));
-        var result = await BadgeAPIService.route(
+        var result = await badgeAPIService.route(
           "/impression/emotional",
           urlArgs: userId,
           client: client,
@@ -179,7 +180,7 @@ void main() {
           .thenAnswer((_) async => http.Response(errorMessage, 400));
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/impression/emotional",
           urlArgs: userId,
           client: client,
@@ -197,7 +198,7 @@ void main() {
           .thenAnswer((_) async => http.Response("", 400));
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/impression/emotional",
           urlArgs: userId,
           client: client,
@@ -214,7 +215,7 @@ void main() {
       when(client.post(Uri.parse(
               '$APIENDPOINT${BadgeAPIService.badgeRoute}/techie/$userId')))
           .thenAnswer((_) async => http.Response("", 200));
-      var result = await BadgeAPIService.route(
+      var result = await badgeAPIService.route(
         "/techie",
         urlArgs: userId,
         client: client,
@@ -230,7 +231,7 @@ void main() {
 
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/techie",
           urlArgs: userId,
           client: client,
@@ -249,7 +250,7 @@ void main() {
 
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/techie",
           urlArgs: userId,
           client: client,
@@ -265,7 +266,7 @@ void main() {
     test('throws a [BadgeAPIException] if the route is not correct', () async {
       var result;
       try {
-        result = await BadgeAPIService.route(
+        result = await badgeAPIService.route(
           "/errorRoute",
         );
       } catch (e) {

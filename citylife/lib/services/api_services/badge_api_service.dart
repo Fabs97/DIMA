@@ -6,9 +6,9 @@ import 'package:http/http.dart' show Client, Response;
 
 class BadgeAPIService {
   static final String badgeRoute = "/badge";
-  static Client _client;
+  Client _client;
 
-  static Future<dynamic> route(String subRoute,
+  Future<dynamic> route(String subRoute,
       {dynamic body, dynamic urlArgs, Client client}) {
     _client = client ?? new Client();
     switch (subRoute) {
@@ -27,7 +27,7 @@ class BadgeAPIService {
     }
   }
 
-  static Future<CLBadge> _getBadge(String subRoute, int userId) async {
+  Future<CLBadge> _getBadge(String subRoute, int userId) async {
     Response response = await _client
         .get(Uri.parse(APIENDPOINT + badgeRoute + subRoute + "/$userId"));
     switch (response.statusCode) {
@@ -42,7 +42,7 @@ class BadgeAPIService {
     }
   }
 
-  static Future<Badge> _postTechieBadge(String subRoute, int userId) async {
+  Future<Badge> _postTechieBadge(String subRoute, int userId) async {
     Response response = await _client
         .post(Uri.parse(APIENDPOINT + badgeRoute + subRoute + "/$userId"));
     if (response.statusCode >= 300) {
@@ -55,7 +55,7 @@ class BadgeAPIService {
     }
   }
 
-  static Future<Badge> _postImpressionBadge(
+  Future<Badge> _postImpressionBadge(
       String subRoute, int userId, bool isEmotional) async {
     Response response = await _client
         .post(Uri.parse(APIENDPOINT + badgeRoute + subRoute + "/$userId"));
@@ -92,7 +92,7 @@ class BadgeAPIService {
     }
   }
 
-  static Future<Badge> _postLoginBadge(int userId) async {
+  Future<Badge> _postLoginBadge(int userId) async {
     Response response = await _client
         .post(Uri.parse(APIENDPOINT + badgeRoute + "/login/$userId"));
     if (response.statusCode >= 300) {

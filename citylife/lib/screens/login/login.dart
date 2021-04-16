@@ -66,8 +66,8 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                Consumer<BadgeDialogState>(
-                  builder: (context, state, _) => SafeArea(
+                Consumer2<BadgeDialogState, BadgeAPIService>(
+                  builder: (context, state, badgeAPIService, _) => SafeArea(
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -130,7 +130,8 @@ class _LoginState extends State<Login> {
                                     try {
                                       setState(() => _isLoggingIn = true);
                                       CLUser u = await auth.signInWithGoogle();
-                                      _dailyLoginBadge(u.id, auth, state);
+                                      _dailyLoginBadge(u.id, auth, state,
+                                          badgeAPIService, context);
                                     } catch (e) {
                                       CustomToast.toast(
                                           context,
@@ -148,7 +149,8 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = true);
 
                                       CLUser u = await auth.signInWithTwitter();
-                                      _dailyLoginBadge(u.id, auth, state);
+                                      _dailyLoginBadge(u.id, auth, state,
+                                          badgeAPIService, context);
                                     } catch (e) {
                                       CustomToast.toast(
                                           context,
@@ -166,7 +168,8 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = true);
                                       CLUser u =
                                           await auth.signInWithGitHub(context);
-                                      _dailyLoginBadge(u.id, auth, state);
+                                      _dailyLoginBadge(u.id, auth, state,
+                                          badgeAPIService, context);
                                     } catch (e) {
                                       CustomToast.toast(
                                           context,
@@ -184,7 +187,8 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = true);
                                       CLUser u =
                                           await auth.signInWithFacebook();
-                                      _dailyLoginBadge(u.id, auth, state);
+                                      _dailyLoginBadge(u.id, auth, state,
+                                          badgeAPIService, context);
                                     } catch (e) {
                                       CustomToast.toast(
                                           context,
@@ -216,7 +220,8 @@ class _LoginState extends State<Login> {
                                             CLUser u = await auth
                                                 .signInWithEmailAndPassword(
                                                     _email, _password);
-                                            _dailyLoginBadge(u.id, auth, state);
+                                            _dailyLoginBadge(u.id, auth, state,
+                                                badgeAPIService, context);
                                             setState(
                                                 () => _isLoggingIn = false);
                                           } on AuthException catch (e) {
@@ -251,7 +256,8 @@ class _LoginState extends State<Login> {
                                                   Timer.periodic(
                                                       Duration(seconds: 5),
                                                       (timer) {
-                                                checkEmailVerified(auth, state);
+                                                checkEmailVerified(auth, state,
+                                                    badgeAPIService, context);
                                               });
                                             } else {
                                               setState(
@@ -295,9 +301,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void _dailyLoginBadge(
-      int userId, AuthService auth, BadgeDialogState state) async {
-    var b = await BadgeAPIService.route("/login", urlArgs: userId);
+  void _dailyLoginBadge(int userId, AuthService auth, BadgeDialogState state,
+      BadgeAPIService badgeAPIService, BuildContext context) async {
+    var b = await badgeAPIService.route("/login", urlArgs: userId);
     if (b != null) {
       state.showBadgeDialog(
         b,
@@ -306,19 +312,20 @@ class _LoginState extends State<Login> {
             milliseconds: 500,
           ),
         ),
+        context,
       );
     }
   }
 
-  Future<void> checkEmailVerified(
-      AuthService auth, BadgeDialogState state) async {
+  Future<void> checkEmailVerified(AuthService auth, BadgeDialogState state,
+      BadgeAPIService badgeAPIService, BuildContext context) async {
     var user = auth.auth.currentUser;
     await user.reload();
     if (user.emailVerified) {
       _emailVerificationTimer.cancel();
       CLUser u = await auth.signInWithEmailAndPassword(_email, _password,
           verifiedEmail: true);
-      _dailyLoginBadge(u.id, auth, state);
+      _dailyLoginBadge(u.id, auth, state, badgeAPIService, context);
       setState(() {
         _isVerifyingEmail = false;
         _isLoggingIn = false;

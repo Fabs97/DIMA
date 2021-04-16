@@ -16,11 +16,13 @@ class SaveImpression extends StatefulWidget {
   final bool isStructural;
   final CLImpression impression;
   final StorageService storageService;
+  final BadgeAPIService badgeAPIService;
   const SaveImpression({
     Key key,
     @required this.isStructural,
     @required this.impression,
     @required this.storageService,
+    @required this.badgeAPIService,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,7 @@ class _SaveImpressionState extends State<SaveImpression> {
       // Save to DB
       var savedImpression =
           await ImpressionsAPIService.route("/new", body: impression);
-      badge = await BadgeAPIService.route(
+      badge = await widget.badgeAPIService.route(
         "/impression/${impression is CLEmotional ? "emotional" : "structural"}",
         urlArgs: impression.userId,
       );
