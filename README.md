@@ -39,18 +39,18 @@ The state of art of the application includes the following features:
   - [x] *Emotional impression flow*:
     - [x] Emotional impression database data
     - [x] Emotional impression image storage
-- [ ] **Impressions in-app analysis**:
+- [x] **Impressions in-app analysis**:
   - [x] *Personal impressions list view*
-  - [ ] *City impressions dynamic map*
+  - [x] *City impressions dynamic map*
   - [x] *Impression detail*
 - [x] **Personal profile**:
   - [x] *Profile name editing*
   - [x] *Technical Role*
   - [x] *2 Factor Authentication activation*
-- [ ] **Users engagement**:
+- [x] **Users engagement**:
   - [x] *Profile experience*
-  - [ ] *Badges screen*
-  - [ ] *Badges acquisition*
+  - [x] *Badges screen*
+  - [x] *Badges acquisition*
 ## Customer
 ![Fulvio Re Cecconi](/readme_images/cecconi.jpg)
 
