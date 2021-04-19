@@ -24,8 +24,7 @@ class ImpressionDetail extends StatelessWidget {
         value: ImpressionDetailState(impression, storageService),
         builder: (_, __) => Consumer<ImpressionDetailState>(
           builder: (_, state, __) => LayoutBuilder(
-            builder: (_, constraints) => Consumer<StorageService>(
-              builder: (_, service, __) => Dialog(
+            builder: (_, constraints) => Dialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -235,7 +234,6 @@ class ImpressionDetail extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }

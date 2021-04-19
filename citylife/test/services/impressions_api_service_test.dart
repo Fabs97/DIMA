@@ -18,6 +18,7 @@ import 'impressions_api_service_test.mocks.dart';
 void main() {
   final errorMessage = "Generic error from the backend";
   final client = MockClient();
+  final impressionsAPIService = ImpressionsAPIService();
   final impressions = List.generate(
     10,
     (index) => Random().nextBool()
@@ -40,7 +41,7 @@ void main() {
             '$APIENDPOINT${ImpressionsAPIService.impressionRoute}/byUser/$userId'),
       )).thenAnswer((_) async => http.Response(jsonEncode(impressions), 200));
 
-      var res = await ImpressionsAPIService.route(
+      var res = await impressionsAPIService.route(
         "/byUser",
         urlArgs: userId,
         client: client,
@@ -59,7 +60,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           "/byUser",
           urlArgs: userId,
           client: client,
@@ -80,7 +81,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           "/byUser",
           urlArgs: userId,
           client: client,
@@ -105,7 +106,7 @@ void main() {
             '$APIENDPOINT${ImpressionsAPIService.impressionRoute}/byLatLong/$latMin/$latMax/$longMin/$longMax'),
       )).thenAnswer((_) async => http.Response(jsonEncode(impressions), 200));
 
-      var result = await ImpressionsAPIService.route(
+      var result = await impressionsAPIService.route(
         "/byLatLong",
         urlArgs: HomeArguments(
           latMin,
@@ -127,7 +128,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           "/byLatLong",
           urlArgs: HomeArguments(
             latMin,
@@ -151,7 +152,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           "/byLatLong",
           urlArgs: HomeArguments(
             latMin,
@@ -182,7 +183,7 @@ void main() {
       )).thenAnswer(
           (_) async => http.Response(jsonEncode(impressionsBut1), 200));
 
-      var result = await ImpressionsAPIService.route("/emotional",
+      var result = await impressionsAPIService.route("/emotional",
           urlArgs: impressionId, client: client);
 
       expect(result, isList);
@@ -197,7 +198,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           '/structural',
           urlArgs: impressionId,
           client: client,
@@ -218,7 +219,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route(
+        result = await impressionsAPIService.route(
           '/structural',
           urlArgs: impressionId,
           client: client,
@@ -241,7 +242,7 @@ void main() {
         body: impression.toJson(),
       )).thenAnswer((_) async => http.Response(impression.toJson(), 200));
 
-      var result = await ImpressionsAPIService.route("/new",
+      var result = await impressionsAPIService.route("/new",
           body: impression, client: client);
 
       expect(result, isA<CLImpression>());
@@ -257,7 +258,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route("/new",
+        result = await impressionsAPIService.route("/new",
             body: impression, client: client);
       } catch (e) {
         expect(e, isA<ImpressionsAPIException>());
@@ -275,7 +276,7 @@ void main() {
 
       var result;
       try {
-        result = await ImpressionsAPIService.route("/new",
+        result = await impressionsAPIService.route("/new",
             body: impression, client: client);
       } catch (e) {
         expect(e, isA<ImpressionsAPIException>());
@@ -288,7 +289,7 @@ void main() {
     test('throws an [ImpressionAPIException] if the route is not correct',
         () async {
       try {
-        await ImpressionsAPIService.route(
+        await impressionsAPIService.route(
           '/errorRoute',
         );
       } catch (e) {

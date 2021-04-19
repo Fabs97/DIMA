@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:citylife/screens/login/2fa_login_state.dart';
 import 'package:citylife/screens/profile/local_widgets/profile_two_factors_auth.dart';
 import 'package:citylife/screens/profile/profile.dart';
@@ -8,7 +5,6 @@ import 'package:citylife/services/api_services/badge_api_service.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/badgeDialogState.dart';
-import 'package:citylife/utils/constants.dart';
 import 'package:citylife/widgets/custom_gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

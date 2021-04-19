@@ -3,6 +3,7 @@ import 'package:citylife/screens/login/2fa_login.dart';
 import 'package:citylife/screens/login/2fa_login_state.dart';
 import 'package:citylife/screens/login/login.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
+import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
@@ -22,6 +23,7 @@ void main() async {
 class CityLife extends StatelessWidget {
   final UserAPIService _userAPIService = UserAPIService();
   final BadgeAPIService _badgeAPIService = BadgeAPIService();
+  final ImpressionsAPIService _impressionsAPIService = ImpressionsAPIService();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -31,6 +33,7 @@ class CityLife extends StatelessWidget {
         ),
         Provider.value(value: _userAPIService),
         Provider.value(value: _badgeAPIService),
+        Provider.value(value: _impressionsAPIService),
         ChangeNotifierProvider<AuthService>(
           create: (_) => AuthService.instance(userAPIService: _userAPIService),
         ),

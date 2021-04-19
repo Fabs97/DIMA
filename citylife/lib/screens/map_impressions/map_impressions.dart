@@ -83,8 +83,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
-              return Consumer<MyMarkersState>(
-                builder: (_, state, __) => Stack(
+              return Consumer2<MyMarkersState, ImpressionsAPIService>(
+                builder: (_, state, impressionsAPIService, __) => Stack(
                   children: [
                     GoogleMap(
                       initialCameraPosition: CameraPosition(
@@ -131,7 +131,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                               if (state.isFirstMove) {
                                 state.impressions =
-                                    await ImpressionsAPIService.route(
+                                    await impressionsAPIService
+                                    .route(
                                         "/byLatLong",
                                         urlArgs: args);
                               }
@@ -181,7 +182,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                             ),
                             onPressed: () async {
                               state.impressions =
-                                  await ImpressionsAPIService.route(
+                                  await impressionsAPIService
+                                  .route(
                                       "/byLatLong",
                                       urlArgs: args);
 

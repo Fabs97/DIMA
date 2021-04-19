@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
+import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
@@ -50,8 +51,10 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                   width: constraints.maxWidth,
                   height: constraints.maxHeight,
                   child: selectedStep == 2
-                      ? Consumer2<StorageService, BadgeAPIService>(
-                          builder: (_, storageService, badgeAPIService, __) =>
+                      ? Consumer3<StorageService, BadgeAPIService,
+                          ImpressionsAPIService>(
+                          builder: (_, storageService, badgeAPIService,
+                                  impressionsAPIService, __) =>
                               Container(
                               height: constraints.maxHeight * 0.45,
                               child: [
@@ -62,6 +65,8 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                                   impression: impression,
                                   storageService: storageService,
                                   badgeAPIService: badgeAPIService,
+                                  impressionsAPIService:
+                                          impressionsAPIService,
                                 ),
                               ].elementAt(selectedStep)),
                         )

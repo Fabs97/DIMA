@@ -9,9 +9,9 @@ import 'package:http/http.dart' show Client, Response;
 
 class ImpressionsAPIService {
   static final String impressionRoute = "/impression";
-  static Client _client;
+  Client _client;
 
-  static Future<dynamic> route(String subRoute,
+  Future<dynamic> route(String subRoute,
       {dynamic body, dynamic urlArgs, Client client}) {
     _client = client ?? new Client();
     switch (subRoute) {
@@ -29,7 +29,7 @@ class ImpressionsAPIService {
     }
   }
 
-  static Future<List<CLImpression>> _deleteImpression(
+  Future<List<CLImpression>> _deleteImpression(
       String subRoute, int id) async {
     Response response = await _client.delete(
       Uri.parse(APIENDPOINT + impressionRoute + subRoute + "/$id"),
@@ -47,7 +47,7 @@ class ImpressionsAPIService {
     }
   }
 
-  static Future<List<CLImpression>> _getImpressionsByLatLong(
+  Future<List<CLImpression>> _getImpressionsByLatLong(
       String subRoute, HomeArguments args) async {
     Response response = await _client.get(
       Uri.parse(APIENDPOINT +
@@ -71,7 +71,7 @@ class ImpressionsAPIService {
     }
   }
 
-  static Future<List<CLImpression>> _getImpressions(
+  Future<List<CLImpression>> _getImpressions(
       String subRoute, int id) async {
     Response response = await _client.get(
       Uri.parse(APIENDPOINT + impressionRoute + subRoute + "/$id"),
@@ -89,7 +89,7 @@ class ImpressionsAPIService {
     }
   }
 
-  static Future<CLImpression> _postImpression(
+  Future<CLImpression> _postImpression(
       String subRoute, CLImpression impression) async {
     Response response = await _client.post(
       Uri.parse(APIENDPOINT +
@@ -111,12 +111,12 @@ class ImpressionsAPIService {
     }
   }
 
-  static List<CLImpression> _parseImpressionsJson(String json) {
+  List<CLImpression> _parseImpressionsJson(String json) {
     final parsed = jsonDecode(json);
     return List.from(parsed.map((e) => _parseImpression(e)));
   }
 
-  static CLImpression _parseImpression(Object impression) {
+  CLImpression _parseImpression(Object impression) {
     Map<String, dynamic> i =
         impression is String ? jsonDecode(impression) : impression;
     if (i.keys.contains("component") ||
