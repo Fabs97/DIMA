@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:citylife/models/cl_emotional.dart';
-import 'package:citylife/models/cl_structural.dart';
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -60,9 +59,6 @@ class _SharedFormState extends State<SharedForm> {
 
   @override
   Widget build(BuildContext context) {
-    final impression = widget.watchStructural
-        ? context.watch<CLStructural>()
-        : context.watch<CLEmotional>();
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
         child: Container(
@@ -85,22 +81,24 @@ class _SharedFormState extends State<SharedForm> {
                     children: gridView,
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    maxLines: null,
-                    controller: _notesController,
-                    textAlignVertical: TextAlignVertical.center,
-                    maxLength: 255,
-                    decoration: InputDecoration(
-                      hintText: "Notes",
-                      counterText: "${_notesController.text.length}/255",
-                      prefixIcon: Icon(
-                        Icons.edit_outlined,
-                        color: T.primaryColor,
+                Consumer<CLImpression>(
+                  builder: (context, impression, _) => Flexible(
+                    flex: 1,
+                    child: TextFormField(
+                      maxLines: null,
+                      controller: _notesController,
+                      textAlignVertical: TextAlignVertical.center,
+                      maxLength: 255,
+                      decoration: InputDecoration(
+                        hintText: "Notes",
+                        counterText: "${_notesController.text.length}/255",
+                        prefixIcon: Icon(
+                          Icons.edit_outlined,
+                          color: T.primaryColor,
+                        ),
                       ),
+                      onChanged: (v) => impression.notes = v,
                     ),
-                    onChanged: (v) => impression.notes = v,
                   ),
                 ),
               ],
