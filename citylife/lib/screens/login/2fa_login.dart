@@ -15,11 +15,11 @@ class TwoFactorsAuthentication extends StatefulWidget {
   TwoFactorsAuthentication({Key key, @required this.userId}) : super(key: key);
 
   @override
-  _TwoFactosrAuthenticationState createState() =>
-      _TwoFactosrAuthenticationState();
+  _TwoFactorsAuthenticationState createState() =>
+      _TwoFactorsAuthenticationState();
 }
 
-class _TwoFactosrAuthenticationState extends State<TwoFactorsAuthentication> {
+class _TwoFactorsAuthenticationState extends State<TwoFactorsAuthentication> {
   TextEditingController textEditingController = TextEditingController();
 
   StreamController<ErrorAnimationType> errorController;

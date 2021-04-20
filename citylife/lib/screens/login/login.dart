@@ -41,7 +41,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService auth = context.read<AuthService>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -66,8 +65,9 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                Consumer2<BadgeDialogState, BadgeAPIService>(
-                  builder: (context, state, badgeAPIService, _) => SafeArea(
+                Consumer3<BadgeDialogState, BadgeAPIService, AuthService>(
+                  builder: (context, state, badgeAPIService, auth, _) =>
+                      SafeArea(
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -231,34 +231,50 @@ class _LoginState extends State<Login> {
                                                 false) {
                                               CustomToast.toast(context,
                                                   "${e.message} to $_email");
-                                              // TODO: iOS needs a different handling, check the documentation
-                                              var openEmailAppResult =
-                                                  await OpenMailApp.openMailApp(
-                                                nativePickerTitle:
-                                                    'Select email app to open',
-                                              );
-                                              if (!openEmailAppResult.didOpen ||
-                                                  openEmailAppResult.canOpen) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (_) {
-                                                    return MailAppPickerDialog(
-                                                      mailApps:
-                                                          openEmailAppResult
-                                                              .options,
-                                                    );
-                                                  },
+                                              try {
+                                                // TODO: iOS needs a different handling, check the documentation
+                                                var openEmailAppResult =
+                                                    await OpenMailApp
+                                                        .openMailApp(
+                                                  nativePickerTitle:
+                                                      'Select email app to open',
                                                 );
+                                                if (!openEmailAppResult
+                                                        .didOpen ||
+                                                    openEmailAppResult
+                                                        .canOpen) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return MailAppPickerDialog(
+                                                        mailApps:
+                                                            openEmailAppResult
+                                                                .options,
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                if (!(e is Exception &&
+                                                    e.toString().contains(
+                                                        "Platform not supported")))
+                                                  rethrow;
+                                                else
+                                                  print(e.toString());
+                                              } finally {
+                                                setState(() =>
+                                                    _isVerifyingEmail = true);
+                                                _emailVerificationTimer =
+                                                    Timer.periodic(
+                                                        Duration(seconds: 5),
+                                                        (timer) {
+                                                  checkEmailVerified(
+                                                      auth,
+                                                      state,
+                                                      badgeAPIService,
+                                                      context);
+                                                });
                                               }
-                                              setState(() =>
-                                                  _isVerifyingEmail = true);
-                                              _emailVerificationTimer =
-                                                  Timer.periodic(
-                                                      Duration(seconds: 5),
-                                                      (timer) {
-                                                checkEmailVerified(auth, state,
-                                                    badgeAPIService, context);
-                                              });
                                             } else {
                                               setState(
                                                   () => _isLoggingIn = false);
@@ -344,9 +360,8 @@ class _LoginState extends State<Login> {
           labelText: "Password",
           contentPadding: const EdgeInsets.all(8.0),
           suffixIcon: IconButton(
-            onPressed: () {
-              setState(() => _obscurePassword = !_obscurePassword);
-            },
+            onPressed: () =>
+                setState(() => _obscurePassword = !_obscurePassword),
             icon: Icon(
               _obscurePassword ? Icons.visibility_off : Icons.visibility,
               color: T.textFieldIconColor,
