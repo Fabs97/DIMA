@@ -1,3 +1,4 @@
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
@@ -38,11 +39,11 @@ class _StructuralImpressionState extends State<StructuralImpression> {
       _impression.userId = auth.authUser.id;
       _impression.fromTech = auth.authUser.tech;
     }
-    return ChangeNotifierProvider<CLStructural>.value(
+    return ChangeNotifierProvider<CLImpression>.value(
       value: _impression,
       builder: (context, _) {
         return LayoutBuilder(
-          builder: (context, constraints) => Consumer<CLStructural>(
+          builder: (context, constraints) => Consumer<CLImpression>(
             builder: (_, impression, __) {
               impression.placeTag = _map.placeTag;
               return Container(
