@@ -1,3 +1,4 @@
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,8 +29,7 @@ class _StructuralFormState extends State<StructuralForm> {
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         width: constraints.maxWidth * 0.9,
-        // height: constraints.maxHeight * 0.6,
-        child: Consumer<CLStructural>(
+        child: Consumer<CLImpression>(
           builder: (context, structuralImpression, _) => Form(
             key: widget.formKey,
             child: SingleChildScrollView(
@@ -46,10 +46,13 @@ class _StructuralFormState extends State<StructuralForm> {
                         ),
                         hintText: "Component",
                       ),
-                      initialValue: structuralImpression.component ?? "",
+                      initialValue:
+                          (structuralImpression as CLStructural).component ??
+                              "",
                       onChanged: (value) {
                         setState(() {
-                          structuralImpression.component = value;
+                          (structuralImpression as CLStructural).component =
+                              value;
                         });
                       },
                       validator: (value) {
@@ -68,10 +71,13 @@ class _StructuralFormState extends State<StructuralForm> {
                         ),
                         hintText: "Pathology",
                       ),
-                      initialValue: structuralImpression.pathology ?? "",
+                      initialValue:
+                          (structuralImpression as CLStructural).pathology ??
+                              "",
                       onChanged: (value) {
                         setState(() {
-                          structuralImpression.pathology = value;
+                          (structuralImpression as CLStructural).pathology =
+                              value;
                         });
                       },
                       validator: (value) {
@@ -92,7 +98,8 @@ class _StructuralFormState extends State<StructuralForm> {
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
-                          structuralImpression.typology = value;
+                          (structuralImpression as CLStructural).typology =
+                              value;
                           _selectedTypology = value;
                         });
                       },

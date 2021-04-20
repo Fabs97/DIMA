@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:citylife/models/cl_emotional.dart';
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/screens/impressions/emotional/local_widget/emotionalForm.dart';
 import 'package:citylife/services/api_services/badge_api_service.dart';
 import 'package:citylife/services/api_services/impressions_api_service.dart';
@@ -39,12 +40,12 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
       _impression.userId = auth.authUser.id;
       _impression.fromTech = auth.authUser.tech;
     }
-    return ChangeNotifierProvider<CLEmotional>.value(
+    return ChangeNotifierProvider<CLImpression>.value(
       value: _impression,
       builder: (context, _) {
         return LayoutBuilder(
           builder: (_, constraints) => SingleChildScrollView(
-            child: Consumer<CLEmotional>(
+            child: Consumer<CLImpression>(
               builder: (_, impression, __) {
                 impression.placeTag = _map.placeTag;
                 return Container(
