@@ -20,43 +20,45 @@ class BadgeDialog extends StatelessWidget {
       content: Container(
         width: size.width * .9,
         height: size.height * .5,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Hero(
-              tag: badge.toString(),
-              child: Container(
-                width: size.width * .5,
-                height: size.width * .5,
-                foregroundDecoration: BoxDecoration(
-                  color: acquired ? Colors.transparent : Colors.grey,
-                  backgroundBlendMode: BlendMode.saturation,
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  image: DecorationImage(image: B.adges[badge].image),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Hero(
+                tag: badge.toString(),
+                child: Container(
+                  width: size.width * .5,
+                  height: size.width * .5,
+                  foregroundDecoration: BoxDecoration(
+                    color: acquired ? Colors.transparent : Colors.grey,
+                    backgroundBlendMode: BlendMode.saturation,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    image: DecorationImage(image: B.adges[badge].image),
+                  ),
                 ),
               ),
-            ),
-            Text(
-              B.adges[badge].description,
-              style: TextStyle(
-                color: T.textDarkColor,
+              Text(
+                B.adges[badge].description,
+                style: TextStyle(
+                  color: T.textDarkColor,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            CustomGradientButton(
-              callback: () {
-                Navigator.pop(context);
-              },
-              width: MediaQuery.of(context).size.width * .2,
-              height: 15.0,
-              title: "Got it!",
-            )
-          ],
+              CustomGradientButton(
+                callback: () {
+                  Navigator.pop(context);
+                },
+                width: MediaQuery.of(context).size.width * .2,
+                height: 15.0,
+                title: "Got it!",
+              )
+            ],
+          ),
         ),
       ),
     );

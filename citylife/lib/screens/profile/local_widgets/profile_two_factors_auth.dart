@@ -49,114 +49,116 @@ class _ProfileTwoFactorsAuthState extends State<ProfileTwoFactorsAuth> {
             final String data =
                 "otpauth://totp/${widget.user.email}?secret=$_secret&issuer=CityLife";
             return Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: QrImage(
-                      data: data,
-                      version: QrVersions.auto,
-                      size: constraints.maxWidth * .6,
-                      backgroundColor: T.primaryColor,
-                      eyeStyle: QrEyeStyle(
-                        eyeShape: QrEyeShape.circle,
-                        color: Colors.black,
-                      ),
-                      dataModuleStyle: QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.circle,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Text(
-                      "Scan this QR or you can input the following code into your Google Authenticator app",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18.0,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: QrImage(
+                        data: data,
+                        version: QrVersions.auto,
+                        size: constraints.maxWidth * .6,
+                        backgroundColor: T.primaryColor,
+                        eyeStyle: QrEyeStyle(
+                          eyeShape: QrEyeShape.circle,
+                          color: Colors.black,
+                        ),
+                        dataModuleStyle: QrDataModuleStyle(
+                          dataModuleShape: QrDataModuleShape.circle,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        _secret ?? "",
+                    Container(
+                      child: Text(
+                        "Scan this QR or you can input the following code into your Google Authenticator app",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18.0,
                         ),
                       ),
-                      FutureBuilder<ClipboardData>(
-                        future: Clipboard.getData("text/plain"),
-                        builder: (context, snapshot) {
-                          if (snapshot.data != null) {
-                            if (snapshot.data.text.contains(_secret)) {
-                              return Icon(Icons.done);
-                            } else {
-                              return IconButton(
-                                icon: Icon(Icons.content_copy),
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    new ClipboardData(text: data),
-                                  );
-                                  setState(() {});
-                                },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          _secret ?? "",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        FutureBuilder<ClipboardData>(
+                          future: Clipboard.getData("text/plain"),
+                          builder: (context, snapshot) {
+                            if (snapshot.data != null) {
+                              if (snapshot.data.text.contains(_secret)) {
+                                return Icon(Icons.done);
+                              } else {
+                                return IconButton(
+                                  icon: Icon(Icons.content_copy),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      new ClipboardData(text: data),
+                                    );
+                                    setState(() {});
+                                  },
+                                );
+                              }
+                            }
+                            return Container();
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        MaterialButton(
+                          color: T.primaryColor,
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(20.0),
+                          ),
+                          onPressed: () async {
+                            if (await canLaunch(data))
+                              await launch(data);
+                            else {
+                              Navigator.pop(context);
+                              CustomToast.toast(
+                                context,
+                                'Could not open the Google Authenticator app, please install it and try again',
                               );
                             }
-                          }
-                          return Container();
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      MaterialButton(
-                        color: T.primaryColor,
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20.0),
+                          },
+                          child: Text(
+                            'Open Authenticator',
+                            style: TextStyle(color: T.textLightColor),
+                          ),
                         ),
-                        onPressed: () async {
-                          if (await canLaunch(data))
-                            await launch(data);
-                          else {
+                        MaterialButton(
+                          color: T.primaryColor,
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(20.0),
+                          ),
+                          onPressed: () async {
                             Navigator.pop(context);
-                            CustomToast.toast(
-                              context,
-                              'Could not open the Google Authenticator app, please install it and try again',
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Open Authenticator',
-                          style: TextStyle(color: T.textLightColor),
+                          },
+                          child: Text(
+                            'Done',
+                            style: TextStyle(color: T.textLightColor),
+                          ),
                         ),
-                      ),
-                      MaterialButton(
-                        color: T.primaryColor,
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20.0),
-                        ),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Done',
-                          style: TextStyle(color: T.textLightColor),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
             );
           } else {

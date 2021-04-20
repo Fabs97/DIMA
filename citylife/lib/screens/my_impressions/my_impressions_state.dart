@@ -12,11 +12,12 @@ class MyImpressionsState with ChangeNotifier {
     notifyListeners();
   }
 
-  MyImpressionsState(int userId) {
-    initState(userId);
+  MyImpressionsState(int userId, ImpressionsAPIService impressionsAPIService) {
+    initState(userId, impressionsAPIService);
   }
 
-  void initState(int userId) async {
-    impressions = await ImpressionsAPIService.route("/byUser", urlArgs: userId);
+  void initState(
+      int userId, ImpressionsAPIService impressionsAPIService) async {
+    impressions = await impressionsAPIService.route("/byUser", urlArgs: userId);
   }
 }

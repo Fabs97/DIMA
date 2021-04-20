@@ -16,9 +16,11 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final int userId;
+  final BadgeAPIService badgeAPIService;
   HomePage({
     Key key,
     @required this.userId,
+    @required this.badgeAPIService,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedItem = 0;
-  ConfettiController _controller;
+  ConfettiController _controller = ConfettiController(
+    duration: Duration(milliseconds: 500),
+  );
   Badge _badge;
 
   @override
@@ -37,7 +41,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _init() async {
-    var b = await BadgeAPIService.route("/login", urlArgs: widget.userId);
+    var b =
+        await widget.badgeAPIService.route("/login", urlArgs: widget.userId);
     if (b != null) {
       setState(() => _badge = b);
     }
@@ -57,11 +62,8 @@ class _HomePageState extends State<HomePage> {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             badgeDialog.showBadgeDialog(
               _badge,
-              _controller = ConfettiController(
-                duration: Duration(
-                  milliseconds: 500,
-                ),
-              ),
+              _controller,
+              context,
             );
             _badge = null;
           });

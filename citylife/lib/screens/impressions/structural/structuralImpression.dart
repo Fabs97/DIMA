@@ -1,5 +1,7 @@
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/screens/impressions/structural/local_widget/structuralForm.dart';
+import 'package:citylife/services/api_services/badge_api_service.dart';
+import 'package:citylife/services/api_services/impressions_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/utils/theme.dart';
@@ -48,13 +50,18 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                 height: constraints.maxHeight,
                 child: SingleChildScrollView(
                   child: selectedStep == 2
-                      ? Consumer<StorageService>(
-                          builder: (_, storageService, __) => Container(
+                      ? Consumer3<StorageService, BadgeAPIService,
+                          ImpressionsAPIService>(
+                          builder: (_, storageService, badgeAPIService,
+                                  impressionsAPIService, __) =>
+                              Container(
                             height: constraints.maxHeight * 0.45,
                             child: SaveImpression(
                               isStructural: true,
                               impression: impression,
                               storageService: storageService,
+                              badgeAPIService: badgeAPIService,
+                              impressionsAPIService: impressionsAPIService,
                             ),
                           ),
                         )

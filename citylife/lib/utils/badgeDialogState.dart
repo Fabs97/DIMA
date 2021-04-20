@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class BadgeDialogState {
-  BuildContext context;
   AuthService authService;
-  BadgeDialogState(this.context, this.authService);
+  BadgeDialogState(this.authService);
 
-  void showBadgeDialog(badge, cont) {
+  void showBadgeDialog(badge, cont, context) {
     cont.play();
     authService.reloadUser();
     showAnimatedDialog(
@@ -31,40 +30,42 @@ class BadgeDialogState {
               decoration: BoxDecoration(boxShadow: null),
               child: Stack(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: constraints.maxWidth * .8,
-                        height: constraints.maxWidth * .8,
-                        decoration: BoxDecoration(
-                          boxShadow: null,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: B.adges[badge].image,
-                            fit: BoxFit.cover,
+                  SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: constraints.maxWidth * .8,
+                          height: constraints.maxWidth * .8,
+                          decoration: BoxDecoration(
+                            boxShadow: null,
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: B.adges[badge].image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: T.primaryColor,
-                          borderRadius: BorderRadius.circular(
-                            15.0,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: T.primaryColor,
+                            borderRadius: BorderRadius.circular(
+                              15.0,
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          "Congratulations for ${B.adges[badge].text}",
-                          style: TextStyle(
-                            color: T.textLightColor,
-                            fontSize: 24,
+                          child: Text(
+                            "Congratulations for ${B.adges[badge].text}",
+                            style: TextStyle(
+                              color: T.textLightColor,
+                              fontSize: 24,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                   Align(
                     alignment: Alignment.center,

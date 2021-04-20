@@ -340,34 +340,40 @@ class _ProfileState extends State<Profile> {
                                         },
                                       ),
                                     )
-                                  : CustomGradientButton(
-                                      title: "Save profile",
-                                      width: constraints.maxWidth,
-                                      callback: () async {
-                                        _unfocus();
+                                  : Consumer<BadgeAPIService>(
+                                      builder: (context, badgeAPIService, _) =>
+                                          CustomGradientButton(
+                                        title: "Save profile",
+                                        width: constraints.maxWidth,
+                                        callback: () async {
+                                          _unfocus();
 
-                                        user.name = state.editedName;
+                                          user.name = state.editedName;
 
-                                        auth.authUser = await _userAPIService
-                                            .route("/update", body: user);
-                                        if (state.techEdited) {
-                                          var badge =
-                                              await BadgeAPIService.route(
-                                            "/techie",
-                                            urlArgs: user.id,
-                                          );
-                                          badgeDialog.showBadgeDialog(
-                                            badge,
-                                            _confettiController =
-                                                ConfettiController(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                            ),
-                                          );
-                                        }
-                                        state.hasBeenEdited = false;
-                                      },
-                                    ),
+                                          auth.authUser = await _userAPIService
+                                              .route("/update", body: user);
+                                          if (state.techEdited) {
+                                            var badge =
+                                                await badgeAPIService.route(
+                                              "/techie",
+                                              urlArgs: user.id,
+                                            );
+                                            if (badge != null) {
+                                              badgeDialog.showBadgeDialog(
+                                                badge,
+                                                _confettiController =
+                                                    ConfettiController(
+                                                  duration:
+                                                      Duration(milliseconds: 500),
+                                                ),
+                                                context
+                                              );
+                                            } 
+                                          }
+                                          state.hasBeenEdited = false;
+                                        },
+                                      ),
+                                  ),
                               Spacer(),
                             ],
                           ),
