@@ -1,9 +1,9 @@
-import 'package:citylife/widgets/logo.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:citylife/widgets/logo.dart';
 
-main() {
+main() async {
   group("L class", () {
     test(
         "check if all constant values are correct and their types what they're supposed to be",
