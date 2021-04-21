@@ -11,8 +11,10 @@ import 'package:provider/provider.dart';
 class SharedForm extends StatefulWidget {
   List<File> imageList;
   final bool watchStructural;
+  ImagePicker picker;
 
-  SharedForm({Key key, this.imageList, @required this.watchStructural})
+  SharedForm(
+      {Key key, this.imageList, this.picker, @required this.watchStructural})
       : super(key: key);
   @override
   _SharedFormState createState() => _SharedFormState();
@@ -22,12 +24,12 @@ class _SharedFormState extends State<SharedForm> {
   bool fromGallery;
   File imageFile;
   List<Widget> gridView;
-
-  final _picker = ImagePicker();
+  ImagePicker _picker;
 
   TextEditingController _notesController = TextEditingController();
   @override
   initState() {
+    _picker = widget.picker ?? ImagePicker();
     super.initState();
     imageList = <File>[];
     _notesController.addListener(() => setState(() {

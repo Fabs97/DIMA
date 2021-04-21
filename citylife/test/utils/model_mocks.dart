@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:citylife/models/cl_badges.dart';
 import 'package:citylife/models/cl_emotional.dart';
+import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/models/cl_structural.dart';
 import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/utils/constants.dart';
@@ -29,6 +30,28 @@ class MockModel {
         email: email ?? "tester@tester.test",
         password: password ?? "secret_password",
         avatar: avatar ?? "avatar_1",
+      );
+
+  static CLImpression getImpression({
+    id,
+    userId,
+    notes,
+    images,
+    latitude,
+    longitude,
+    timeStamp,
+    placeTag,
+    fromTech,
+  }) =>
+      CLImpression(
+        userId: userId ?? 1,
+        notes: notes ?? "Test notes",
+        images: images ?? <File>[],
+        latitude: latitude ?? 0.0,
+        longitude: longitude ?? 0.0,
+        timeStamp: timeStamp ?? DateTime.now(),
+        placeTag: placeTag ?? "Test Placetag",
+        fromTech: fromTech ?? false,
       );
 
   static CLEmotional getEmotional({
