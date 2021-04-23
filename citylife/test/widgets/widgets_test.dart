@@ -21,18 +21,33 @@ main() {
     expect(find.text("Test title"), findsOneWidget);
   });
 
+  testWidgets("Test CustomGradientButton throws exception",
+      (WidgetTester tester) async {
+    expect(
+        () async => await tester.pumpWidget(new MaterialApp(
+              home: new CustomGradientButton(
+                width: 0,
+                callback: () {},
+              ),
+            )),
+        throwsAssertionError);
+  });
+
   testWidgets("Test CustomToast has context and valid message",
       (WidgetTester tester) async {
-    await tester.pumpWidget(WidgetsApp(
-      home: ScaffoldMessenger(
-        child: Builder(builder: (BuildContext context) {
-          CustomToast.toast(context, "Test message");
-          expect(context, isNotEmpty);
-          return Container();
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: Builder(builder: (BuildContext context) {
+          // expect(context, isNotEmpty);
+          return ElevatedButton(
+            onPressed: () => CustomToast.toast(context, "Test message"),
+          );
         }),
       ),
       color: null,
     ));
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
     expect(find.byType(SnackBar), findsOneWidget);
   });
 }
