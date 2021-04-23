@@ -79,7 +79,7 @@ class MockModel {
         id: id ?? 1,
         userId: userId ?? 1,
         notes: notes ?? "Test notes",
-        images: images ?? <File>[],
+        images: images ?? null,
         latitude: latitude ?? 0.0,
         longitude: longitude ?? 0.0,
         timeStamp: timeStamp ?? DateTime.now(),
