@@ -6,17 +6,24 @@
 //   expect(find.byType(TextFormField), findsOneWidget);
 // });
 
+import 'dart:io';
+
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../mocks/image_picker_mock.dart';
 import '../utils/model_mocks.dart';
 
 main() async {
   final impression = MockModel.getEmotional();
+  final picker = MockImagePicker();
   group('sharedForm tests', () {
     Widget testApp = ChangeNotifierProvider<CLImpression>.value(
       value: impression,
@@ -24,11 +31,22 @@ main() async {
           home: Scaffold(
         body: SharedForm(
           watchStructural: false,
+          picker: picker,
         ),
       )),
     );
 
     testWidgets('working path for adding an image to the gridView', (t) async {
+      PickedFile file =
+          new PickedFile('citylife\\assets\\images\\avatar_1.jpg');
+      when(picker.getImage(
+        source: ImageSource.gallery,
+        preferredCameraDevice: CameraDevice.rear,
+      )).thenAnswer((_) async => file);
+      when(picker.getImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.rear,
+      )).thenAnswer((_) async => file);
       await t.pumpWidget(testApp);
 
       final gridViewFinder = find.byType(GridView);
@@ -53,6 +71,23 @@ main() async {
       final iconFinder3 = find.descendant(
           of: listViewFinder, matching: find.byIcon(Icons.photo_camera));
       expect(iconFinder3, findsOneWidget);
+
+      await t.tap(listViewFinder.first);
+      await t.pumpAndSettle();
+      expect(
+          (find.byType(GridView).evaluate().first.widget as GridView)
+              .semanticChildCount,
+          2);
+
+      await t.tapAt(t.getCenter(iconFinder));
+      await t.pumpAndSettle();
+
+      await t.tap(listViewFinder.last);
+      await t.pumpAndSettle();
+      expect(
+          (find.byType(GridView).evaluate().first.widget as GridView)
+              .semanticChildCount,
+          3);
     });
   });
 }
