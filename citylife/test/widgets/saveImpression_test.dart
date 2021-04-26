@@ -63,12 +63,6 @@ main() async {
       // when(storageService.uploadImageList(
       //         false, impression.id, impression.images))
       //     .thenAnswer((_) async => images);
-
-      await t.pumpWidget(testApp);
-      await t.pumpAndSettle();
-
-      final iconFinder = find.byIcon(Icons.done_all_outlined);
-      expect(iconFinder, findsOneWidget);
     });
   });
 }

@@ -40,7 +40,7 @@ main() {
       testWidgets('social login buttons', (t) async {
         await t.pumpWidget(testApp);
 
-        final socialButtonsFinder = find.byType(FloatingActionButton);
+        final socialButtonsFinder = find.byType(ClipOval);
         expect(socialButtonsFinder, findsNWidgets(4));
         // * All social buttons must be in a row
         expect(
@@ -208,14 +208,17 @@ main() {
               .thenAnswer((_) => null);
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final googleButtonFinder = buttonsFinder.first;
-          final googleButton = googleButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(googleButton.child, isA<Image>());
-          expect((googleButton.child as Image).image, L.Google);
+          final googleButton =
+              googleButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: googleButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Google);
 
           await t.tap(googleButtonFinder);
 
@@ -228,14 +231,17 @@ main() {
               .thenAnswer((_) => null);
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final twitterButtonFinder = buttonsFinder.at(1);
-          final twitterButton = twitterButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(twitterButton.child, isA<Image>());
-          expect((twitterButton.child as Image).image, L.Twitter);
+          final twitterButton =
+              twitterButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: twitterButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Twitter);
 
           await t.tap(twitterButtonFinder);
 
@@ -248,14 +254,17 @@ main() {
               .thenAnswer((_) => null);
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final facebookButtonFinder = buttonsFinder.last;
-          final facebookButton = facebookButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(facebookButton.child, isA<Image>());
-          expect((facebookButton.child as Image).image, L.Facebook);
+          final facebookButton =
+              facebookButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: facebookButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Facebook);
 
           await t.tap(facebookButtonFinder);
 
@@ -268,14 +277,17 @@ main() {
           when(authService.signInWithGoogle()).thenThrow(Exception());
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final googleButtonFinder = buttonsFinder.first;
-          final googleButton = googleButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(googleButton.child, isA<Image>());
-          expect((googleButton.child as Image).image, L.Google);
+          final googleButton =
+              googleButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: googleButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Google);
 
           await t.tap(googleButtonFinder);
           await t.pump();
@@ -288,14 +300,17 @@ main() {
           when(authService.signInWithTwitter()).thenThrow(Exception());
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final twitterButtonFinder = buttonsFinder.at(1);
-          final twitterButton = twitterButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(twitterButton.child, isA<Image>());
-          expect((twitterButton.child as Image).image, L.Twitter);
+          final twitterButton =
+              twitterButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: twitterButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Twitter);
 
           await t.tap(twitterButtonFinder);
           await t.pump();
@@ -308,14 +323,17 @@ main() {
           when(authService.signInWithFacebook()).thenThrow(Exception());
           await t.pumpWidget(testApp);
 
-          final buttonsFinder = find.byType(FloatingActionButton);
+          final buttonsFinder = find.byType(ClipOval);
           expect(buttonsFinder, findsNWidgets(4));
 
           final facebookButtonFinder = buttonsFinder.last;
-          final facebookButton = facebookButtonFinder.evaluate().first.widget
-              as FloatingActionButton;
-          expect(facebookButton.child, isA<Image>());
-          expect((facebookButton.child as Image).image, L.Facebook);
+          final facebookButton =
+              facebookButtonFinder.evaluate().first.widget as ClipOval;
+          final imageFinder = find.descendant(
+              of: facebookButtonFinder, matching: find.byType(Image));
+          expect(imageFinder, findsOneWidget);
+          expect(
+              (imageFinder.evaluate().first.widget as Image).image, L.Facebook);
 
           await t.tap(facebookButtonFinder);
           await t.pump();
