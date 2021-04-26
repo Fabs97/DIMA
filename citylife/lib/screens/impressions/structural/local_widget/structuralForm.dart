@@ -88,10 +88,10 @@ class _StructuralFormState extends State<StructuralForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: DropdownButtonFormField(
+                    child: DropdownButtonFormField<dynamic>(
                       value: _selectedTypology,
                       items: _typologies.map((typology) {
-                        return DropdownMenuItem(
+                        return DropdownMenuItem<dynamic>(
                           child: Text(typology),
                           value: typology,
                         );
