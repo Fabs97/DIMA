@@ -120,8 +120,7 @@ class MockUser implements User {
 
   @override
   Future<void> reload() {
-    // TODO: implement reload
-    throw UnimplementedError();
+    return null;
   }
 
   @override
