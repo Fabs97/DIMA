@@ -20,8 +20,8 @@ class HomeArguments {
 }
 
 class ImpressionsMap extends StatefulWidget {
-  ImpressionsMap({Key key}) : super(key: key);
-
+  ImpressionsMap({Key key, this.testController}) : super(key: key);
+  final GoogleMapController testController;
   @override
   ImpressionsMapState createState() => ImpressionsMapState();
 }
@@ -111,8 +111,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
 
                         state.googleMarkers = updatedMarkers.toSet();
                       },
-                      onMapCreated: (cntlr) {
-                        _controller = cntlr;
+                      onMapCreated: (cntrl) {
+                        _controller = widget.testController ?? cntrl;
                       },
                       onCameraIdle: () async {
                         if (_controller != null) {
@@ -130,11 +130,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                                   northEast.longitude);
 
                               if (state.isFirstMove) {
-                                state.impressions =
-                                    await impressionsAPIService
-                                    .route(
-                                        "/byLatLong",
-                                        urlArgs: args);
+                                state.impressions = await impressionsAPIService
+                                    .route("/byLatLong", urlArgs: args);
                               }
 
                               _clusterManager =
@@ -181,11 +178,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
                               ),
                             ),
                             onPressed: () async {
-                              state.impressions =
-                                  await impressionsAPIService
-                                  .route(
-                                      "/byLatLong",
-                                      urlArgs: args);
+                              state.impressions = await impressionsAPIService
+                                  .route("/byLatLong", urlArgs: args);
 
                               _clusterManager =
                                   await MapHelper.initClusterManager(
