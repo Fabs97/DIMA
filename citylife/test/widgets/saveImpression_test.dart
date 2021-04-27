@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:citylife/utils/constants.dart';
 import 'package:citylife/widgets/saveImpression.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,19 +52,41 @@ main() async {
 
     testWidgets('save impression correctly', (t) async {
       when(impressionAPIService.route("/new", body: impression))
-          .thenAnswer((_) async {
-        return impression;
-      });
+          .thenAnswer((_) async => impression);
 
-      when(badgeAPIService.route("/impression/emotional",
-              urlArgs: impression.userId))
-          .thenAnswer((_) async => null);
+      when(badgeAPIService.route(
+        "/impression/emotional",
+        urlArgs: impression.userId,
+      )).thenAnswer((_) async => null);
 
-      List<File> images = [File('citylife\assets\images\avatar_1.jpg')];
-      // TODO: sistemare questo schifo <3
-      // when(storageService.uploadImageList(
-      //         false, impression.id, impression.images))
-      //     .thenAnswer((_) async => images);
+      List<Future<String>> images = [
+        Future<String>.value('citylife\assets\images\avatar_1.jpg')
+      ];
+
+      when(storageService.uploadImageList(
+              false, impression.id, impression.images))
+          .thenAnswer((_) => images);
+      await t.pumpWidget(testApp);
+      await t.pump();
+
+      final iconFinder = find.byIcon(Icons.done_all_outlined);
+      expect(iconFinder, findsOneWidget);
+
+      await t.pumpAndSettle(Duration(seconds: 1));
+
+      expect(find.byType(SaveImpression), findsNothing);
+    });
+    testWidgets('save impression throws error', (t) async {
+      when(impressionAPIService.route("/new", body: impression))
+          .thenThrow(Exception("Test Exception"));
+
+      await t.pumpWidget(testApp);
+      await t.pump();
+
+      final iconFinder = find.byIcon(Icons.warning_amber_outlined);
+      expect(iconFinder, findsOneWidget);
+
+      await t.pumpAndSettle(Duration(seconds: 1));
     });
   });
 }

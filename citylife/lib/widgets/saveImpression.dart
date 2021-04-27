@@ -51,16 +51,6 @@ class _SaveImpressionState extends State<SaveImpression> {
             .then((_) async {
           setState(() => _uploadStatus = UploadStatus.Saved);
         });
-        // .catchError((e) {
-        //   // Error while saving in storage
-        //   setState(() {
-        //     if (e.message == "Images list was found null") {
-        //       _uploadStatus = UploadStatus.Saved;
-        //     } else {
-        //       _uploadStatus = UploadStatus.Error;
-        //     }
-        //   });
-        // });
       }
     } catch (e, sTrace) {
       // Error while saving impression
