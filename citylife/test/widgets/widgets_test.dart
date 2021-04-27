@@ -40,6 +40,7 @@ main() {
         body: Builder(builder: (BuildContext context) {
           // expect(context, isNotEmpty);
           return ElevatedButton(
+            child: Placeholder(),
             onPressed: () => CustomToast.toast(context, "Test message"),
           );
         }),
