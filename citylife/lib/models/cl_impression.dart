@@ -42,17 +42,4 @@ class CLImpression extends ChangeNotifier {
       "fromTech": this.fromTech,
     };
   }
-
-  CLImpression.fromJson(Map<String, dynamic> json) {
-    this.id = json["id"] as int;
-    this.userId = json["userId"] as int;
-    this.notes = json["notes"] as String;
-    this.fromTech = json["fromTech"] as bool;
-    this.latitude = json["latitude"] as double;
-    this.longitude = json["longitude"] as double;
-    if (json["created"] != null) {
-      this.timeStamp = DateTime.parse(json["created"] as String);
-    }
-    this.placeTag = json["place_tag"] as String;
-  }
 }
