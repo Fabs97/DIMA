@@ -57,19 +57,19 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                           builder: (_, storageService, badgeAPIService,
                                   impressionsAPIService, __) =>
                               Container(
-                              height: constraints.maxHeight * 0.45,
-                              child: [
-                                EmotionalForm(),
-                                _sharedForm,
-                                SaveImpression(
-                                  isStructural: true,
-                                  impression: impression,
-                                  storageService: storageService,
-                                  badgeAPIService: badgeAPIService,
-                                  impressionsAPIService:
+                                  height: constraints.maxHeight * 0.45,
+                                  child: [
+                                    EmotionalForm(),
+                                    _sharedForm,
+                                    SaveImpression(
+                                      isStructural: true,
+                                      impression: impression,
+                                      storageService: storageService,
+                                      badgeAPIService: badgeAPIService,
+                                      impressionsAPIService:
                                           impressionsAPIService,
-                                ),
-                              ].elementAt(selectedStep)),
+                                    ),
+                                  ].elementAt(selectedStep)),
                         )
                       : ConstrainedBox(
                           constraints: BoxConstraints(

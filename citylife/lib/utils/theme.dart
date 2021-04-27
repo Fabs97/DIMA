@@ -1,4 +1,3 @@
-import 'package:citylife/widgets/custom_slider_track.dart';
 import 'package:flutter/material.dart';
 
 class T {
@@ -76,15 +75,6 @@ class T {
         borderSide: BorderSide(color: textFieldIconColor, width: 2.0),
       ),
       floatingLabelBehavior: FloatingLabelBehavior.never,
-    ),
-    sliderTheme: SliderThemeData(
-      tickMarkShape: RoundSliderTickMarkShape(),
-      trackShape: GradientRectSliderTrackShape(
-        gradient: sliderTrackGradient,
-        darkenInactive: true,
-      ),
-      activeTickMarkColor: T.structuralColor,
-      inactiveTickMarkColor: T.structuralColor,
     ),
     snackBarTheme: SnackBarThemeData(
       shape: RoundedRectangleBorder(
