@@ -57,58 +57,66 @@ class _EmotionalFormState extends State<EmotionalForm> {
                                   ),
                                   Container(
                                     width: constraints.maxWidth * 0.63,
-                                    child: Slider(
-                                      activeColor: T.primaryColor,
-                                      min: 1,
-                                      max: 5,
-                                      divisions: 4,
-                                      value: _sliderValue[index].toDouble(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _sliderValue[index] = value.toInt();
-                                          switch (_titles[index]) {
-                                            case "Cleanness":
-                                              {
-                                                (emotionalImpression
-                                                        as CLEmotional)
-                                                    .cleanness = value.toInt();
-                                                break;
-                                              }
-                                            case "Happiness":
-                                              {
-                                                (emotionalImpression
-                                                        as CLEmotional)
-                                                    .happiness = value.toInt();
-                                                break;
-                                              }
-                                            case "Inclusiveness":
-                                              {
-                                                (emotionalImpression
-                                                            as CLEmotional)
-                                                        .inclusiveness =
-                                                    value.toInt();
-                                                break;
-                                              }
-                                            case "Comfort":
-                                              {
-                                                (emotionalImpression
-                                                        as CLEmotional)
-                                                    .comfort = value.toInt();
-                                                break;
-                                              }
-                                            case "Safety":
-                                              {
-                                                (emotionalImpression
-                                                        as CLEmotional)
-                                                    .safety = value.toInt();
-                                                break;
-                                              }
-                                            default:
-                                              throw Exception(
-                                                  "Value not defined in emotional range");
-                                          }
-                                        });
-                                      },
+                                    child: SliderTheme(
+                                      data: SliderTheme.of(context).copyWith(
+                                        activeTrackColor: T.primaryColor,
+                                        inactiveTrackColor: Colors.grey,
+                                        thumbColor: T.primaryColor,
+                                      ),
+                                      child: Slider(
+                                        min: 1,
+                                        max: 5,
+                                        divisions: 4,
+                                        value: _sliderValue[index].toDouble(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _sliderValue[index] = value.toInt();
+                                            switch (_titles[index]) {
+                                              case "Cleanness":
+                                                {
+                                                  (emotionalImpression
+                                                              as CLEmotional)
+                                                          .cleanness =
+                                                      value.toInt();
+                                                  break;
+                                                }
+                                              case "Happiness":
+                                                {
+                                                  (emotionalImpression
+                                                              as CLEmotional)
+                                                          .happiness =
+                                                      value.toInt();
+                                                  break;
+                                                }
+                                              case "Inclusiveness":
+                                                {
+                                                  (emotionalImpression
+                                                              as CLEmotional)
+                                                          .inclusiveness =
+                                                      value.toInt();
+                                                  break;
+                                                }
+                                              case "Comfort":
+                                                {
+                                                  (emotionalImpression
+                                                          as CLEmotional)
+                                                      .comfort = value.toInt();
+                                                  break;
+                                                }
+                                              case "Safety":
+                                                {
+                                                  (emotionalImpression
+                                                          as CLEmotional)
+                                                      .safety = value.toInt();
+                                                  break;
+                                                }
+                                              default:
+                                                throw Exception(
+                                                    "Value not defined in emotional range");
+                                            }
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ],
