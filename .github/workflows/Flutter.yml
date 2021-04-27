@@ -33,10 +33,14 @@ jobs:
       - name: Running application tests
         run: flutter test --coverage && curl -s https://codecov.io/bash -o codecov.sh
       - name: Upload Test coverage to CodeCov project
-        uses: codecov/codecov-action@v1.2.1 
-        with: 
-          token: ${{ secrets.CODECOV_TOKEN }} 
-          file: ./coverage/lcov.info
-          fail_ci_if_error: false
-          working-directory: ./citylife
-          verbose: true     
+        run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }} -f ./coverage/lcov.info
+        shell: bash
+        
+#       - name: Upload Test coverage to CodeCov project
+#         uses: codecov/codecov-action@v1.2.1 
+#         with: 
+#           token: ${{ secrets.CODECOV_TOKEN }} 
+#           file: ./coverage/lcov.info
+#           fail_ci_if_error: false
+#           working-directory: ./citylife
+#           verbose: true     
