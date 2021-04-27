@@ -7,6 +7,7 @@ import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/services/storage_service.dart';
 import 'package:citylife/widgets/littleMap.dart';
+import 'package:citylife/widgets/saveImpression.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -57,8 +58,47 @@ main() async {
       final formFinder = find.byType(StructuralForm);
       expect(formFinder, findsOneWidget);
 
+      final componentField = find.text('Component');
+      expect(componentField, findsOneWidget);
+      // expect(componentField.evaluate().first.widget, isA<EditableText>());
+      final fieldFinder = find.ancestor(
+          of: componentField, matching: find.byType(TextFormField));
+      expect(fieldFinder, findsOneWidget);
+      await t.enterText(fieldFinder, "Test");
+      await t.pumpAndSettle();
+
+      final pathologyField = find.text('Pathology');
+      expect(pathologyField, findsOneWidget);
+      final pathFieldFinder = find.ancestor(
+          of: pathologyField, matching: find.byType(TextFormField));
+      expect(pathFieldFinder, findsOneWidget);
+      await t.enterText(pathFieldFinder, 'Test');
+      await t.pumpAndSettle();
+
+      final typeField = find.text('Type of Intervention');
+      expect(typeField, findsOneWidget);
+      final dropdownFinder = find.ancestor(
+          of: typeField, matching: find.byType(DropdownButtonFormField));
+      expect(dropdownFinder, findsOneWidget);
+      final items = find.byType(DropdownMenuItem);
+      expect(items, findsNWidgets(5));
+      await t.tap(dropdownFinder);
+      await t.pumpAndSettle();
+      await t.tapAt(t.getCenter(items.first));
+      await t.pumpAndSettle();
+
       final stepsFinder = find.byType(StepsIndicator);
       expect(stepsFinder, findsOneWidget);
+
+      final buttonFinder = find.byType(MaterialButton);
+      await t.tap(buttonFinder);
+      await t.pumpAndSettle();
+
+      await t.tap(buttonFinder);
+      await t.pump();
+
+      final saveFinder = find.byType(SaveImpression);
+      expect(saveFinder, findsOneWidget);
     });
   });
 }
