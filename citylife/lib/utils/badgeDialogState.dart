@@ -2,7 +2,6 @@ import 'package:citylife/services/auth_service.dart';
 import 'package:citylife/utils/badge.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:confetti/confetti.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 

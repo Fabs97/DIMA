@@ -2,7 +2,6 @@ import 'package:citylife/models/cl_emotional.dart';
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/utils/emotional_utils.dart';
 import 'package:citylife/utils/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -2,7 +2,7 @@ import 'package:citylife/models/cl_user.dart';
 import 'package:citylife/services/api_services/user_api_service.dart';
 import 'package:citylife/services/shared_pref_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:github_sign_in/github_sign_in.dart';
@@ -140,8 +140,7 @@ class AuthService with ChangeNotifier {
   Future<CLUser> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
-      final GoogleSignInAccount googleUser =
-          await GoogleSignIn().signIn();
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =

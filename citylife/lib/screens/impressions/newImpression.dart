@@ -1,6 +1,5 @@
 import 'package:citylife/screens/impressions/emotional/emotionalImpression.dart';
 import 'package:citylife/utils/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:citylife/screens/impressions/structural/structuralImpression.dart';

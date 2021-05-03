@@ -14,30 +14,65 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+void main({
+  SharedPrefService testSharedPrefService,
+  UserAPIService testUserAPIService,
+  BadgeAPIService testBadgeAPIService,
+  ImpressionsAPIService testImpressionsAPIService,
+  AuthService testAuthService,
+  StorageService testStorageService,
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(CityLife());
+  runApp(CityLife(
+    testSharedPrefService: testSharedPrefService,
+    testUserAPIService: testUserAPIService,
+    testBadgeAPIService: testBadgeAPIService,
+    testImpressionsAPIService: testImpressionsAPIService,
+    testAuthService: testAuthService,
+    testStorageService: testStorageService,
+  ));
 }
 
 class CityLife extends StatelessWidget {
   final UserAPIService _userAPIService = UserAPIService();
   final BadgeAPIService _badgeAPIService = BadgeAPIService();
   final ImpressionsAPIService _impressionsAPIService = ImpressionsAPIService();
+
+  final SharedPrefService testSharedPrefService;
+  final UserAPIService testUserAPIService;
+  final BadgeAPIService testBadgeAPIService;
+  final ImpressionsAPIService testImpressionsAPIService;
+  final AuthService testAuthService;
+  final StorageService testStorageService;
+
+  CityLife({
+    Key key,
+    this.testSharedPrefService,
+    this.testUserAPIService,
+    this.testBadgeAPIService,
+    this.testImpressionsAPIService,
+    this.testAuthService,
+    this.testStorageService,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         FutureProvider.value(
-          value: SharedPrefService.getInstance(),
+          value: testSharedPrefService ?? SharedPrefService.getInstance(),
         ),
-        Provider.value(value: _userAPIService),
-        Provider.value(value: _badgeAPIService),
-        Provider.value(value: _impressionsAPIService),
+        Provider.value(value: testUserAPIService ?? _userAPIService),
+        Provider.value(value: testBadgeAPIService ?? _badgeAPIService),
+        Provider.value(
+            value: testImpressionsAPIService ?? _impressionsAPIService),
         ChangeNotifierProvider<AuthService>(
-          create: (_) => AuthService.instance(userAPIService: _userAPIService),
+          create: (_) =>
+              testAuthService ??
+              AuthService.instance(userAPIService: _userAPIService),
         ),
-        Provider.value(value: StorageService()),
+        Provider.value(value: testStorageService ?? StorageService()),
       ],
       child: NotificationListener(
         child: MaterialApp(

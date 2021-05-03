@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ProfileState with ChangeNotifier {
   bool _hasBeenEdited = false;
@@ -20,6 +20,7 @@ class ProfileState with ChangeNotifier {
     _hasBeenEdited = v;
     notifyListeners();
   }
+
   set techEdited(v) {
     _techEdited = v;
     notifyListeners();

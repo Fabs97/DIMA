@@ -11,7 +11,6 @@ import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/littleMap.dart';
 import 'package:citylife/widgets/saveImpression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:steps_indicator/steps_indicator.dart';

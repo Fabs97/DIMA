@@ -1,19 +1,8 @@
-// testWidgets("Test SharedForm if no img added show one element only",
-//     (WidgetTester tester) async {
-//   await tester.pumpWidget(SharedForm(
-//     watchStructural: true,
-//   ));
-//   expect(find.byType(TextFormField), findsOneWidget);
-// });
-
-import 'dart:io';
-
 import 'package:citylife/models/cl_impression.dart';
 import 'package:citylife/widgets/sharedForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
