@@ -106,21 +106,28 @@ class _HomePageState extends State<HomePage> {
                   unselectedIconTheme: T.unselectedBottomNavBarIconTheme,
                   type: BottomNavigationBarType.fixed,
                   iconSize: 39,
-                  items: [
-                    Icons.map_outlined,
-                    Icons.list_sharp,
-                    Icons.add_circle_outline,
-                    Icons.star_outline,
-                    Icons.person_outline,
-                  ].map((icon) {
-                    return BottomNavigationBarItem(
-                      icon: Icon(
-                        icon,
-                        size: 39,
-                      ),
-                      label: "",
-                    );
-                  }).toList(),
+                  items: {
+                    "BottomBarHome": Icons.map_outlined,
+                    "BottomBarList": Icons.list_sharp,
+                    "BottomBarImpression": Icons.add_circle_outline,
+                    "BottomBarBadges": Icons.star_outline,
+                    "BottomBarProfile": Icons.person_outline,
+                  }
+                      .map((key, icon) {
+                        return MapEntry(
+                          key,
+                          BottomNavigationBarItem(
+                            icon: Icon(
+                              icon,
+                              key: Key(key),
+                              size: 39,
+                            ),
+                            label: "",
+                          ),
+                        );
+                      })
+                      .values
+                      .toList(),
                 ),
               ),
             ),

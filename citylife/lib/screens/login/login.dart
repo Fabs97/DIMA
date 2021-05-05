@@ -141,6 +141,7 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = false);
                                     }
                                   },
+                                  "LoginGoogle",
                                 ),
                                 buildSocialLoginButton(
                                   L.Twitter,
@@ -160,6 +161,7 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = false);
                                     }
                                   },
+                                  "LoginTwitter",
                                 ),
                                 buildSocialLoginButton(
                                   L.GitHub,
@@ -179,6 +181,7 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = false);
                                     }
                                   },
+                                  "LoginGitHub",
                                 ),
                                 buildSocialLoginButton(
                                   L.Facebook,
@@ -198,6 +201,7 @@ class _LoginState extends State<Login> {
                                       setState(() => _isLoggingIn = false);
                                     }
                                   },
+                                  "LoginFacebook",
                                 ),
                               ],
                             ),
@@ -400,13 +404,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget buildSocialLoginButton(AssetImage logo, Function() callback,
+  Widget buildSocialLoginButton(
+      AssetImage logo, Function() callback, String key,
       {double size = 70}) {
     return Container(
       decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       child: ClipOval(
         child: Material(
           child: InkWell(
+            key: Key(key),
             splashColor: T.primaryColor,
             onTap: callback,
             child: Image(

@@ -212,8 +212,6 @@ main() {
           expect(buttonsFinder, findsNWidgets(4));
 
           final googleButtonFinder = buttonsFinder.first;
-          final googleButton =
-              googleButtonFinder.evaluate().first.widget as ClipOval;
           final imageFinder = find.descendant(
               of: googleButtonFinder, matching: find.byType(Image));
           expect(imageFinder, findsOneWidget);
