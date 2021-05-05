@@ -54,54 +54,19 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  crypto:
+  crypto: 2.1.5
   test:
-  mockito: ^5.0.3
-  build_runner: ^1.12.2
+  mockito: 
   pedantic:
 module:
   androidX: true
 
-# flutter_icons:
-#   android: "launcher_icon"
-#   ios: true
-#   image_path: "assets/images/launcher_icon.png"
 flutter:
   uses-material-design: true
   assets:
     - assets/svgs/CityLife_Logo.svg
-    - assets/images/Google_Logo.png
-    - assets/images/Twitter_Logo.png
-    - assets/images/GitHub_Logo.png
-    - assets/images/Facebook_Logo.png
-    - assets/images/avatar_1.jpg
-    - assets/images/avatar_2.jpg
-    - assets/images/avatar_3.jpg
-    - assets/images/avatar_4.jpg
-    - assets/images/avatar_5.jpg
-    - assets/images/avatar_6.jpg
-    - assets/images/avatar_7.jpg
-    - assets/images/avatar_8.jpg
-    - assets/images/avatar_9.jpg
-    - assets/images/avatar_10.jpg
-    - assets/images/avatar_11.jpg
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+    - assets/images/
+
 tags:
   widgets:
   screens:
