@@ -217,6 +217,7 @@ class _LoginState extends State<Login> {
                                     ),
                                     child: CustomGradientButton(
                                       title: "Sign In",
+                                      key: Key("SignInButton"),
                                       callback: () async {
                                         if (_formKey.currentState.validate()) {
                                           try {
@@ -357,6 +358,7 @@ class _LoginState extends State<Login> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: TextFormField(
+        key: Key("LoginFormPswd"),
         keyboardType: TextInputType.visiblePassword,
         initialValue: _password ?? "",
         obscureText: _obscurePassword,
@@ -388,6 +390,7 @@ class _LoginState extends State<Login> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: TextFormField(
+        key: Key("LoginFormEmail"),
         initialValue: _email ?? "",
         decoration: InputDecoration(
           labelText: "Email",

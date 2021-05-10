@@ -332,6 +332,7 @@ class _ProfileState extends State<Profile> {
                                   ? Consumer<TwoFALoginState>(
                                       builder: (context, state, _) =>
                                           CustomGradientButton(
+                                        key: Key("ProfileSignOut"),
                                         title: "Sign out",
                                         width: constraints.maxWidth,
                                         callback: () {
