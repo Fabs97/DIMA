@@ -18,6 +18,7 @@ class BadgeDialogState {
       barrierColor: Colors.transparent,
       barrierDismissible: true,
       builder: (_) => Dialog(
+        key: Key("NewBadgeDialog"),
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: LayoutBuilder(

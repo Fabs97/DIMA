@@ -87,6 +87,7 @@ class _SharedFormState extends State<SharedForm> {
                   builder: (context, impression, _) => Flexible(
                     flex: 1,
                     child: TextFormField(
+                      key: Key("NewImpressionNotesField"),
                       maxLines: null,
                       controller: _notesController,
                       textAlignVertical: TextAlignVertical.center,

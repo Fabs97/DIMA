@@ -54,7 +54,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  crypto: 2.1.5
+  logger: ^1.0.0
   test:
   mockito: 
   pedantic:

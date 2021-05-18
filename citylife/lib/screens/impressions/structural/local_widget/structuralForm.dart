@@ -38,6 +38,7 @@ class _StructuralFormState extends State<StructuralForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: Key("NewStructuralComponentField"),
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.domain,
@@ -63,6 +64,7 @@ class _StructuralFormState extends State<StructuralForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: Key("NewStructuralPathologyField"),
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.help_outline,
@@ -88,9 +90,11 @@ class _StructuralFormState extends State<StructuralForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButtonFormField<dynamic>(
+                      key: Key("NewStructuralInterventionField"),
                       value: _selectedTypology,
                       items: _typologies.map((typology) {
                         return DropdownMenuItem<dynamic>(
+                          key: Key(typology),
                           child: Text(typology),
                           value: typology,
                         );

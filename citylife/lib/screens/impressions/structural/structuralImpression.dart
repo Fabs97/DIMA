@@ -118,6 +118,7 @@ class _StructuralImpressionState extends State<StructuralImpression> {
                                         padding:
                                             const EdgeInsets.only(left: 45),
                                         child: MaterialButton(
+                                          key: Key("NewStructuralNextButton"),
                                           color: T.primaryColor,
                                           shape: new RoundedRectangleBorder(
                                             borderRadius:

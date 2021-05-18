@@ -18,6 +18,13 @@ class _EmotionalFormState extends State<EmotionalForm> {
     "Comfort",
     "Safety"
   ];
+  List<String> _keys = [
+    "NewEmotionalCleannessSlider",
+    "NewEmotionalHappinessSlider",
+    "NewEmotionalInclusivenessSlider",
+    "NewEmotionalComfortSlider",
+    "NewEmotionalSafetySlider"
+  ];
 
   List<int> _sliderValue = [1, 1, 1, 1, 1];
 

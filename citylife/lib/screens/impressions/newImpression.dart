@@ -44,6 +44,7 @@ class _NewImpressionState extends State<NewImpression> {
                       ),
                     ),
                     ElevatedButton(
+                      key: Key("NewStructuralButton"),
                         onPressed: () {
                           setState(() {
                             _newImpressionChoice =
@@ -85,6 +86,7 @@ class _NewImpressionState extends State<NewImpression> {
                           ),
                         )),
                     ElevatedButton(
+                      key: Key("NewEmotionalButton"),
                         onPressed: () {
                           setState(() {
                             _newImpressionChoice =

@@ -121,6 +121,7 @@ class _EmotionalImpressionState extends State<EmotionalImpression> {
                                         padding:
                                             const EdgeInsets.only(left: 45),
                                         child: MaterialButton(
+                                          key: Key("NewEmotionalNextButton"),
                                           color: T.primaryColor,
                                           shape: new RoundedRectangleBorder(
                                             borderRadius:

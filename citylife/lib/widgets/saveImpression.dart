@@ -79,9 +79,16 @@ class _SaveImpressionState extends State<SaveImpression> {
       child: <UploadStatus, Widget>{
         UploadStatus.Saving: SpinKitRipple(
           color: Colors.amber,
+          key: Key("NewImpresionSaving"),
         ),
-        UploadStatus.Saved: Icon(Icons.done_all_outlined),
-        UploadStatus.Error: Icon(Icons.warning_amber_outlined),
+        UploadStatus.Saved: Icon(
+          Icons.done_all_outlined,
+          key: Key("NewImpressionSaved"),
+        ),
+        UploadStatus.Error: Icon(
+          Icons.warning_amber_outlined,
+          key: Key("NewImpressionSavingError"),
+        ),
       }[_uploadStatus],
     );
   }
