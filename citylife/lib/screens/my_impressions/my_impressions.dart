@@ -15,6 +15,7 @@ class MyImpressions extends StatelessWidget {
         create: (_) =>
             MyImpressionsState(auth.authUser.id, impressionsAPIService),
         child: Scaffold(
+          key: Key("MyImpressionsList"),
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: LayoutBuilder(

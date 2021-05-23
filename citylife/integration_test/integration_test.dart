@@ -14,7 +14,6 @@ class CustomOutput extends LogOutput {
   }
 }
 
-
 main() async {
   final logger = Logger(
     output: CustomOutput(),
@@ -57,12 +56,11 @@ main() async {
   group('Profile integration test -', () {
     final signInButton = find.byValueKey("SignInButton");
     test('test', () async {
-      final newBadgeDialogKey = "NewBadgeDialog";
-
       final emailField = find.byValueKey("LoginFormEmail");
       final pswdField = find.byValueKey("LoginFormPswd");
       final profilePageButton = find.byValueKey("BottomBarProfile");
       final impressionPageButton = find.byValueKey("BottomBarImpression");
+      final impressionsListPageButton = find.byValueKey("BottomBarList");
       final newImpressionDialog = find.byValueKey("newImpresssionDialog");
       final newStructuralButton = find.byValueKey("NewStructuralButton");
       final newStructuralNextButton =
@@ -77,16 +75,9 @@ main() async {
           find.byValueKey("NewImpressionNotesField");
       final newEmotionalButton = find.byValueKey("NewEmotionalButton");
       // final newImpresionSaving = find.byValueKey("NewImpresionSaving");
-      final newImpresionSavingError =
-          find.byValueKey("NewImpresionSavingError");
       final newImpressionSaved = find.byValueKey("NewImpressionSaved");
-      final newEmotionalCleannessSliderKey = "NewEmotionalCleannessSlider";
-      final newEmotionalHappinessSliderKey = "NewEmotionalHappinessSlider";
-      final newEmotionalInclusivenessSliderKey =
-          "NewEmotionalInclusivenessSlider";
-      final newEmotionalComfortSliderKey = "NewEmotionalComfortSlider";
-      final newEmotionalSafetySliderKey = "NewEmotionalSafetySlider";
       final newEmotionalNextButton = find.byValueKey("NewEmotionalNextButton");
+      final listViewFinder = find.byType("ListView");
       final logoutButton = find.byValueKey("ProfileSignOut");
 
       logger.i("Starting application");
@@ -168,10 +159,7 @@ main() async {
       await d.waitFor(newImpressionSaved);
       // Wait for the dialog to pop out
       await U.delay(1000);
-      // if (find.byValueKey(newBadgeDialogKey).serialize().isNotEmpty) {
-      //   await d.tap(find.byValueKey(newBadgeDialogKey));
-      // }
-
+      
       // Create a new Emotional impression
       // Tap for impression modal
       logger.i("Starting emotional impression creation process");
@@ -184,36 +172,6 @@ main() async {
       await U.delay(500);
       await d.waitFor(newEmotionalButton);
       await d.tap(newEmotionalButton);
-
-      logger.i("Sliding cleanness slider");
-      await U.delay(200);
-      expect(find.byValueKey(newEmotionalCleannessSliderKey), isNotNull);
-      await d.scroll(find.byValueKey(newEmotionalCleannessSliderKey), 150, 0,
-          Duration(milliseconds: 300));
-
-      logger.i("Sliding happiness slider");
-      await U.delay(200);
-      expect(find.byValueKey(newEmotionalHappinessSliderKey), isNotNull);
-      await d.scroll(find.byValueKey(newEmotionalHappinessSliderKey), 150, 0,
-          Duration(milliseconds: 300));
-
-      logger.i("Sliding inclusiveness slider");
-      await U.delay(200);
-      expect(find.byValueKey(newEmotionalInclusivenessSliderKey), isNotNull);
-      await d.scroll(find.byValueKey(newEmotionalInclusivenessSliderKey), 150,
-          0, Duration(milliseconds: 300));
-
-      await U.delay(200);
-      logger.i("Sliding comfort slider");
-      expect(find.byValueKey(newEmotionalComfortSliderKey), isNotNull);
-      await d.scroll(find.byValueKey(newEmotionalComfortSliderKey), 150, 0,
-          Duration(milliseconds: 300));
-
-      await U.delay(200);
-      logger.i("Sliding safety slider");
-      expect(find.byValueKey(newEmotionalSafetySliderKey), isNotNull);
-      await d.scroll(find.byValueKey(newEmotionalSafetySliderKey), 150, 0,
-          Duration(milliseconds: 300));
 
       // Go to next page
       await U.delay(500);
@@ -234,11 +192,20 @@ main() async {
       await d.tap(newEmotionalNextButton);
 
       await d.waitFor(newImpressionSaved);
-
       await U.delay(1000);
-      if (find.byValueKey(newBadgeDialogKey) != null) {
-        await d.tap(find.byValueKey(newBadgeDialogKey));
-      }
+
+      // Go to Impressions list
+
+      await d.tap(impressionsListPageButton);
+      await d.waitFor(listViewFinder);
+      await U.delay(1000);
+      final impressionCards = find.descendant(
+        of: listViewFinder,
+        matching: find.byType("ImpressionCard"),
+        firstMatchOnly: true,
+      );
+      expect(impressionCards.serialize().isNotEmpty, true);
+      expect(impressionCards.serialize().length > 2, true);
 
       // Go to Profile
       await U.delay(1000);
