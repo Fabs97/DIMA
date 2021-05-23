@@ -2,29 +2,11 @@ import 'dart:io';
 
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
-import 'package:logger/logger.dart';
 
 import 'utils/utils.dart';
 
-class CustomOutput extends LogOutput {
-  final out = File("./output.log");
-  @override
-  void output(OutputEvent event) {
-    out.writeAsStringSync(event.lines.join("\n"));
-  }
-}
-
 main() async {
-  final logger = Logger(
-    output: CustomOutput(),
-    printer: PrettyPrinter(
-      methodCount: 2,
-      lineLength: 120,
-      colors: true,
-      printEmojis: true,
-      printTime: true,
-    ),
-  );
+  final out = new File("integration_test.log").openWrite();
 
   FlutterDriver d;
   final email = "sicilianofabrizio@gmail.com";
@@ -51,6 +33,7 @@ main() async {
 
   tearDownAll(() async {
     d?.close();
+    out?.close();
   });
 
   group('Profile integration test -', () {
@@ -80,35 +63,40 @@ main() async {
       final listViewFinder = find.byType("ListView");
       final logoutButton = find.byValueKey("ProfileSignOut");
 
-      logger.i("Starting application");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Starting application");
       expect((await d.checkHealth()).status, HealthStatus.ok);
-      logger.i("Health status is ok");
-      logger.i("Starting test");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Health status is ok");
+      out.writeln("${DateTime.now().millisecondsSinceEpoch} | Starting test");
 
       // Enter email
       await U.delay(1000);
       await d.waitFor(emailField);
       await d.tap(emailField);
       await d.enterText(email);
-      logger.i("Inserted login email $email");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Inserted login email $email");
 
       // Enter password
       await U.delay(1000);
       await d.waitFor(pswdField);
       await d.tap(find.byValueKey("LoginFormPswd"));
       await d.enterText(pswd);
-      logger.i("Inserted login password");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Inserted login password");
 
       // Create a new Structural impression
       // Tap for login
       await U.delay(1000);
-      logger.i("Signing in");
+      out.writeln("${DateTime.now().millisecondsSinceEpoch} | Signing in");
       await d.waitFor(signInButton);
       await d.tap(signInButton);
-      logger.i("Signed in");
+      out.writeln("${DateTime.now().millisecondsSinceEpoch} | Signed in");
 
       // Tap for impression modal
-      logger.i("Starting structural impression creation process");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Starting structural impression creation process");
       await U.delay(1000);
       await d.waitFor(impressionPageButton);
       await d.tap(impressionPageButton);
@@ -119,20 +107,23 @@ main() async {
       await d.tap(newStructuralButton);
 
       // Insert new Structural impression field values
-      logger.i("Inserting structural component");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Inserting structural component");
       await U.delay(500);
       await d.waitFor(newStructuralComponentField);
       await d.tap(newStructuralComponentField);
       await d.enterText("Component integration test");
 
-      logger.i("Inserting structural pathology");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Inserting structural pathology");
       await U.delay(500);
       await d.waitFor(newStructuralPathologyField);
       await d.tap(newStructuralPathologyField);
       await d.enterText("Pathology integration test");
 
       await U.delay(500);
-      logger.i("Inserting structural intervention suggestion");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Inserting structural intervention suggestion");
       await d.waitFor(newStructuralInterventionField);
       await d.tap(newStructuralInterventionField);
       await U.delay(300);
@@ -145,13 +136,15 @@ main() async {
 
       // Fill in the notes, leave images empty
       await U.delay(500);
-      logger.i("Filling in structural notes");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Filling in structural notes");
       await d.waitFor(newImpressionNotesField);
       await d.tap(newImpressionNotesField);
       await d.enterText("Notes integration test");
 
       // Go to next page and wait for correct save
-      logger.i("Saving created structural impression");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Saving created structural impression");
       await U.delay(500);
       await d.waitFor(newStructuralNextButton);
       await d.tap(newStructuralNextButton);
@@ -159,10 +152,11 @@ main() async {
       await d.waitFor(newImpressionSaved);
       // Wait for the dialog to pop out
       await U.delay(1000);
-      
+
       // Create a new Emotional impression
       // Tap for impression modal
-      logger.i("Starting emotional impression creation process");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Starting emotional impression creation process");
       await U.delay(1000);
       await d.waitFor(impressionPageButton);
       await d.tap(impressionPageButton);
@@ -178,7 +172,8 @@ main() async {
       await d.waitFor(newEmotionalNextButton);
       await d.tap(newEmotionalNextButton);
 
-      logger.i("Filling in emotional notes");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Filling in emotional notes");
       // Fill in the notes
       await U.delay(500);
       await d.waitFor(newImpressionNotesField);
@@ -187,7 +182,8 @@ main() async {
 
       // Go to next page and wait for correct save
       await U.delay(500);
-      logger.i("Saving created emotional impression");
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Saving created emotional impression");
       await d.waitFor(newEmotionalNextButton);
       await d.tap(newEmotionalNextButton);
 
@@ -217,6 +213,7 @@ main() async {
       await d.tap(logoutButton);
 
       await U.delay(1000);
+
     });
   });
 }

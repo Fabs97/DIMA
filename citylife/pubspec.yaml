@@ -54,7 +54,6 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  logger: ^1.0.0
   test:
   mockito: 
   pedantic:
