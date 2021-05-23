@@ -202,6 +202,8 @@ main() async {
       );
       expect(impressionCards.serialize().isNotEmpty, true);
       expect(impressionCards.serialize().length > 2, true);
+      out.writeln(
+          "${DateTime.now().millisecondsSinceEpoch} | Expecting more than two impressions has been validated");
 
       // Go to Profile
       await U.delay(1000);
@@ -213,7 +215,6 @@ main() async {
       await d.tap(logoutButton);
 
       await U.delay(1000);
-
     });
   });
 }
