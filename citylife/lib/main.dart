@@ -12,6 +12,7 @@ import 'package:citylife/utils/badgeDialogState.dart';
 import 'package:citylife/utils/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main({
@@ -23,6 +24,17 @@ void main({
   StorageService testStorageService,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      WidgetsBinding.instance.window.physicalSize.width <
+              WidgetsBinding.instance.window.physicalSize.height
+          ? [
+              DeviceOrientation.portraitDown,
+              DeviceOrientation.portraitUp,
+            ]
+          : [
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft,
+            ]);
   await Firebase.initializeApp();
   runApp(CityLife(
     testSharedPrefService: testSharedPrefService,
