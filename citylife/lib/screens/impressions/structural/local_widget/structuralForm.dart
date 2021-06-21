@@ -90,6 +90,12 @@ class _StructuralFormState extends State<StructuralForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButtonFormField<dynamic>(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.handyman_outlined,
+                          color: T.primaryColor,
+                        ),
+                      ),
                       key: Key("NewStructuralInterventionField"),
                       value: _selectedTypology,
                       items: _typologies.map((typology) {
