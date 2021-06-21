@@ -77,7 +77,8 @@ class _SharedFormState extends State<SharedForm> {
                   flex: 2,
                   child: GridView.count(
                     crossAxisCount: 2,
-                    childAspectRatio: 122.0 / 86.0,
+                    childAspectRatio:
+                        constraints.maxWidth / (constraints.maxHeight * 1.5),
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 20,
                     children: gridView,
