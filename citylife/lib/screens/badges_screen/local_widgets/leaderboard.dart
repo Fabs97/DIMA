@@ -45,29 +45,31 @@ class Leaderboard extends StatelessWidget {
                           switch (index) {
                             case 0:
                               trophyColor = Colors.amber;
-                              trophySize = 40.0;
                               break;
                             case 1:
                               trophyColor = Colors.blueGrey[300];
-                              trophySize = 32.0;
                               break;
                             case 2:
                               trophyColor = Colors.brown[600];
-                              trophySize = 24.0;
                               break;
                             default:
                               break;
                           }
+                          trophySize = 32.0;
                           return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              if (isTop3)
-                                Icon(
-                                  Icons.emoji_events_outlined,
-                                  color: trophyColor,
-                                  size: trophySize,
+                                Container(
+                                width: size.width * .1,
+                                child: isTop3
+                                    ? Icon(
+                                        Icons.emoji_events_outlined,
+                                        color: trophyColor,
+                                        size: trophySize,
+                                  )
+                                    : Container(),
                                 ),
                               Container(
                                 width: size.width * .1,
@@ -81,24 +83,16 @@ class Leaderboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Text(
-                                user.name,
-                                style: TextStyle(
-                                  color: T.textDarkColor,
+                              Container(
+                                width: size.width * .4,
+                                child: Text(
+                                  user.name,
+                                  style: TextStyle(
+                                    color: T.textDarkColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              // Text(
-                              //   "${user.exp.toInt()}",
-                              //   style: TextStyle(
-                              //     color: T.textDarkColor,
-                              //   ),
-                              // ),
-                              if (isTop3)
-                                Icon(
-                                  Icons.emoji_events_outlined,
-                                  color: trophyColor,
-                                  size: trophySize,
-                                ),
                             ],
                           );
                         },
