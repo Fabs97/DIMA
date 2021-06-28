@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:citylife/screens/map_impressions/local_widgets/map_helper.dart';
 import 'package:citylife/screens/map_impressions/local_widgets/map_marker.dart';
 import 'package:citylife/screens/map_impressions/local_widgets/my_markers_state.dart';
@@ -6,8 +8,9 @@ import 'package:citylife/utils/theme.dart';
 import 'package:citylife/widgets/custom_toast.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class HomeArguments {
@@ -30,11 +33,8 @@ class ImpressionsMapState extends State<ImpressionsMap> {
   HomeArguments args;
   LatLng _center = LatLng(45.465086, 9.189747);
   GoogleMapController _controller;
-  Location _location = new Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
   double _currentZoom = 15;
+  StreamSubscription<Position> _positionStream;
 
   int _minClusterZoom = 0;
   int _maxClusterZoom = 19;
@@ -50,26 +50,53 @@ class ImpressionsMapState extends State<ImpressionsMap> {
   void dispose() {
     super.dispose();
     _controller?.dispose();
+    _positionStream?.cancel();
   }
 
   Future<LatLng> _checkLocationPermission() async {
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
-        throw new Exception("Could not enable location");
-      }
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
     }
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        throw new Exception("Please grant access to location service");
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
       }
     }
 
-    _locationData = await _location.getLocation();
-    _center = LatLng(_locationData.latitude, _locationData.longitude);
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    if (_positionStream == null) {
+      _positionStream = Geolocator.getPositionStream(
+        desiredAccuracy: LocationAccuracy.high,
+        forceAndroidLocationManager: true,
+      ).listen((Position position) {
+        _center = LatLng(position.latitude, position.longitude);
+      }, onError: (error) {
+        print("error in _positionStream");
+      });
+    }
     return _center;
   }
 

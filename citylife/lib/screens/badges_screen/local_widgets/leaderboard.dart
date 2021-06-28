@@ -55,14 +55,14 @@ class Leaderboard extends StatelessWidget {
                             default:
                               break;
                           }
-                          trophySize = 32.0;
+                          trophySize = 52.0;
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                                 Container(
-                                width: size.width * .1,
+                                width: size.height * .1,
                                 child: isTop3
                                     ? Icon(
                                         Icons.emoji_events_outlined,
@@ -72,8 +72,8 @@ class Leaderboard extends StatelessWidget {
                                     : Container(),
                                 ),
                               Container(
-                                width: size.width * .1,
-                                height: size.width * .1,
+                                width: size.height * .1,
+                                height: size.height * .1,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.white,
@@ -84,11 +84,13 @@ class Leaderboard extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: size.width * .4,
+                                width: size.height * .4,
                                 child: Text(
                                   user.name,
                                   style: TextStyle(
                                     color: T.textDarkColor,
+                                    fontWeight: FontWeight.bold,
+                                      fontSize: 24
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
